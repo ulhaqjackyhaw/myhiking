@@ -338,7 +338,7 @@ class BookingScreen extends StatelessWidget {
             readOnly: true,
             width: 128.h,
             controller: bookingDateInputController,
-            hintText: "lbl_dd_mm_yyyy".tr,
+            hintText: "lbl_dd_mm_yy".tr,
             textInputAction: TextInputAction.done,
             contentPadding: EdgeInsets.symmetric(
               horizontal: 18.h,

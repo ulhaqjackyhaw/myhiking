@@ -28,7 +28,7 @@ class PopUpLengkapiDataDiriDialog extends StatelessWidget {
         Container(
           width: double.maxFinite,
           padding: EdgeInsets.symmetric(
-            horizontal: 38.h,
+            horizontal: 20.h,
             vertical: 20.h,
           ),
           decoration: BoxDecoration(
@@ -40,18 +40,18 @@ class PopUpLengkapiDataDiriDialog extends StatelessWidget {
             children: [
               SizedBox(height: 6.h),
               SizedBox(
-                height: 24.h,
+                height: 30.h,
                 child: VerticalDivider(
-                  width: 3.h,
-                  thickness: 3.h,
+                  width: 6.h,
+                  thickness: 6.h,
                   color: appTheme.redA700,
                 ),
               ),
               SizedBox(height: 8.h),
               CustomImageView(
                 imagePath: ImageConstant.imgVector,
-                height: 3.h,
-                width: 3.h,
+                height: 10.h,
+                width: 10.h,
               ),
               SizedBox(height: 26.h),
               Text(
@@ -72,7 +72,7 @@ class PopUpLengkapiDataDiriDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomElevatedButton(
-                      height: 24.h,
+                      height: 25.h,
                       width: 72.h,
                       text: "lbl_batal".tr,
                       buttonStyle: CustomButtonStyles.fillRed,
@@ -82,7 +82,7 @@ class PopUpLengkapiDataDiriDialog extends StatelessWidget {
                       },
                     ),
                     CustomElevatedButton(
-                      height: 24.h,
+                      height: 25.h,
                       width: 72.h,
                       text: "lbl_lengkapi".tr,
                       buttonStyle: CustomButtonStyles.fillPrimaryTL12,

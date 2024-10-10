@@ -24,68 +24,74 @@ class KodeVerifikasiScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.only(
-            left: 24.h,
-            top: 12.h,
-            right: 24.h,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Column(
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgNn,
-                    height: 54.h,
-                    width: 68.h,
-                  ),
-                  Text(
-                    "lbl_myhiking".tr,
-                    style: theme.textTheme.headlineLarge,
-                  ),
-                  Text(
-                    "msg_your_hiking_assistance".tr,
-                    style: CustomTextStyles.bodySmallBluegray900,
-                  ),
-                ],
-              ),
-              SizedBox(height: 74.h),
-              CustomImageView(
-                imagePath: ImageConstant.imgGroup297,
-                height: 192.h,
-                width: double.maxFinite,
-                margin: EdgeInsets.only(
-                  left: 4.h,
-                  right: 18.h,
+        body: SingleChildScrollView(
+          // Ditambahkan SingleChildScrollView di sini
+          child: Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.only(
+              left: 24.h,
+              top: 12.h,
+              right: 24.h,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Column(
+                  children: [
+                    CustomImageView(
+                      imagePath: ImageConstant.imgNn,
+                      height: 54.h,
+                      width: 68.h,
+                    ),
+                    Text(
+                      "lbl_myhiking".tr,
+                      style: theme.textTheme.headlineLarge,
+                    ),
+                    Text(
+                      "msg_your_hiking_assistance".tr,
+                      style: CustomTextStyles.bodySmallBluegray900,
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(height: 4.h),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10.h),
-                  child: Text(
-                    "lbl_reset_password".tr,
-                    style: CustomTextStyles.titleMediumSemiBold,
+                SizedBox(height: 74.h),
+                CustomImageView(
+                  imagePath: ImageConstant.imgGroup297,
+                  height: 192.h,
+                  width: double.maxFinite,
+                  margin: EdgeInsets.only(
+                    left: 4.h,
+                    right: 18.h,
                   ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-              _buildOtpInputSection(context),
-              SizedBox(height: 24.h),
-              CustomElevatedButton(
-                text: "lbl_kirim".tr,
-                margin: EdgeInsets.only(
-                  left: 62.h,
-                  right: 68.h,
+                SizedBox(height: 4.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10.h),
+                    child: Text(
+                      "lbl_reset_password".tr,
+                      style: CustomTextStyles.titleMediumSemiBold,
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  onTapKirim(context);
-                },
-              ),
-            ],
+                SizedBox(height: 2.h),
+                _buildOtpInputSection(context),
+                SizedBox(height: 24.h),
+                CustomElevatedButton(
+                  text: "lbl_kirim".tr,
+                  margin: EdgeInsets.only(
+                    left: 62.h,
+                    right: 68.h,
+                  ),
+                  onPressed: () {
+                    onTapKirim(context);
+                  },
+                ),
+                SizedBox(
+                    height: 24
+                        .h), // Menambahkan jarak 24.h antara tombol "Kirim" dan teks
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: _buildRegistrationPrompt(context),

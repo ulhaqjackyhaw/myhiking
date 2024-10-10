@@ -15,7 +15,7 @@ class TiketScreen extends StatelessWidget {
 
   static Widget builder(BuildContext context) {
     return BlocProvider<TiketBloc>(
-      create: (context) => TiketBloc(TiketState( 
+      create: (context) => TiketBloc(TiketState(
         tiketModelObj: const TiketModel(),
       ))
         ..add(TiketInitialEvent()),
@@ -90,7 +90,7 @@ class TiketScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Align(
-                                      alignment: Alignment.centerLeft,
+                                      alignment: Alignment.center,
                                       child: Container(
                                         width: 102.h,
                                         padding:

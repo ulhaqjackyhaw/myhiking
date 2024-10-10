@@ -12,7 +12,8 @@ class LoginScreen extends StatelessWidget {
     return BlocProvider<LoginBloc>(
       create: (context) => LoginBloc(LoginState(
         loginModelObj: const LoginModel(),
-      ))..add(LoginInitialEvent()),
+      ))
+        ..add(LoginInitialEvent()),
       child: const LoginScreen(),
     );
   }
@@ -185,8 +186,8 @@ class LoginScreen extends StatelessWidget {
                 suffix: InkWell(
                   onTap: () {
                     context.read<LoginBloc>().add(ChangePasswordVisibilityEvent(
-                      value: !state.isShowPassword,
-                    ));
+                          value: !state.isShowPassword,
+                        ));
                   },
                   child: Container(
                     margin: EdgeInsets.fromLTRB(16.h, 8.h, 14.h, 8.h),
