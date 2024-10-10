@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../riwayat_page/riwayat_page.dart';
-import '../transaksi_page/transaksi_page.dart';
 import 'bloc/data_profile_bloc.dart';
 import 'models/data_profile_model.dart';
 

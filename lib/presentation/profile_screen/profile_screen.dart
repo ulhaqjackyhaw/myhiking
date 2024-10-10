@@ -3,10 +3,6 @@ import 'package:myhiking/presentation/profile_screen/bloc/profile_bloc.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../riwayat_page/riwayat_page.dart';
-import '../transaksi_page/transaksi_page.dart';
-import 'bloc/profile_bloc.dart';
-import 'models/profile_model.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
