@@ -82,7 +82,7 @@ class ResetKirimEmailScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(
-                    height: 24
+                    height: 102
                         .h), // Memberikan jarak antara tombol "Kirim" dan teks
               ],
             ),

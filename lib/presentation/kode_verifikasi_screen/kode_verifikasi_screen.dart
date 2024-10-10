@@ -88,7 +88,7 @@ class KodeVerifikasiScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(
-                    height: 24
+                    height: 102
                         .h), // Menambahkan jarak 24.h antara tombol "Kirim" dan teks
               ],
             ),
