@@ -78,13 +78,13 @@ class LoginScreen extends StatelessWidget {
                       right: 18.h,
                     ),
                   ),
-                  SizedBox(height: 6.h),
+                  SizedBox(height: 20.h),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(left: 10.h),
                       child: Text(
-                        "lbl_login".tr,
+                        "LOGIN".tr,
                         style: CustomTextStyles.titleMediumSemiBold,
                       ),
                     ),
@@ -106,7 +106,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  SizedBox(height: 40.h),
                   CustomElevatedButton(
                     text: "lbl_masuk".tr,
                     margin: EdgeInsets.symmetric(horizontal: 66.h),
@@ -133,8 +133,9 @@ class LoginScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 20.h),
           Text(
-            "lbl_email".tr,
+            "Email".tr,
             style: theme.textTheme.labelMedium,
           ),
           BlocSelector<LoginBloc, LoginState, TextEditingController?>(
@@ -163,7 +164,7 @@ class LoginScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           Text(
-            "lbl_password".tr,
+            "Password".tr,
             style: theme.textTheme.labelMedium,
           ),
           BlocBuilder<LoginBloc, LoginState>(

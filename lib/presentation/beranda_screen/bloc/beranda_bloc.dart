@@ -22,8 +22,18 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
         gunungmerbabu: "Gunung Merbabu",
         jawatengah: "Jawa Tengah",
       ),
-      HomelistItemModel(),
-      HomelistItemModel(),
+      HomelistItemModel(
+        malangcentral: "Pemalang, Central Java, Indonesia",
+        image: ImageConstant.imgImage156x316,
+        gunungmerbabu: "Gunung Slamet",
+        jawatengah: "Jawa Tengah",
+      ),
+      HomelistItemModel(
+        malangcentral: "Malang, Central Java, Indonesia",
+        image: ImageConstant.imgImage158x314,
+        gunungmerbabu: "Gunung Sumbing",
+        jawatengah: "Jawa Tengah",
+      ),
     ];
   }
 

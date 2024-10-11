@@ -39,13 +39,13 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       height: 68.h,
       decoration: BoxDecoration(
         color: const Color(0XFFFFFFFF),
-        borderRadius: BorderRadius.circular(25.h),
+        borderRadius: BorderRadius.circular(10.h),
         boxShadow: [
           BoxShadow(
             color: const Color(0X3F000000),
             spreadRadius: 2.h,
             blurRadius: 2.h,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, -1),
           )
         ],
       ),
@@ -86,7 +86,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
 // ignore_for_file: must_be_immutable
 class BottomMenuModel {
-  BottomMenuModel({required this.icon, required this.activeIcon, required this.type});
+  BottomMenuModel(
+      {required this.icon, required this.activeIcon, required this.type});
   String icon;
   String activeIcon;
   BottomBarEnum type;

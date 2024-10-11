@@ -35,18 +35,11 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10.h),
-            Padding(
-              padding: EdgeInsets.only(left: 12.h),
-              child: Text(
-                "lbl_selamat_datang".tr,
-                style: CustomTextStyles.bodyMediumGray500,
-              ),
-            ),
+            SizedBox(height: 20.h),
             Padding(
               padding: EdgeInsets.only(left: 14.h),
               child: Text(
-                "lbl_user".tr,
+                "User".tr,
                 style: CustomTextStyles.titleMediumGray80001,
               ),
             ),
@@ -65,7 +58,8 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
             SizedBox(height: 4.h),
             Padding(
               padding: EdgeInsets.only(left: 8.h, right: 16.h),
-              child: BlocSelector<BerandaBloc, BerandaState, TextEditingController?>(
+              child: BlocSelector<BerandaBloc, BerandaState,
+                  TextEditingController?>(
                 selector: (state) => state.searchController,
                 builder: (context, searchController) {
                   return CustomSearchView(
@@ -105,7 +99,9 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
             },
             itemCount: berandaInitialModelObj?.homelistItemList.length ?? 0,
             itemBuilder: (context, index) {
-              HomelistItemModel model = berandaInitialModelObj?.homelistItemList[index] ?? HomelistItemModel();
+              HomelistItemModel model =
+                  berandaInitialModelObj?.homelistItemList[index] ??
+                      HomelistItemModel();
               return HomelistItemWidget(model);
             },
           );
