@@ -17,8 +17,8 @@ class CustomIconButton extends StatelessWidget {
   final VoidCallback? onTap;
   final Widget? child;
 
-  const CustomIconButton({
-    super.key,
+  CustomIconButton({
+    Key? key,
     this.alignment,
     this.height,
     this.width,
@@ -26,7 +26,7 @@ class CustomIconButton extends StatelessWidget {
     this.padding,
     this.onTap,
     this.child,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class CustomIconButton extends StatelessWidget {
                     color: theme.colorScheme.secondaryContainer,
                     spreadRadius: 2.h,
                     blurRadius: 2.h,
-                    offset: const Offset(0, 16),
+                    offset: Offset(0, 16),
                   ),
                 ],
               ),

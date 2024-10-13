@@ -7,20 +7,31 @@ class CustomElevatedButton extends BaseButton {
   final Widget? leftIcon;
   final Widget? rightIcon;
 
-  const CustomElevatedButton({super.key, 
+  CustomElevatedButton({
+    Key? key,
     this.decoration,
     this.leftIcon,
     this.rightIcon,
-    super.margin,
-    super.onPressed,
-    super.buttonStyle,
-    super.alignment,
-    super.buttonTextStyle,
-    super.isDisabled,
-    super.height,
-    super.width,
-    required super.text,
-  });
+    EdgeInsets? margin,
+    VoidCallback? onPressed,
+    ButtonStyle? buttonStyle,
+    Alignment? alignment,
+    TextStyle? buttonTextStyle,
+    bool? isDisabled,
+    double? height,
+    double? width,
+    required String text,
+  }) : super(
+          text: text,
+          onPressed: onPressed,
+          buttonStyle: buttonStyle,
+          isDisabled: isDisabled,
+          buttonTextStyle: buttonTextStyle,
+          height: height,
+          width: width,
+          alignment: alignment,
+          margin: margin,
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +44,13 @@ class CustomElevatedButton extends BaseButton {
   }
 
   Widget get buildElevatedButtonWidget => Container(
-        height: height ?? 34.h,
-        width: width ?? double.maxFinite,
+        height: this.height ?? 34.h,
+        width: this.width ?? double.maxFinite,
         margin: margin,
         decoration: decoration,
         child: ElevatedButton(
           style: buttonStyle,
-          onPressed: (isDisabled ?? false) ? null : onPressed ?? () {},
+          onPressed: isDisabled ?? false ? null : onPressed ?? () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:device_preview/device_preview.dart'; // Import Device Preview
 import 'core/app_export.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -12,7 +14,12 @@ void main() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
   ]).then((value) {
     PrefUtils().init();
-    runApp(const MyApp());
+    runApp(
+      DevicePreview(
+        enabled: !kReleaseMode, // Aktif hanya pada mode debug
+        builder: (context) => const MyApp(), // Aplikasi di dalam DevicePreview
+      ),
+    );
   });
 }
 
@@ -34,6 +41,12 @@ class MyApp extends StatelessWidget {
                 title: 'myhiking',
                 navigatorKey: NavigatorService.navigatorKey,
                 debugShowCheckedModeBanner: false,
+                useInheritedMediaQuery:
+                    true, // Ini penting untuk Device Preview
+                locale: DevicePreview.locale(
+                    context), // Locale responsif sesuai Device Preview
+                builder: DevicePreview
+                    .appBuilder, // App builder untuk Device Preview
                 localizationsDelegates: const [
                   AppLocalizationDelegate(),
                   GlobalMaterialLocalizations.delegate,

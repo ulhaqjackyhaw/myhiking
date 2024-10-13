@@ -9,15 +9,15 @@ import 'bloc/menunggu_verifikasi_bloc.dart';
 import 'models/menunggu_verifikasi_model.dart';
 
 class MenungguVerifikasiScreen extends StatelessWidget {
-  const MenungguVerifikasiScreen({super.key});
+  const MenungguVerifikasiScreen({Key? key}) : super(key: key);
 
   static Widget builder(BuildContext context) {
     return BlocProvider<MenungguVerifikasiBloc>(
       create: (context) => MenungguVerifikasiBloc(MenungguVerifikasiState(
-        menungguVerifikasiModelObj: const MenungguVerifikasiModel(),
+        menungguVerifikasiModelObj: MenungguVerifikasiModel(),
       ))
         ..add(MenungguVerifikasiInitialEvent()),
-      child: const MenungguVerifikasiScreen(),
+      child: MenungguVerifikasiScreen(),
     );
   }
 
@@ -58,7 +58,7 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                               color: appTheme.black900.withOpacity(0.04),
                               spreadRadius: 2.h,
                               blurRadius: 2.h,
-                              offset: const Offset(0, 2),
+                              offset: Offset(0, 2),
                             )
                           ],
                         ),
@@ -76,32 +76,67 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                               width: 138.h,
                             ),
                             SizedBox(height: 38.h),
-                            _buildOrderDateRow(
-                              context,
-                              tanggalpesanan: "lbl_no_pesanan".tr,
-                              date: "lbl_12312312323".tr,
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(
+                                left: 14.h,
+                                right: 20.h,
+                              ),
+                              child: _buildOrderDateRow(
+                                context,
+                                tanggalpesanan: "lbl_no_pesanan".tr,
+                                date: "lbl_12312312323".tr,
+                              ),
                             ),
                             SizedBox(height: 2.h),
-                            _buildOrderDateRow(
-                              context,
-                              tanggalpesanan: "msg_tanggal_pesanan".tr,
-                              date: "lbl_20_10_2024".tr,
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(
+                                left: 12.h,
+                                right: 20.h,
+                              ),
+                              child: _buildOrderDateRow(
+                                context,
+                                tanggalpesanan: "msg_tanggal_pesanan".tr,
+                                date: "lbl_20_10_2024".tr,
+                              ),
                             ),
-                            _buildOrderDateRow(
-                              context,
-                              tanggalpesanan: "lbl_nama_pemesan".tr,
-                              date: "lbl_pratista_s".tr,
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(
+                                left: 14.h,
+                                right: 20.h,
+                              ),
+                              child: _buildOrderDateRow(
+                                context,
+                                tanggalpesanan: "lbl_nama_pemesan".tr,
+                                date: "lbl_pratista_s".tr,
+                              ),
                             ),
                             SizedBox(height: 2.h),
-                            _buildOrderDateRow(
-                              context,
-                              tanggalpesanan: "lbl_total_anggota".tr,
-                              date: "lbl_5".tr,
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(
+                                left: 12.h,
+                                right: 20.h,
+                              ),
+                              child: _buildOrderDateRow(
+                                context,
+                                tanggalpesanan: "lbl_total_anggota".tr,
+                                date: "lbl_5".tr,
+                              ),
                             ),
-                            _buildOrderDateRow(
-                              context,
-                              tanggalpesanan: "lbl_total_harga".tr,
-                              date: "lbl_25_000".tr,
+                            Container(
+                              width: double.maxFinite,
+                              margin: EdgeInsets.only(
+                                left: 14.h,
+                                right: 20.h,
+                              ),
+                              child: _buildOrderDateRow(
+                                context,
+                                tanggalpesanan: "lbl_total_harga".tr,
+                                date: "lbl_25_000".tr,
+                              ),
                             ),
                             SizedBox(height: 68.h),
                             Text(
@@ -122,11 +157,11 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                                 onTapKembalikehome(context);
                               },
                             ),
-                            SizedBox(height: 6.h),
+                            SizedBox(height: 6.h)
                           ],
                         ),
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 12.h)
                     ],
                   ),
                 ),
@@ -138,6 +173,7 @@ class MenungguVerifikasiScreen extends StatelessWidget {
     );
   }
 
+  /// Section Widget
   Widget _buildVerificationHeader(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
@@ -156,18 +192,19 @@ class MenungguVerifikasiScreen extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Padding(
-              padding: EdgeInsets.only(right: 118.h),
+              padding: EdgeInsets.only(right: 120.h),
               child: Text(
                 "lbl_verifikasi".tr,
                 style: CustomTextStyles.titleMediumGray900,
               ),
             ),
-          ),
+          )
         ],
       ),
     );
   }
 
+  /// Section Widget
   Widget _buildBookingDetailsSection(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -194,12 +231,13 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                       borderRadius: BorderRadiusStyle.roundedBorder14,
                     ),
                     child: Column(
+                      mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "lbl_1".tr,
                           style: CustomTextStyles.titleMediumOnPrimary_2,
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -207,6 +245,26 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                 StepperData(
                   iconWidget: Container(
                     height: 24.h,
+                    width: 28.h,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: BorderRadiusStyle.roundedBorder14,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "lbl_2".tr,
+                          style: CustomTextStyles.titleMediumOnPrimary_2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                StepperData(
+                  iconWidget: Container(
+                    height: 22.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: appTheme.gray5001,
@@ -225,12 +283,13 @@ class MenungguVerifikasiScreen extends StatelessWidget {
           Text(
             "lbl_detail_pesanan".tr,
             style: CustomTextStyles.titleMediumGray900_1,
-          ),
+          )
         ],
       ),
     );
   }
 
+  /// Common widget
   Widget _buildOrderDateRow(
     BuildContext context, {
     required String tanggalpesanan,
@@ -255,11 +314,17 @@ class MenungguVerifikasiScreen extends StatelessWidget {
     );
   }
 
+  /// Navigates to the berandaScreen when the action is triggered.
   onTapImgArrowdownone(BuildContext context) {
-    NavigatorService.pushNamed(AppRoutes.berandaScreen);
+    NavigatorService.pushNamed(
+      AppRoutes.berandaScreen,
+    );
   }
 
+  /// Navigates to the berandaScreen when the action is triggered.
   onTapKembalikehome(BuildContext context) {
-    NavigatorService.pushNamed(AppRoutes.berandaScreen);
+    NavigatorService.pushNamed(
+      AppRoutes.berandaScreen,
+    );
   }
 }

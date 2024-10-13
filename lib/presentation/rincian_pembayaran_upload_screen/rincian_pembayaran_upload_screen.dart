@@ -12,13 +12,13 @@ import 'bloc/rincian_pembayaran_upload_bloc.dart';
 import 'models/rincian_pembayaran_upload_model.dart';
 
 class RincianPembayaranUploadScreen extends StatelessWidget {
-  const RincianPembayaranUploadScreen({super.key});
+  const RincianPembayaranUploadScreen({Key? key}) : super(key: key);
 
   static Widget builder(BuildContext context) {
     return BlocProvider<RincianPembayaranUploadBloc>(
       create: (context) => RincianPembayaranUploadBloc(
         RincianPembayaranUploadState(
-          rincianPembayaranUploadModelObj: const RincianPembayaranUploadModel(),
+          rincianPembayaranUploadModelObj: RincianPembayaranUploadModel(),
         ),
       )..add(RincianPembayaranUploadInitialEvent()),
       child: const RincianPembayaranUploadScreen(),
@@ -47,11 +47,11 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                     children: [
                       _buildStepperSection(context),
                       SizedBox(height: 22.h),
-                      _buildTimerSection(context),
+                      _buildTimerRow(context),
                       SizedBox(height: 26.h),
-                      _buildPaymentDetails(context),
+                      _buildPaymentDetailsStack(context),
                       SizedBox(height: 16.h),
-                      _buildUploadProofSection(context),
+                      _buildUploadProofRow(context),
                       SizedBox(height: 54.h),
                       CustomElevatedButton(
                         height: 48.h,
@@ -64,12 +64,13 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 30.h),
+                      // _buildReturnHomeColumn(context),
                     ],
                   ),
                 ),
               ),
             ),
-            bottomNavigationBar: _buildReturnHomeSection(context),
+            bottomNavigationBar: _buildReturnHomeColumn(context),
           ),
         );
       },
@@ -167,7 +168,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildTimerSection(BuildContext context) {
+  Widget _buildTimerRow(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 14.h),
       padding: EdgeInsets.symmetric(
@@ -212,7 +213,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildPaymentDetails(BuildContext context) {
+  Widget _buildPaymentDetailsStack(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
       child: Card(
@@ -252,11 +253,11 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
               CustomImageView(
                 imagePath: ImageConstant.imgPaymentByTapping,
                 height: 174.h,
-                width: 192.h,
+                width: 190.h,
                 alignment: Alignment.topCenter,
               ),
               Container(
-                width: 242.h,
+                width: 240.h,
                 margin: EdgeInsets.only(bottom: 16.h),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -292,8 +293,10 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                                 CustomImageView(
                                   imagePath: ImageConstant.imgLogoBankBri,
                                   height: 36.h,
-                                  width: 40.h,
-                                  radius: BorderRadius.circular(8.h),
+                                  width: 38.h,
+                                  radius: BorderRadius.circular(
+                                    8.h,
+                                  ),
                                 ),
                               ],
                             ),
@@ -319,6 +322,11 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      "msg_atas_nama_gn_slamet".tr,
+                      style: CustomTextStyles.labelMediumPrimary10,
+                    ),
                   ],
                 ),
               ),
@@ -330,25 +338,36 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildUploadProofSection(BuildContext context) {
+  Widget _buildUploadProofRow(BuildContext context) {
     return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.only(left: 8.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 26.h,
+        vertical: 8.h,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onPrimary,
+        borderRadius: BorderRadiusStyle.roundedBorder14,
+        border: Border.all(
+          color: appTheme.gray50004,
+          width: 1.h,
+        ),
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            "lbl_upload_bukti_pembayaran".tr,
-            style: theme.textTheme.labelLarge!.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+          CustomImageView(
+            imagePath: ImageConstant.imgProfile,
+            height: 24.h,
+            width: 24.h,
           ),
-          CustomOutlinedButton(
-            height: 36.h,
-            text: "lbl_upload".tr.toUpperCase(),
-            onPressed: () {
-              onTapUpload(context);
-            },
+          SizedBox(width: 18.h),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Text(
+              "msg_upload_bukti_pembayaran".tr,
+              style: CustomTextStyles.labelLargeGray50004,
+            ),
           ),
         ],
       ),
@@ -356,40 +375,43 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildReturnHomeSection(BuildContext context) {
+  Widget _buildReturnHomeColumn(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8.h),
-      height: 54.h,
       width: double.maxFinite,
-      decoration: BoxDecoration(
-        color: appTheme.gray5001,
-      ),
-      child: Center(
-        child: CustomOutlinedButton(
-          height: 36.h,
-          text: "KEMBALI KE BERANDA".tr.toUpperCase(),
-          onPressed: () {
-            onTapKembaliKeBeranda(context);
-          },
-        ),
+      padding: EdgeInsets.symmetric(horizontal: 18.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomOutlinedButton(
+            text: "lbl_kembali_ke_home".tr.toUpperCase(),
+            margin: EdgeInsets.only(bottom: 12.h),
+            onPressed: () {
+              onTapKembalikehome(context);
+            },
+          ),
+        ],
       ),
     );
   }
 
-  /// Event Handlers
-  void onTapKirim(BuildContext context) {
-    // Handle the send button tap event
-  }
-
-  void onTapUpload(BuildContext context) {
-    // Handle the upload button tap event
-  }
-
-  void onTapKembaliKeBeranda(BuildContext context) {
-    // Handle the return to home button tap event
-  }
-
+  /// Navigates to the pilihanBankPembayaranScreen when the action is triggered.
   void onTapArrowdownone(BuildContext context) {
-    // Handle the arrow down button tap event
+    NavigatorService.pushNamed(
+      AppRoutes.pilihanBankPembayaranScreen,
+    );
+  }
+
+  /// Navigates to the menungguVerifikasiScreen when the action is triggered.
+  void onTapKirim(BuildContext context) {
+    NavigatorService.pushNamed(
+      AppRoutes.menungguVerifikasiScreen,
+    );
+  }
+
+  /// Navigates to the berandaScreen when the action is triggered.
+  void onTapKembalikehome(BuildContext context) {
+    NavigatorService.pushNamed(
+      AppRoutes.berandaScreen,
+    );
   }
 }

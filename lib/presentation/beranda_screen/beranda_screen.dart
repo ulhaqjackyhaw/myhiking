@@ -93,7 +93,7 @@ class BerandaScreen extends StatelessWidget {
       case AppRoutes.transaksiPage:
         return TransaksiPage.builder(context);
       default:
-        return const DefaultWidget();
+        return DefaultWidget();
     }
   }
 }

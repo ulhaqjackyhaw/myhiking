@@ -30,7 +30,7 @@ class ImageConstant {
   // Rincian pembayaran & upload images
   static String imgMdiClockOutline = '$imagePath/img_mdi_clock_outline.svg';
   static String imgPaymentByTapping = '$imagePath/img_payment_by_tapping.png';
-  static String imgLogoBankBri = '$imagePath/img_logo_bank_bri.png';
+  static String imgLogoBankBri = '$imagePath/Logo_Bank_BRI.png';
   static String imgProfile = '$imagePath/img_profile.svg';
 
   // Menunggu Verifikasi images
@@ -40,15 +40,16 @@ class ImageConstant {
   static String imgSuccess1 = '$imagePath/img_success_1.png';
 
   // Pesanan dibatalkan images
-  static String imgVectorPrimary150x150 = '$imagePath/img_vector_primary_150x150.svg';
+  static String imgVectorPrimary150x150 =
+      '$imagePath/img_vector_primary_150x150.svg';
 
   // Beranda images
   static String imgRewind = '$imagePath/img_rewind.svg';
   static String imgImage = '$imagePath/img_image.png';
   static String imgImage156x316 = '$imagePath/img_image_156x316.png';
   static String imgImage158x314 = '$imagePath/img_image_158x314.png';
-  static String imgFavorite = '$imagePath/img_favorite.svg';
-
+  // static String imgFavorite = '$imagePath/img_favorite.svg';
+  static String imgFavorite = 'assets/images/img_home.png';
   // Detail Mountain images
   static String imgBg = '$imagePath/img_bg.png';
   static String imgIconArrow = '$imagePath/img_icon_arrow.svg';
@@ -57,7 +58,8 @@ class ImageConstant {
   // Route images
   static String imgRoute = '$imagePath/img_route.png';
   static String imgGroup77 = '$imagePath/img_group_77.png';
-  static String imgIconArrowOnprimarycontainer = '$imagePath/img_icon_arrow_onprimarycontainer.svg';
+  static String imgIconArrowOnprimarycontainer =
+      '$imagePath/img_icon_arrow_onprimarycontainer.svg';
   static String imgDownload = '$imagePath/img_download.svg';
   static String imgSettings = '$imagePath/img_settings.svg';
   static String imgMaximize = '$imagePath/img_maximize.svg';
@@ -69,10 +71,12 @@ class ImageConstant {
   static String imgClock = '$imagePath/img_clock.svg';
 
   // DATA PROFILE images
-  static String imgUserProfileDetails = '$imagePath/img_user_profile_details.png';
+  static String imgUserProfileDetails =
+      '$imagePath/img_user_profile_details.png';
 
   // TRANSAKSI images
-  static String imgWomanReceivedDividend = '$imagePath/img_woman_received_dividend.png';
+  static String imgWomanReceivedDividend =
+      '$imagePath/img_woman_received_dividend.png';
 
   // Tiket images
   static String imgGroup51 = '$imagePath/img_group_51.png';
@@ -88,10 +92,12 @@ class ImageConstant {
   static String imgCheckmark = '$imagePath/img_checkmark.svg';
   static String imgArrowDown = '$imagePath/img_arrow_down.svg';
   static String imgIconMap = '$imagePath/img_icon_map.svg';
-  static String imgLockBlueGray10002 = '$imagePath/img_lock_blue_gray_100_02.svg';
+  static String imgLockBlueGray10002 =
+      '$imagePath/img_lock_blue_gray_100_02.svg';
   static String imgLinkedin = '$imagePath/img_linkedin.svg';
   static String imgArrowRight = '$imagePath/img_arrow_right.svg';
-  static String imgFavoriteBlueGray10002 = '$imagePath/img_favorite_blue_gray_100_02.svg';
+  static String imgFavoriteBlueGray10002 =
+      '$imagePath/img_favorite_blue_gray_100_02.svg';
   static String imgLockPrimary = '$imagePath/img_lock_primary.svg';
   static String imageNotFound = 'assets/images/image_not_found.png';
 }
