@@ -48,7 +48,7 @@ class ImageConstant {
   static String imgImage = '$imagePath/img_image.png';
   static String imgImage156x316 = '$imagePath/img_image_156x316.png';
   static String imgImage158x314 = '$imagePath/img_image_158x314.png';
-  static String imgFavorite = '$imagePath/img_Home2.svg';
+  static String imgFavorite = '$imagePath/home.svg';
   // static String imgFavorite = 'assets/images/img_home.png';
   // Detail Mountain images
   static String imgBg = '$imagePath/img_bg.png';
