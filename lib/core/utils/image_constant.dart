@@ -89,6 +89,7 @@ class ImageConstant {
   // Common images
   static String imgNn = '$imagePath/img_nn.png';
   static String img37081 = '$imagePath/img_3708_1.png';
+  static String imgriwayat = '$imagePath/backpack.png';
   static String imgCheckmark = '$imagePath/img_checkmark.svg';
   static String imgArrowDown = '$imagePath/img_arrow_down.svg';
   static String imgIconMap = '$imagePath/img_icon_map.svg';

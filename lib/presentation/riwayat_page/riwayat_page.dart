@@ -14,7 +14,8 @@ class RiwayatPage extends StatelessWidget {
     return BlocProvider<RiwayatBloc>(
       create: (context) => RiwayatBloc(RiwayatState(
         riwayatModelObj: RiwayatModel(),
-      ))..add(RiwayatInitialEvent()),
+      ))
+        ..add(RiwayatInitialEvent()),
       child: const RiwayatPage(),
     );
   }
@@ -32,6 +33,7 @@ class RiwayatPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              SizedBox(height: 45.h),
               _buildHikingEquipmentSection(context),
               Expanded(
                 child: SizedBox(
@@ -71,7 +73,7 @@ class RiwayatPage extends StatelessWidget {
       child: Row(
         children: [
           CustomImageView(
-            imagePath: ImageConstant.img37081,
+            imagePath: ImageConstant.imgriwayat,
             height: 136.h,
             width: 186.h,
           ),

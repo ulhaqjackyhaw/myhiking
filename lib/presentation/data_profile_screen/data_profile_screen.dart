@@ -4,6 +4,7 @@ import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_text_form_field.dart';
 import 'bloc/data_profile_bloc.dart';
 import 'models/data_profile_model.dart';
+import 'package:myhiking/widgets/custom_elevated_button.dart';
 
 // ignore_for_file: must_be_immutable
 class DataProfileScreen extends StatelessWidget {
@@ -21,122 +22,113 @@ class DataProfileScreen extends StatelessWidget {
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.gray50,
         body: SizedBox(
           width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16.h),
-                  _buildProfileHeader(context),
-                  SizedBox(height: 10.h),
-                  SizedBox(
+          child: Column(
+            children: [
+              _buildProfileHeader(context),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: SizedBox(
                     width: double.maxFinite,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          left: 26.h,
-                          right: 14.h,
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: 334.h,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "lbl_nama_lengkap".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50004
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.only(left: 26.h, right: 14.h, top: 10.h),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            // height: 35.h,
+                            width: 334.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "lbl_nama_lengkap".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50004
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 8.h),
-                                  _buildFullNameInput(context),
-                                  SizedBox(height: 10.h),
-                                  Text(
-                                    "lbl_nik".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50003
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                                ),
+                                SizedBox(height: 8.h),
+                                _buildFullNameInput(context),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  "lbl_nik".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50003
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 10.h),
-                                  _buildNikInput(context),
-                                  SizedBox(height: 12.h),
-                                  Text(
-                                    "lbl_no_telepon".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50003
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                                ),
+                                SizedBox(height: 10.h),
+                                _buildNikInput(context),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  "lbl_no_telepon".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50003
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 8.h),
-                                  _buildPhoneNumberInput(context),
-                                  SizedBox(height: 12.h),
-                                  Text(
-                                    "msg_no_telepon_darurat".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50003
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                                ),
+                                SizedBox(height: 8.h),
+                                _buildPhoneNumberInput(context),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  "msg_no_telepon_darurat".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50003
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 8.h),
-                                  _buildEmergencyContactInput(context),
-                                  SizedBox(height: 10.h),
-                                  Text(
-                                    "lbl_alamat".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50003
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                                ),
+                                SizedBox(height: 8.h),
+                                _buildEmergencyContactInput(context),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  "lbl_alamat".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50003
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 10.h),
-                                  _buildAddressInput(context),
-                                  SizedBox(height: 10.h),
-                                  Text(
-                                    "lbl_email2".tr,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: CustomTextStyles.bodyMediumGray50003
-                                        .copyWith(
-                                      height: 1.40,
-                                    ),
+                                ),
+                                SizedBox(height: 10.h),
+                                _buildAddressInput(context),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  "lbl_email2".tr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: CustomTextStyles.bodyMediumGray50003
+                                      .copyWith(
+                                    height: 1.40,
                                   ),
-                                  SizedBox(height: 10.h),
-                                  _buildEmailInput(context),
-                                  SizedBox(height: 4.h),
-                                  _buildIdentityUploadSection(context)
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                ),
+                                SizedBox(height: 10.h),
+                                _buildEmailInput(context),
+                                SizedBox(height: 4.h),
+                                _buildIdentityUploadSection(context)
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
         bottomNavigationBar: SizedBox(
@@ -299,6 +291,7 @@ class DataProfileScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 8.h),
                 Text(
                   "msg_unggah_kartu_identitas".tr,
                   maxLines: 1,
@@ -307,7 +300,7 @@ class DataProfileScreen extends StatelessWidget {
                     height: 1.40,
                   ),
                 ),
-                SizedBox(height: 18.h),
+                SizedBox(height: 10.h),
                 Container(
                   padding: EdgeInsets.all(6.h),
                   decoration: BoxDecoration(
@@ -346,9 +339,10 @@ class DataProfileScreen extends StatelessWidget {
                               "lbl_pilih_file".tr,
                               style: CustomTextStyles.bodySmallBlack900Light,
                             )
-                          ],
+                          ]
                         ),
-                      )
+                  ),
+                      
                     ],
                   ),
                 )
@@ -359,6 +353,7 @@ class DataProfileScreen extends StatelessWidget {
       ),
     );
   }
+
 
   /// Section Widget
   Widget _buildBottomNavigation(BuildContext context) {
