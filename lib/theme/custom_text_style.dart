@@ -158,6 +158,12 @@ class CustomTextStyles {
         fontSize: 13.fSize,
         fontWeight: FontWeight.w600,
       );
+      static TextStyle get labelLargePrimarySemiBoldw =>
+      theme.textTheme.labelLarge!.copyWith(
+        color: Colors.white,
+        fontSize: 15.fSize,
+        fontWeight: FontWeight.w600,
+      );
   static TextStyle get labelLargePrimary_1 =>
       theme.textTheme.labelLarge!.copyWith(
         color: theme.colorScheme.primary,

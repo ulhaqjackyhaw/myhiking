@@ -5,6 +5,7 @@ import '../../widgets/custom_text_form_field.dart';
 import 'bloc/data_profile_bloc.dart';
 import 'models/data_profile_model.dart';
 import 'package:myhiking/widgets/custom_elevated_button.dart';
+import '../../theme/custom_button_style.dart';
 
 // ignore_for_file: must_be_immutable
 class DataProfileScreen extends StatelessWidget {
@@ -118,7 +119,33 @@ class DataProfileScreen extends StatelessWidget {
                                 SizedBox(height: 10.h),
                                 _buildEmailInput(context),
                                 SizedBox(height: 4.h),
-                                _buildIdentityUploadSection(context)
+                                _buildIdentityUploadSection(context),
+                                // SizedBox(height: 4.h),
+                                CustomElevatedButton(
+                                  margin: EdgeInsets.symmetric(vertical: 0.0),
+                                  buttonStyle:
+                                      CustomButtonStyles.fillPrimaryTL12,
+                                  buttonTextStyle: CustomTextStyles
+                                      .labelLargePrimarySemiBoldw,
+                                  text: "Simpan".tr,
+                                  alignment: Alignment.centerRight,
+                                  onPressed: () {},
+                                ),
+                                SizedBox(height: 20.h),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "Ubah Password",
+                                    style: TextStyle(
+                                      color:
+                                          const Color.fromARGB(255, 4, 57, 101),
+                                      fontSize: 15.fSize,
+                                      fontWeight: FontWeight.w700,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 45.h),
                               ],
                             ),
                           )
@@ -332,17 +359,15 @@ class DataProfileScreen extends StatelessWidget {
                           ),
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "lbl_pilih_file".tr,
-                              style: CustomTextStyles.bodySmallBlack900Light,
-                            )
-                          ]
-                        ),
-                  ),
-                      
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "lbl_pilih_file".tr,
+                                style: CustomTextStyles.bodySmallBlack900Light,
+                              )
+                            ]),
+                      ),
                     ],
                   ),
                 )
@@ -353,7 +378,6 @@ class DataProfileScreen extends StatelessWidget {
       ),
     );
   }
-
 
   /// Section Widget
   Widget _buildBottomNavigation(BuildContext context) {
@@ -376,7 +400,7 @@ class DataProfileScreen extends StatelessWidget {
       case BottomBarEnum.Iconmap:
         return AppRoutes.riwayatPage;
       case BottomBarEnum.Lockbluegray10002:
-        return AppRoutes.transaksiPage;
+        return AppRoutes.profileScreen;
       default:
         return "/";
     }

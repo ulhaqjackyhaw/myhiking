@@ -21,26 +21,26 @@ class ProfileScreen extends StatelessWidget {
     return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         return SafeArea(
-          child: Scaffold(
-            backgroundColor: appTheme.gray50,
-            body: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.only(top: 20.h),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _buildProfileHeader(context),
-                  SizedBox(height: 44.h),
-                  _buildProfileSettings(context),
-                ],
-              ),
+            child: Scaffold(
+          backgroundColor: appTheme.gray50,
+          body: Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.only(top: 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                _buildProfileHeader(context),
+                SizedBox(height: 44.h),
+                _buildProfileSettings(context),
+              ],
             ),
-            bottomNavigationBar: SizedBox(
-              width: double.maxFinite,
-              child: _buildBottomNavigation(context),
-            ),
+            // ),
+            // bottomNavigationBar: SizedBox(
+            //   width: double.maxFinite,
+            //   child: _buildBottomNavigation(context),
+            // ),
           ),
-        );
+        ));
       },
     );
   }
@@ -223,32 +223,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget: Bottom Navigation
-  Widget _buildBottomNavigation(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      child: CustomBottomBar(
-        onChanged: (BottomBarEnum type) {
-          Navigator.pushNamed(
-              navigatorKey.currentContext!, getCurrentRoute(type));
-        },
-      ),
-    );
-  }
-
-  /// Handling route based on bottom navigation actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Favorite:
-        return AppRoutes.berandaInitialPage;
-      case BottomBarEnum.Iconmap:
-        return AppRoutes.riwayatPage;
-      case BottomBarEnum.Lockbluegray10002:
-        return AppRoutes.transaksiPage;
-      default:
-        return "/";
-    }
-  }
 
   /// Navigates to the dataProfileScreen when the action is triggered.
   void onTapProfileone(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/profile_screen/profile_screen.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../riwayat_page/riwayat_page.dart';
@@ -63,7 +64,8 @@ class BerandaScreen extends StatelessWidget {
       width: double.maxFinite,
       child: CustomBottomBar(
         onChanged: (BottomBarEnum type) {
-          Navigator.pushNamed(navigatorKey.currentContext!, getCurrentRoute(type));
+          Navigator.pushNamed(
+              navigatorKey.currentContext!, getCurrentRoute(type));
         },
       ),
     );
@@ -77,7 +79,7 @@ class BerandaScreen extends StatelessWidget {
       case BottomBarEnum.Iconmap:
         return AppRoutes.riwayatPage;
       case BottomBarEnum.Lockbluegray10002:
-        return AppRoutes.transaksiPage;
+        return AppRoutes.profileScreen;
       default:
         return "/";
     }
@@ -90,8 +92,8 @@ class BerandaScreen extends StatelessWidget {
         return BerandaInitialPage.builder(context);
       case AppRoutes.riwayatPage:
         return RiwayatPage.builder(context);
-      case AppRoutes.transaksiPage:
-        return TransaksiPage.builder(context);
+      case AppRoutes.profileScreen:
+        return ProfileScreen.builder(context);
       default:
         return DefaultWidget();
     }

@@ -33,7 +33,7 @@ class RiwayatPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(height: 45.h),
+              SizedBox(height: 20.h),
               _buildHikingEquipmentSection(context),
               Expanded(
                 child: SizedBox(
