@@ -168,21 +168,27 @@ class ResetPageTwoScreen extends StatelessWidget {
     );
   }
 
-  /// Displays a dialog with the [PopUpPwDigantiDialog] content.
+  /// Menampilkan dialog dengan konten [PopUpPwDigantiDialog].
   onTapGanti(BuildContext context) {
+    final double dialogWidth =
+        MediaQuery.of(context).size.width * 0.8; // 80% dari lebar layar
+    final double dialogHeight =
+        MediaQuery.of(context).size.height * 0.4; // 40% dari tinggi layar
+
     showDialog(
       context: NavigatorService.navigatorKey.currentContext!,
-      builder: (_) => AlertDialog(
-        content: PopUpPwDigantiDialog.builder(
-            NavigatorService.navigatorKey.currentContext!),
-        backgroundColor: Colors.transparent,
-        contentPadding: EdgeInsets.zero,
-        insetPadding: EdgeInsets.zero,
+      builder: (_) => Dialog(
+        child: Container(
+          width: dialogWidth,
+          height: dialogHeight,
+          child: PopUpPwDigantiDialog.builder(
+              NavigatorService.navigatorKey.currentContext!),
+        ),
       ),
     );
   }
 
-  /// Navigates to the registScreen when the action is triggered.
+  /// Navigasi ke halaman registrasi.
   onTapTxtBelumpunyaakun2(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.registScreen,

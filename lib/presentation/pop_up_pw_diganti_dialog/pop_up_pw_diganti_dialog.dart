@@ -40,7 +40,7 @@ class PopUpPwDigantiDialog extends StatelessWidget {
                 height: 70.h,
                 width: 70.h,
               ),
-              SizedBox(height: 6.h),
+              SizedBox(height: 15.h),
               Text(
                 "msg_selamat_password".tr,
                 maxLines: 2,
@@ -51,7 +51,7 @@ class PopUpPwDigantiDialog extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 6.h,
+                height: 30.h,
               ),
               CustomElevatedButton(
                 height: 24.h,
