@@ -76,46 +76,35 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 40.h,
       title: Container(
         width: double.maxFinite,
-        margin: EdgeInsets.only(left: 13.h),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: IntrinsicWidth(
-            child: Row(
-              // Menggunakan Row sebagai pengganti AppbarImage
-              children: [
-                AppbarImage(
-                  imagePath: ImageConstant.imgArrowDown,
-                  margin: EdgeInsets.only(
-                    top: 1.h,
-                    right: 344.h,
-                  ),
-                  onTap: () {
-                    onTapArrowdownone(context);
-                  },
-                ),
-                AppbarSubtitleOne(
-                  text: "lbl_pesan".tr,
-                  margin: EdgeInsets.only(
-                    left: 152.h,
-                    right: 154.h,
-                  ),
-                ),
-                AppbarImage(
-                  imagePath: ImageConstant.imgIcon,
-                  margin: EdgeInsets.only(
-                    left: 370.h,
-                    top: 1.h,
-                  ),
-                ),
-              ],
+        margin:
+            EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Space between items
+          children: [
+            // Back Button
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop(); // Navigate back
+              },
+              padding: EdgeInsets.only(right: 16.h), // Adjust padding as needed
             ),
-          ),
+            Expanded(
+              child: Center(
+                child: AppbarSubtitleOne(
+                  text: "lbl_pesan".tr,
+                ),
+              ),
+            ),
+            // Placeholder for spacing, adjust if needed
+            SizedBox(width: 50.h), // You can adjust this width
+          ],
         ),
       ),
     );
@@ -431,7 +420,6 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  
   /// Navigates to the routeScreen when the action is triggered.
   onTapArrowdownone(BuildContext context) {
     NavigatorService.pushNamed(
