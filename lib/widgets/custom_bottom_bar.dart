@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-enum BottomBarEnum { Favorite, Iconmap, Lockbluegray10002 }
+enum BottomBarEnum { Favorite, Iconmap, Iconprofile }
 
 // ignore_for_file: must_be_immutable
 class CustomBottomBar extends StatefulWidget {
@@ -29,7 +29,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
     BottomMenuModel(
       icon: ImageConstant.imgLockBlueGray10002,
       activeIcon: ImageConstant.imgLockBlueGray10002,
-      type: BottomBarEnum.Lockbluegray10002,
+      type: BottomBarEnum.Iconprofile,
     ),
   ];
 

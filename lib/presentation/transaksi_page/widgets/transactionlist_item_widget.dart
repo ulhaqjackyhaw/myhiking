@@ -6,10 +6,13 @@ import '../models/transactionlist_item_model.dart';
 
 // ignore_for_file: must_be_immutable
 class TransactionlistItemWidget extends StatelessWidget {
+  final VoidCallback? onChangeStatus;
+
   TransactionlistItemWidget(
     this.transactionlistItemModelObj, {
     super.key,
     this.onTapRecentclimbing,
+    this.onChangeStatus, // Inisialisasi callback ini
   });
 
   TransactionlistItemModel transactionlistItemModelObj;
@@ -19,6 +22,11 @@ class TransactionlistItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        // Jika status adalah "Selesai", navigasi ke tiket
+        if (transactionlistItemModelObj.status == "Selesai") {
+          NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        }
+        // Panggil callback jika ada
         onTapRecentclimbing?.call();
       },
       child: Container(
@@ -65,14 +73,51 @@ class TransactionlistItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            _buildBerhasilButton(context),
+            _buildStatusButton(context),
           ],
         ),
       ),
     );
   }
 
+  /// Menampilkan tombol sesuai status transaksi
+  /// Menampilkan tombol sesuai status transaksi
+  Widget _buildStatusButton(BuildContext context) {
+    if (transactionlistItemModelObj.status == "Proses") {
+      return CustomElevatedButton(
+        height: 26.h,
+        width: 98.h,
+        text: "Proses".tr,
+        buttonStyle: CustomButtonStyles.outlineTeal1,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+        onPressed: () {
+          onChangeStatus?.call(); // Panggil callback saat tombol ditekan
+        },
+      );
+    } else if (transactionlistItemModelObj.status == "Berhasil") {
+      return _buildBerhasilButton(context);
+    } else {
+      return _buildSelesaiButton(context);
+    }
+  }
+
   /// Section Widget
+  Widget _buildProsesButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 26.h,
+      width: 98.h,
+      text: "Proses".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal1,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Logika untuk mengubah status menjadi "Berhasil"
+        transactionlistItemModelObj.status = "Berhasil";
+        // Panggil untuk navigasi
+        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+      },
+    );
+  }
+
   Widget _buildBerhasilButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
@@ -80,6 +125,24 @@ class TransactionlistItemWidget extends StatelessWidget {
       text: "lbl_berhasil".tr,
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Navigasi ke tiket screen
+        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+      },
+    );
+  }
+
+  Widget _buildSelesaiButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 26.h,
+      width: 98.h,
+      text: "lbl_selesai".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal2,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Navigasi ke tiket screen
+        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+      },
     );
   }
 }
