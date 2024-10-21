@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/transaksi_page/transaksi_page.dart';
 import '../../core/app_export.dart';
 import '../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
 import '../pop_up_data_diri_lengkap_dialog/pop_up_data_diri_lengkap_dialog.dart';
@@ -226,6 +227,12 @@ class AppNavigationScreen extends StatelessWidget {
                               screenTitle: "pop up checkout - Dialog",
                               onTapScreenTitle: () => onTapDialogTitle(context,
                                   PopUpCheckoutDialog.builder(context)),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "transaksi page",
+                              onTapScreenTitle: () =>
+                                  OnTapScreenTitle(AppRoutes.transaksiPage),
                             )
                           ],
                         ),
