@@ -77,20 +77,34 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      leadingWidth: 31.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgArrowDown,
-        margin: EdgeInsets.only(left: 13.h),
-        onTap: () {
-          onTapArrowdownone(context);
-        },
-      ),
-      centerTitle: true,
-      title: AppbarSubtitleOne(
-        text: "lbl_booking".tr,
+      height: 40.h,
+      title: Container(
+        width: double.maxFinite,
+        margin: EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between items
+          children: [
+            // Back Button
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop(); // Navigate back
+              },
+              padding: EdgeInsets.only(right: 16.h), // Adjust padding as needed
+            ),
+            Expanded(
+              child: Center(
+                child: AppbarSubtitleOne(
+                  text: "lbl_booking".tr,
+                ),
+              ),
+            ),
+            // Placeholder for spacing, adjust if needed
+            SizedBox(width: 50.h), // You can adjust this width
+          ],
+        ),
       ),
     );
   }
