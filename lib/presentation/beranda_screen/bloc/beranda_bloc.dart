@@ -55,3 +55,57 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
     );
   }
 }
+
+// UI implementation in the screen where the list is displayed
+class BerandaScreen extends StatelessWidget {
+  final List<HomelistItemModel> homelistItemList;
+
+  BerandaScreen({required this.homelistItemList});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: homelistItemList.length,
+      itemBuilder: (context, index) {
+        HomelistItemModel item = homelistItemList[index];
+        return GestureDetector(
+          onTap: () {
+            if (item.image == ImageConstant.imgImage156x316) {
+              // Navigate to the detail mountain screen when the image is clicked
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailMountainScreen(
+                    mountainName: item.gunungmerbabu!,
+                    location: item.jawatengah!,
+                  ),
+                ),
+              );
+            }
+          },
+          child: Image.asset(item.image!), // Display the image
+        );
+      },
+    );
+  }
+}
+
+// DetailMountainScreen to display mountain details
+class DetailMountainScreen extends StatelessWidget {
+  final String mountainName;
+  final String location;
+
+  DetailMountainScreen({required this.mountainName, required this.location});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(mountainName),
+      ),
+      body: Center(
+        child: Text("Lokasi: $location"),
+      ),
+    );
+  }
+}
