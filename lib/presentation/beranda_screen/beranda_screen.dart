@@ -78,7 +78,7 @@ class BerandaScreen extends StatelessWidget {
         return AppRoutes.berandaInitialPage;
       case BottomBarEnum.Iconmap:
         return AppRoutes.riwayatPage;
-      case BottomBarEnum.Lockbluegray10002:
+      case BottomBarEnum.Iconprofile:
         return AppRoutes.profileScreen;
       default:
         return "/";
