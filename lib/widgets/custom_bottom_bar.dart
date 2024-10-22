@@ -61,14 +61,30 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           return BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: bottomMenuList[index].icon,
-              height: 34.h,
-              width: 34.h,
+              height: index == 1
+                  ? 33.h
+                  : index == 2
+                      ? 28.h
+                      : 34.h,
+              width: index == 1
+                  ? 33.h
+                  : index == 2
+                      ? 28.h
+                      : 34.h,
               color: const Color(0XFFCAD8EA),
             ),
             activeIcon: CustomImageView(
               imagePath: bottomMenuList[index].activeIcon,
-              height: 34.h,
-              width: 34.h,
+              height: index == 1
+                  ? 33.h
+                  : index == 2
+                      ? 28.h
+                      : 34.h,
+              width: index == 1
+                  ? 33.h
+                  : index == 2
+                      ? 28.h
+                      : 34.h,
               color: const Color(0XFF127857),
             ),
             label: '',
