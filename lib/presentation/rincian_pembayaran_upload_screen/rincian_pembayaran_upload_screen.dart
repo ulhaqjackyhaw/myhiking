@@ -102,7 +102,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
               ),
             ),
             // Placeholder for spacing, adjust if needed
-            SizedBox(width: 50.h), // You can adjust this width
+            SizedBox(width: 40.h), // You can adjust this width
           ],
         ),
       ),
