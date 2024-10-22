@@ -31,7 +31,7 @@ class BookingScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.gray5001,
-        appBar: _buildAppBar(context),
+        appBar: _buildAppbar(context),
         body: SizedBox(
           width: double.maxFinite,
           child: SingleChildScrollView(
@@ -48,22 +48,67 @@ class BookingScreen extends StatelessWidget {
                   Container(
                     width: double.maxFinite,
                     margin: EdgeInsets.only(
-                      left: 6.h,
-                      right: 10.h,
+                      left: 4.h,
+                      right: 6.h,
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "lbl_rincian_pesanan".tr,
-                          style: CustomTextStyles.titleSmallPrimaryMedium,
+                        Container(
+                          width: double.maxFinite,
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadiusStyle.roundedBorder20,
+                            border: Border.all(
+                              color: theme.colorScheme.primaryContainer,
+                              width: 2.h,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "FORM PESANAN".tr,
+                                  style: CustomTextStyles.titleMediumManrope,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: Divider(
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              SizedBox(height: 24.h),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "msg_tanggal_pemesanan".tr.toUpperCase(),
+                                  style: CustomTextStyles.labelLargePrimary,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                              _buildBookingDateField(context),
+                              SizedBox(height: 14.h),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "lbl_tambah_anggota".tr.toUpperCase(),
+                                  style: CustomTextStyles.labelLargePrimary,
+                                ),
+                              ),
+                              SizedBox(height: 14.h),
+                              _buildMemberIdField(context),
+                              // SizedBox(height: 8.h),
+                              // _buildMemberNameField(context),
+                              SizedBox(height: 124.h)
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 24.h),
-                        _buildOrderDetails(context),
-                        SizedBox(height: 16.h),
-                        _buildAddMemberButton(context),
-                        SizedBox(height: 14.h),
-                        _buildContinueButton(context),
+                        SizedBox(height: 22.h),
+                        _buildContinueButton(context)
                       ],
                     ),
                   )
@@ -76,7 +121,7 @@ class BookingScreen extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppbar(BuildContext context) {
     return CustomAppBar(
       height: 40.h,
       title: Container(
@@ -87,7 +132,6 @@ class BookingScreen extends StatelessWidget {
           mainAxisAlignment:
               MainAxisAlignment.spaceBetween, // Space between items
           children: [
-            // Back Button
             IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
@@ -98,7 +142,7 @@ class BookingScreen extends StatelessWidget {
             Expanded(
               child: Center(
                 child: AppbarSubtitleOne(
-                  text: "lbl_pesan".tr,
+                  text: "lbl_booking".tr,
                 ),
               ),
             ),
@@ -127,6 +171,7 @@ class BookingScreen extends StatelessWidget {
               iconWidth: 26,
               stepperDirection: Axis.horizontal,
               activeIndex: 0,
+              barThickness: 4,
               inverted: true,
               stepperList: [
                 StepperData(
@@ -134,7 +179,7 @@ class BookingScreen extends StatelessWidget {
                     height: 22.h,
                     width: 26.h,
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
+                      color: theme.colorScheme.primaryContainer,
                       borderRadius: BorderRadiusStyle.roundedBorder14,
                     ),
                     child: Column(
@@ -154,7 +199,7 @@ class BookingScreen extends StatelessWidget {
                     height: 22.h,
                     width: 26.h,
                     decoration: BoxDecoration(
-                      color: appTheme.gray5001,
+                      // color: appTheme.gray5001,
                       borderRadius: BorderRadius.circular(12.h),
                       border: Border.all(
                         color: appTheme.blueGray100,
@@ -256,81 +301,20 @@ class BookingScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildIdInput(BuildContext context) {
-    return BlocSelector<BookingBloc, BookingState, TextEditingController?>(
-      selector: (state) => state.idInputController,
-      builder: (context, idInputController) {
-        return CustomTextFormField(
-          controller: idInputController,
-          hintText: "msg_masukkan_id_anda".tr,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 18.h,
-            vertical: 12.h,
-          ),
-          borderDecoration: TextFormFieldStyleHelper.outlineBlueGray,
-        );
-      },
-    );
-  }
-
-  /// Section Widget
-  Widget _buildEmailInput(BuildContext context) {
-    return BlocSelector<BookingBloc, BookingState, TextEditingController?>(
-      selector: (state) => state.emailInputController,
-      builder: (context, emailInputController) {
-        return CustomTextFormField(
-          controller: emailInputController,
-          hintText: "lbl_masukkan_email".tr,
-          textInputType: TextInputType.emailAddress,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 18.h,
-            vertical: 12.h,
-          ),
-          borderDecoration: TextFormFieldStyleHelper.outlineBlueGray,
-          validator: (value) {
-            if (value == null || (!isValidEmail(value, isRequired: true))) {
-              return "err_msg_please_enter_valid_email";
-            }
-            return null;
-          },
-        );
-      },
-    );
-  }
-
-  /// Section Widget
-  Widget _buildPhoneNumberInput(BuildContext context) {
-    return BlocSelector<BookingBloc, BookingState, TextEditingController?>(
-      selector: (state) => state.phoneNumberInputController,
-      builder: (context, phoneNumberInputController) {
-        return CustomTextFormField(
-          controller: phoneNumberInputController,
-          hintText: "msg_masukkan_nomor_telepon".tr,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 18.h,
-            vertical: 12.h,
-          ),
-          borderDecoration: TextFormFieldStyleHelper.outlineBlueGray,
-        );
-      },
-    );
-  }
-
-  /// Section Widget
-  Widget _buildBookingDateInput(BuildContext context) {
+  Widget _buildBookingDateField(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 2.h),
+      padding: EdgeInsets.only(left: 24.h),
       child: BlocSelector<BookingBloc, BookingState, TextEditingController?>(
-        selector: (state) => state.bookingDateInputController,
-        builder: (context, bookingDateInputController) {
+        selector: (state) => state.bookingDateFieldController,
+        builder: (context, bookingDateFieldController) {
           return CustomTextFormField(
             readOnly: true,
-            width: 128.h,
-            controller: bookingDateInputController,
-            hintText: "lbl_dd_mm_yy".tr,
+            width: 130.h,
+            controller: bookingDateFieldController,
+            hintText: "Pilih Tanggal".tr,
             textInputAction: TextInputAction.done,
             contentPadding: EdgeInsets.symmetric(
-              horizontal: 18.h,
+              horizontal: 16.h,
               vertical: 12.h,
             ),
             borderDecoration: TextFormFieldStyleHelper.outlineBlueGrayTL14,
@@ -344,74 +328,35 @@ class BookingScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildOrderDetails(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.only(right: 6.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "lbl_id".tr.toUpperCase(),
-            style: CustomTextStyles.labelLargePrimary,
-          ),
-          SizedBox(height: 8.h),
-          _buildIdInput(context),
-          SizedBox(height: 16.h),
-          Text(
-            "lbl_email2".tr.toUpperCase(),
-            style: CustomTextStyles.labelLargePrimary,
-          ),
-          SizedBox(height: 10.h),
-          _buildEmailInput(context),
-          SizedBox(height: 16.h),
-          Text(
-            "lbl_nomor_telepon".tr.toUpperCase(),
-            style: CustomTextStyles.labelLargePrimary,
-          ),
-          SizedBox(height: 10.h),
-          _buildPhoneNumberInput(context),
-          SizedBox(height: 16.h),
-          Padding(
-            padding: EdgeInsets.only(left: 2.h),
-            child: Text(
-              "msg_tanggal_pemesanan".tr.toUpperCase(),
-              style: CustomTextStyles.labelLargePrimary,
+  Widget _buildMemberIdField(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 24.h),
+      child: BlocSelector<BookingBloc, BookingState, TextEditingController?>(
+        selector: (state) => state.memberIdFieldController,
+        builder: (context, memberIdFieldController) {
+          return CustomTextFormField(
+            width: 280.h,
+            controller: memberIdFieldController,
+            hintText: "Masukkan ID anggota".tr,
+            textInputAction: TextInputAction.done,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.h,
+              vertical: 12.h,
             ),
-          ),
-          SizedBox(height: 10.h),
-          _buildBookingDateInput(context)
-        ],
+          );
+        },
       ),
     );
   }
 
-  /// Section Widget
-  Widget _buildAddMemberButton(BuildContext context) {
-    return CustomOutlinedButton(
-      height: 30.h,
-      width: 176.h,
-      text: "lbl_tambah_anggota".tr.toUpperCase(),
-      rightIcon: Container(
-        margin: EdgeInsets.only(left: 6.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgGrid,
-          height: 24.h,
-          width: 20.h,
-          fit: BoxFit.contain,
-        ),
-      ),
-      buttonStyle: CustomButtonStyles.outlineGray,
-      buttonTextStyle: CustomTextStyles.labelMediumGray50003,
-    );
-  }
-
-  /// Section Widget
   Widget _buildContinueButton(BuildContext context) {
     return CustomOutlinedButton(
       height: 42.h,
       text: "lbl_lanjut2".tr,
-      margin: EdgeInsets.only(left: 6.h),
+      margin: EdgeInsets.only(
+        left: 8.h,
+        right: 4.h,
+      ),
       buttonStyle: CustomButtonStyles.outlineBlueGray,
       buttonTextStyle: CustomTextStyles.labelLarge13,
       onPressed: () {
@@ -440,7 +385,7 @@ class BookingScreen extends StatelessWidget {
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
     if (dateTime != null) {
       context.read<BookingBloc>().add(ChangeDateEvent(date: dateTime));
-      initialState.bookingDateInputController?.text =
+      initialState.bookingDateFieldController?.text =
           dateTime.format(pattern: SHORT_DATE);
     }
   }
@@ -451,6 +396,4 @@ class BookingScreen extends StatelessWidget {
       AppRoutes.pilihanBankPembayaranScreen,
     );
   }
-
-  // Tambahkan metode lain yang diperlukan di sini
 }

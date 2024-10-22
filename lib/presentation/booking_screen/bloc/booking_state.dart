@@ -4,42 +4,37 @@ part of 'booking_bloc.dart';
 // ignore_for_file: must_be_immutable
 class BookingState extends Equatable {
   BookingState({
-    this.idInputController,
-    this.emailInputController,
-    this.phoneInputController,
-    this.bookingDateInputController,
+    this.bookingDateFieldController,
+    this.memberIdFieldController,
+    this.memberNameFieldController,
     this.bookingModelObj,
   });
 
-  TextEditingController? idInputController;
-  TextEditingController? emailInputController;
-  TextEditingController? phoneInputController;
-  TextEditingController? bookingDateInputController;
+  TextEditingController? bookingDateFieldController;
+  TextEditingController? memberIdFieldController;
+  TextEditingController? memberNameFieldController;
   BookingModel? bookingModelObj;
 
   @override
   List<Object?> get props => [
-        idInputController,
-        emailInputController,
-        phoneInputController,
-        bookingDateInputController,
+        bookingDateFieldController,
+        memberIdFieldController,
+        memberNameFieldController,
         bookingModelObj,
       ];
 
   get phoneNumberInputController => null;
 
   BookingState copyWith({
-    TextEditingController? idInputController,
-    TextEditingController? emailInputController,
-    TextEditingController? phoneInputController,
-    TextEditingController? bookingDateInputController,
+    TextEditingController? bookingDateFieldController,
+    TextEditingController? memberIdFieldController,
+    TextEditingController? memberNameFieldController,
     BookingModel? bookingModelObj,
   }) {
     return BookingState(
-      idInputController: idInputController ?? this.idInputController,
-      emailInputController: emailInputController ?? this.emailInputController,
-      phoneInputController: phoneInputController ?? this.phoneInputController,
-      bookingDateInputController: bookingDateInputController ?? this.bookingDateInputController,
+      bookingDateFieldController: bookingDateFieldController ?? this.bookingDateFieldController,
+      memberIdFieldController: memberIdFieldController ?? this.memberIdFieldController,
+      memberNameFieldController: memberNameFieldController ?? this.memberNameFieldController,
       bookingModelObj: bookingModelObj ?? this.bookingModelObj,
     );
   }
