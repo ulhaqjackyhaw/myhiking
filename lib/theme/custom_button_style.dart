@@ -113,7 +113,24 @@ class CustomButtonStyles {
         elevation: 16,
         padding: EdgeInsets.zero,
       );
-
+  static ButtonStyle get outlineTeal1 => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.orange,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.h),
+        ),
+        shadowColor: appTheme.teal40051,
+        elevation: 16,
+        padding: EdgeInsets.zero,
+      );
+  static ButtonStyle get outlineTeal2 => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.gray100,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.h),
+        ),
+        shadowColor: appTheme.teal40051,
+        elevation: 16,
+        padding: EdgeInsets.zero,
+      );
   static ButtonStyle get outlineTealTL12 => ElevatedButton.styleFrom(
         backgroundColor: appTheme.gray50003,
         shape: RoundedRectangleBorder(

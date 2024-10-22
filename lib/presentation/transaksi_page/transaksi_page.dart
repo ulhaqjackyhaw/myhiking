@@ -3,7 +3,7 @@ import '../../core/app_export.dart';
 import 'bloc/transaksi_bloc.dart';
 import 'models/transactionlist_item_model.dart';
 import 'models/transaksi_model.dart';
-import 'widgets/transactionlist_item_widget.dart'; 
+import 'widgets/transactionlist_item_widget.dart';
 
 // ignore_for_file: must_be_immutable
 class TransaksiPage extends StatelessWidget {
@@ -13,7 +13,8 @@ class TransaksiPage extends StatelessWidget {
     return BlocProvider<TransaksiBloc>(
       create: (context) => TransaksiBloc(TransaksiState(
         transaksiModelObj: TransaksiModel(),
-      ))..add(TransaksiInitialEvent()),
+      ))
+        ..add(TransaksiInitialEvent()),
       child: const TransaksiPage(),
     );
   }
@@ -126,11 +127,18 @@ class TransaksiPage extends StatelessWidget {
             itemBuilder: (context, index) {
               TransactionlistItemModel model =
                   transaksiModelObj?.transactionlistItemList[index] ??
-                  TransactionlistItemModel();
+                      TransactionlistItemModel();
               return TransactionlistItemWidget(
                 model,
                 onTapRecentclimbing: () {
-                  onTapRecentclimbing(context);
+                  _handleTapRecentClimbing(context, model.status,
+                      model.id); // Pass model.id sebagai parameter
+                },
+                onChangeStatus: () {
+                  if (model.id != null) {
+                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model
+                        .id!)); // Gunakan '!' untuk mengekstrak nilai non-null
+                  }
                 },
               );
             },
@@ -141,9 +149,17 @@ class TransaksiPage extends StatelessWidget {
   }
 
   /// Navigates to the tiketScreen when the action is triggered.
-  onTapRecentclimbing(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.tiketScreen,
-    );
+  void _handleTapRecentClimbing(
+      BuildContext context, String? status, String? id) {
+    if (status == "Selesai") {
+      NavigatorService.pushNamed(AppRoutes.tiketScreen);
+    } else if (status == "Proses") {
+      // Mengubah status
+      if (id != null) {
+        context
+            .read<TransaksiBloc>()
+            .add(ChangeStatusEvent(id)); // Mengubah status
+      }
+    }
   }
 }

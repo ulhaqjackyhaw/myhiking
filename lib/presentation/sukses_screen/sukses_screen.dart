@@ -12,14 +12,15 @@ import 'bloc/sukses_bloc.dart';
 import 'models/sukses_model.dart';
 
 class SuksesScreen extends StatelessWidget {
-  const SuksesScreen({super.key});
+  const SuksesScreen({Key? key}) : super(key: key);
 
   static Widget builder(BuildContext context) {
     return BlocProvider<SuksesBloc>(
       create: (context) => SuksesBloc(SuksesState(
-        suksesModelObj: const SuksesModel(),
-      ))..add(SuksesInitialEvent()),
-      child: const SuksesScreen(),
+        suksesModelObj: SuksesModel(),
+      ))
+        ..add(SuksesInitialEvent()),
+      child: SuksesScreen(),
     );
   }
 
@@ -60,7 +61,7 @@ class SuksesScreen extends StatelessWidget {
                               color: appTheme.black900.withOpacity(0.04),
                               spreadRadius: 2.h,
                               blurRadius: 2.h,
-                              offset: const Offset(0, 2),
+                              offset: Offset(0, 2),
                             ),
                           ],
                         ),
@@ -92,7 +93,8 @@ class SuksesScreen extends StatelessWidget {
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
-                                style: CustomTextStyles.titleSmallGray50003Medium,
+                                style:
+                                    CustomTextStyles.titleSmallGray50003Medium,
                               ),
                             ),
                             SizedBox(height: 128.h),
@@ -126,138 +128,142 @@ class SuksesScreen extends StatelessWidget {
       },
     );
   }
+}
 
-  /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: 31.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgArrowDown,
-        margin: EdgeInsets.only(left: 13.h),
-        onTap: () {
-          onTapArrowdownone(context);
-        },
-      ),
-      title: AppbarSubtitleOne(
+/// Section Widget
+PreferredSizeWidget _buildAppBar(BuildContext context) {
+  return CustomAppBar(
+    leadingWidth: 31.h,
+    leading: AppbarLeadingImage(
+      imagePath: ImageConstant.imgArrowDown,
+      margin: EdgeInsets.only(left: 13.h),
+      onTap: () {
+        onTapArrowdownone(context);
+      },
+    ),
+    title: Center(
+      // Menggunakan Center widget untuk memusatkan judul
+      child: AppbarSubtitleOne(
         text: "lbl_sukses".tr,
-        margin: EdgeInsets.only(right: 145.h),
+        margin: EdgeInsets.zero, // Mengatur margin menjadi nol untuk memusatkan
       ),
-    );
-  }
+    ),
+  );
+}
 
-  /// Section Widget
-  Widget _buildProgressSection(BuildContext context) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.only(
-        left: 10.h,
-        right: 2.h,
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.maxFinite,
-            child: AnotherStepper(
-              iconHeight: 22,
-              iconWidth: 26,
-              stepperDirection: Axis.horizontal,
-              activeIndex: 0,
-              inverted: true,
-              stepperList: [
-                StepperData(
-                  iconWidget: Container(
-                    height: 22.h,
-                    width: 26.h,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadiusStyle.roundedBorder14,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "lbl_1".tr,
-                          style: CustomTextStyles.titleSmallOnPrimaryMedium,
-                        ),
-                      ],
-                    ),
+/// Section Widget
+Widget _buildProgressSection(BuildContext context) {
+  return Container(
+    width: double.maxFinite,
+    margin: EdgeInsets.only(
+      left: 10.h,
+      right: 2.h,
+    ),
+    child: Column(
+      children: [
+        SizedBox(
+          width: double.maxFinite,
+          child: AnotherStepper(
+            iconHeight: 24,
+            iconWidth: 26,
+            stepperDirection: Axis.horizontal,
+            activeIndex: 0,
+            barThickness: 4,
+            inverted: true,
+            stepperList: [
+              StepperData(
+                iconWidget: Container(
+                  height: 24.h,
+                  width: 26.h,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadiusStyle.roundedBorder14,
                   ),
-                ),
-                StepperData(
-                  iconWidget: Container(
-                    height: 22.h,
-                    width: 26.h,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.primary,
-                      borderRadius: BorderRadiusStyle.roundedBorder14,
-                      border: Border.all(
-                        color: theme.colorScheme.primary,
-                        width: 2.h,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "lbl_1".tr,
+                        style: CustomTextStyles.titleSmallOnPrimaryMedium,
                       ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "lbl_2".tr,
-                          style: CustomTextStyles.titleSmallOnPrimaryMedium,
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
                 ),
-                StepperData(
-                  iconWidget: Container(
-                    height: 22.h,
-                    width: 26.h,
-                    decoration: BoxDecoration(
+              ),
+              StepperData(
+                iconWidget: Container(
+                  height: 24.h,
+                  width: 26.h,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadiusStyle.roundedBorder14,
+                    border: Border.all(
                       color: theme.colorScheme.primary,
-                      borderRadius: BorderRadiusStyle.roundedBorder14,
-                      border: Border.all(
-                        color: theme.colorScheme.primary,
-                        width: 2.h,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "lbl_3".tr,
-                          style: CustomTextStyles.titleSmallOnPrimaryMedium,
-                        ),
-                      ],
+                      width: 2.h,
                     ),
                   ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "lbl_2".tr,
+                        style: CustomTextStyles.titleSmallOnPrimaryMedium,
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
+              ),
+              StepperData(
+                iconWidget: Container(
+                  height: 24.h,
+                  width: 26.h,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary,
+                    borderRadius: BorderRadiusStyle.roundedBorder14,
+                    border: Border.all(
+                      color: theme.colorScheme.primary,
+                      width: 2.h,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "lbl_3".tr,
+                        style: CustomTextStyles.titleSmallOnPrimaryMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
-  /// Navigates to the berandaScreen when the action is triggered.
-  void onTapArrowdownone(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.berandaScreen,
-    );
-  }
+/// Navigates to the berandaScreen when the action is triggered.
+void onTapArrowdownone(BuildContext context) {
+  NavigatorService.pushNamed(
+    AppRoutes.berandaScreen,
+  );
+}
 
-  /// Navigates to the tiketScreen when the action is triggered.
-  void onTapLihattiket(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.tiketScreen,
-    );
-  }
+/// Navigates to the tiketScreen when the action is triggered.
+void onTapLihattiket(BuildContext context) {
+  NavigatorService.pushNamed(
+    AppRoutes.tiketScreen,
+  );
+}
 
-  /// Navigates to the berandaScreen when the action is triggered.
-  void onTapKembalikehome(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.berandaScreen,
-    );
-  }
+/// Navigates to the berandaScreen when the action is triggered.
+void onTapKembalikehome(BuildContext context) {
+  NavigatorService.pushNamed(
+    AppRoutes.berandaScreen,
+  );
 }

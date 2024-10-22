@@ -26,7 +26,8 @@ class ThemeHelper {
 
   /// Returns the current theme data.
   ThemeData _getThemeData() {
-    var colorScheme = _supportedColorScheme[_appTheme] ?? ColorSchemes.lightCodeColorScheme;
+    var colorScheme =
+        _supportedColorScheme[_appTheme] ?? ColorSchemes.lightCodeColorScheme;
     return ThemeData(
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
@@ -211,6 +212,7 @@ class LightCodeColors {
   Color get gray800 => const Color(0XFF373C3A);
   Color get gray80001 => const Color(0XFF363B3A);
   Color get gray900 => const Color(0XFF25272A);
+  Color get gray100 => const Color(0xFF979797);
 
   // Green
   Color get greenA700 => const Color(0XFF0FA958);
@@ -231,4 +233,7 @@ class LightCodeColors {
   Color get teal40051 => const Color(0X5128A176);
   Color get teal800 => const Color(0XFF127958);
   Color get teal900 => const Color(0XFF064E3A);
+
+  // Orange
+  Color get orange => const Color(0xFFFFA8949);
 }

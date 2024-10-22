@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/beranda_screen/beranda_initial_page.dart';
+import 'package:myhiking/presentation/profile_screen/profile_screen.dart';
+import 'package:myhiking/presentation/riwayat_page/riwayat_page.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -399,7 +402,7 @@ class DataProfileScreen extends StatelessWidget {
         return AppRoutes.berandaInitialPage;
       case BottomBarEnum.Iconmap:
         return AppRoutes.riwayatPage;
-      case BottomBarEnum.Lockbluegray10002:
+      case BottomBarEnum.Iconprofile:
         return AppRoutes.profileScreen;
       default:
         return "/";

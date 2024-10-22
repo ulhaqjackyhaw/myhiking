@@ -14,3 +14,12 @@ class TransaksiInitialEvent extends TransaksiEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ChangeStatusEvent extends TransaksiEvent {
+  final String transactionId; // ID transaksi yang ingin diubah
+
+  ChangeStatusEvent(this.transactionId);
+
+  @override
+  List<Object?> get props => [transactionId];
+}

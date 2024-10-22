@@ -169,59 +169,6 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.h),
-          // GestureDetector(
-          //   onTap: () => onTapTransaction(
-          //       context), // Fungsi navigasi ke halaman Transaksi
-          //   child: Container(
-          //     padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 12.h),
-          //     decoration: BoxDecoration(
-          //       color: theme.colorScheme.onPrimary,
-          //       borderRadius: BorderRadiusStyle.roundedBorder14,
-          //       border:
-          //           Border.all(color: theme.colorScheme.onPrimary, width: 1.h),
-          //       boxShadow: [
-          //         BoxShadow(
-          //           color: appTheme.blueGray40019.withOpacity(0.08),
-          //           spreadRadius: 2.h,
-          //           blurRadius: 2.h,
-          //           offset: const Offset(0, 4),
-          //         ),
-          //       ],
-          //     ),
-          //     width: double.maxFinite,
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.center,
-          //       children: [
-          //         Padding(
-          //           padding: EdgeInsets.only(left: 6.h),
-          //           child: CustomIconButton(
-          //             height: 24.h,
-          //             width: 24.h,
-          //             padding: EdgeInsets.all(4.h),
-          //             decoration: IconButtonStyleHelper.fillBlueGray,
-          //             child: CustomImageView(
-          //               imagePath: ImageConstant.imgClock,
-          //             ),
-          //           ),
-          //         ),
-          //         Padding(
-          //           padding: EdgeInsets.only(left: 14.h),
-          //           child: Text(
-          //             "lbl_cek_transaksi".tr,
-          //             style: theme.textTheme.bodyLarge,
-          //           ),
-          //         ),
-          //         const Spacer(),
-          //         CustomImageView(
-          //           imagePath: ImageConstant.imgArrowRight,
-          //           height: 24.h,
-          //           width: 24.h,
-          //           alignment: Alignment.bottomCenter,
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           GestureDetector(
             onTap: () => onTapTransaction(context), // Fungsi navigasi
             child: Container(

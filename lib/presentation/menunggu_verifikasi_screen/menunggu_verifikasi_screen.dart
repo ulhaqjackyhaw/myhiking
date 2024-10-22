@@ -245,7 +245,7 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                 StepperData(
                   iconWidget: Container(
                     height: 24.h,
-                    width: 28.h,
+                    width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       borderRadius: BorderRadiusStyle.roundedBorder14,
