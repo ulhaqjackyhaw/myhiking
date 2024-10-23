@@ -233,6 +233,12 @@ class AppNavigationScreen extends StatelessWidget {
                               screenTitle: "transaksi page",
                               onTapScreenTitle: () =>
                                   OnTapScreenTitle(AppRoutes.transaksiPage),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "Riwayat",
+                              onTapScreenTitle: () =>
+                                  OnTapScreenTitle(AppRoutes.riwayatPage),
                             )
                           ],
                         ),
