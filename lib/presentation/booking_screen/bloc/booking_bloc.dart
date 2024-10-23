@@ -8,7 +8,7 @@ part 'booking_state.dart';
 
 /// A bloc that manages the state of a Booking according to the event that is dispatched to it.
 class BookingBloc extends Bloc<BookingEvent, BookingState> {
-  BookingBloc(super.initialState) {
+  BookingBloc(BookingState initialState) : super(initialState) {
     on<BookingInitialEvent>(_onInitialize);
     on<ChangeDateEvent>(_changeDate);
   }
@@ -19,22 +19,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   ) async {
     emit(
       state.copyWith(
-        idInputController: TextEditingController(),
-        emailInputController: TextEditingController(),
-        phoneInputController: TextEditingController(),
-        bookingDateInputController: TextEditingController(),
+        bookingDateFieldController: TextEditingController(),
+        memberNameFieldController: TextEditingController(),
+        memberIdFieldController: TextEditingController(),
       ),
     );
   }
 
-  _changeDate(
+ _changeDate(
     ChangeDateEvent event,
     Emitter<BookingState> emit,
   ) {
     emit(
       state.copyWith(
-        bookingModelObj: state.bookingModelObj?.copyWith(
-          selectedBookingDateInput: event.date,
+            bookingModelObj: state.bookingModelObj?.copyWith(
+          selectedBookingDateField: event.date,
         ),
       ),
     );

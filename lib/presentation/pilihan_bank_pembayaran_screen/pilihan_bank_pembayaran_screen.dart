@@ -58,9 +58,11 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
       height: 40.h,
       title: Container(
         width: double.maxFinite,
-        margin: EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
+        margin:
+            EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between items
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Space between items
           children: [
             // Back Button
             IconButton(
@@ -73,7 +75,8 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
             Expanded(
               child: Center(
                 child: AppbarSubtitleOne(
-                  text: "lbl_booking".tr, // Updated text according to your context
+                  text: "lbl_booking"
+                      .tr, // Updated text according to your context
                 ),
               ),
             ),
@@ -100,7 +103,7 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
             width: double.maxFinite,
             margin: EdgeInsets.only(left: 4.h),
             child: AnotherStepper(
-              iconHeight: 24,
+              iconHeight: 26,
               iconWidth: 26,
               stepperDirection: Axis.horizontal,
               activeIndex: 0,
@@ -109,7 +112,7 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
               stepperList: [
                 StepperData(
                   iconWidget: Container(
-                    height: 24.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
@@ -129,7 +132,7 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 24.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
@@ -149,7 +152,7 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: appTheme.gray5001,
@@ -190,20 +193,23 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
               separatorBuilder: (context, index) {
                 return SizedBox(height: 14.h);
               },
-              itemCount: pilihanBankPembayaranModelObj?.paymentmethodslistItemList.length ?? 0,
+              itemCount: pilihanBankPembayaranModelObj
+                      ?.paymentmethodslistItemList.length ??
+                  0,
               itemBuilder: (context, index) {
                 PaymentmethodslistItemModel model =
-                    pilihanBankPembayaranModelObj?.paymentmethodslistItemList[index] ?? 
-                    PaymentmethodslistItemModel();
+                    pilihanBankPembayaranModelObj
+                            ?.paymentmethodslistItemList[index] ??
+                        PaymentmethodslistItemModel();
                 return PaymentmethodslistItemWidget(
                   model,
                   onTapRadioGroup: (value) {
                     context.read<PilihanBankPembayaranBloc>().add(
-                      PaymentmethodslistItemEvent(
-                        index: index,
-                        radioGroup: value,
-                      ),
-                    );
+                          PaymentmethodslistItemEvent(
+                            index: index,
+                            radioGroup: value,
+                          ),
+                        );
                   },
                 );
               },
@@ -226,7 +232,7 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
             height: 48.h,
             text: "lbl_bayar_sekarang".tr.toUpperCase(),
             margin: EdgeInsets.only(bottom: 12.h),
-            buttonStyle: CustomButtonStyles.fillBlueGray,
+            buttonStyle: CustomButtonStyles.fillPrimary,
             buttonTextStyle: theme.textTheme.labelLarge!,
           ),
         ],

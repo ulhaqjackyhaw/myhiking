@@ -21,7 +21,8 @@ class PilihanBankPembayaranBloc
   ) async {
     emit(
       state.copyWith(
-        pilihanBankPembayaranModelObj: state.pilihanBankPembayaranModelObj?.copyWith(
+        pilihanBankPembayaranModelObj:
+            state.pilihanBankPembayaranModelObj?.copyWith(
           paymentmethodslistItemList: fillPaymentmethodslistItemList(),
         ),
       ),
@@ -51,9 +52,11 @@ class PilihanBankPembayaranBloc
       PaymentmethodslistItemModel(
           gopayOne: ImageConstant.imgLogo, debitcard: "Gopay"),
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgPngwingCom1, debitcard: "Bank Central Asia"),
+          gopayOne: ImageConstant.imgPngwingCom1,
+          debitcard: "Bank Central Asia"),
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgLogoBankBri, debitcard: "Bank Rakyat Indonesia"),
+          gopayOne: ImageConstant.imgLogoBankBri,
+          debitcard: "Bank Rakyat Indonesia"),
     ];
   }
 }

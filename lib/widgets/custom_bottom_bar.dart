@@ -3,7 +3,6 @@ import '../core/app_export.dart';
 
 enum BottomBarEnum { Favorite, Iconmap, Iconprofile }
 
-// ignore_for_file: must_be_immutable
 class CustomBottomBar extends StatefulWidget {
   CustomBottomBar({super.key, this.onChanged});
   Function(BottomBarEnum)? onChanged;
@@ -12,7 +11,6 @@ class CustomBottomBar extends StatefulWidget {
   CustomBottomBarState createState() => CustomBottomBarState();
 }
 
-// ignore_for_file: must_be_immutable
 class CustomBottomBarState extends State<CustomBottomBar> {
   int selectedIndex = 0;
   List<BottomMenuModel> bottomMenuList = [
@@ -61,30 +59,52 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           return BottomNavigationBarItem(
             icon: CustomImageView(
               imagePath: bottomMenuList[index].icon,
-              height: 34.h,
-              width: 34.h,
+              height: _getIconHeight(index), // Set ukuran ikon
+              width: _getIconWidth(index), // Set ukuran ikon
               color: const Color(0XFFCAD8EA),
             ),
             activeIcon: CustomImageView(
               imagePath: bottomMenuList[index].activeIcon,
-              height: 34.h,
-              width: 34.h,
+              height: _getIconHeight(index), // Set ukuran ikon aktif
+              width: _getIconWidth(index), // Set ukuran ikon aktif
               color: const Color(0XFF127857),
             ),
             label: '',
           );
         }),
         onTap: (index) {
-          selectedIndex = index;
+          setState(() {
+            selectedIndex = index;
+          });
           widget.onChanged?.call(bottomMenuList[index].type);
-          setState(() {});
         },
       ),
     );
   }
+
+  // Function untuk menentukan tinggi ikon berdasarkan indeks
+  double _getIconHeight(int index) {
+    if (index == 0) {
+      return 36.h; // Ukuran untuk Favorite
+    } else if (index == 1) {
+      return 33.h; // Ukuran untuk Iconmap
+    } else {
+      return 28.h; // Ukuran untuk Iconprofile
+    }
+  }
+
+  // Function untuk menentukan lebar ikon berdasarkan indeks
+  double _getIconWidth(int index) {
+    if (index == 0) {
+      return 36.h; // Ukuran untuk Favorite
+    } else if (index == 1) {
+      return 33.h; // Ukuran untuk Iconmap
+    } else {
+      return 30.h; // Ukuran untuk Iconprofile
+    }
+  }
 }
 
-// ignore_for_file: must_be_immutable
 class BottomMenuModel {
   BottomMenuModel(
       {required this.icon, required this.activeIcon, required this.type});

@@ -4,23 +4,23 @@ import 'package:equatable/equatable.dart';
 /// and is typically used to hold data that is passed between different parts of the application.
 // ignore_for_file: must_be_immutable
 class BookingModel extends Equatable {
-  BookingModel({this.selectedBookingDateInput, this.bookingDateInput = "\"\""}) {
-    selectedBookingDateInput = selectedBookingDateInput ?? DateTime.now();
+  BookingModel({this.selectedBookingDateField, this.bookingDateField = "dd/mm/yyyy"}) {
+    selectedBookingDateField = selectedBookingDateField ?? DateTime.now();
   }
 
-  DateTime? selectedBookingDateInput;
-  String bookingDateInput;
+  DateTime? selectedBookingDateField;
+  String bookingDateField;
 
   BookingModel copyWith({
-    DateTime? selectedBookingDateInput,
-    String? bookingDateInput,
+    DateTime? selectedBookingDateField,
+    String? bookingDateField,
   }) {
     return BookingModel(
-      selectedBookingDateInput: selectedBookingDateInput ?? this.selectedBookingDateInput,
-      bookingDateInput: bookingDateInput ?? this.bookingDateInput,
+      selectedBookingDateField: selectedBookingDateField ?? this.selectedBookingDateField,
+      bookingDateField: bookingDateField ?? this.bookingDateField,
     );
   }
 
   @override
-  List<Object?> get props => [selectedBookingDateInput, bookingDateInput];
+  List<Object?> get props => [ selectedBookingDateField, bookingDateField];
 }

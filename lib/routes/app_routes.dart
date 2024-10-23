@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/riwayat_page/riwayat_page.dart';
 import 'package:myhiking/presentation/transaksi_page/transaksi_page.dart';
 import '../presentation/app_navigation_screen/app_navigation_screen.dart';
 import '../presentation/beranda_screen/beranda_screen.dart';
@@ -71,6 +72,7 @@ class AppRoutes {
         tiketScreen: TiketScreen.builder,
         appNavigationScreen: AppNavigationScreen.builder,
         initialRoute: LandingScreen.builder,
-        transaksiPage: TransaksiPage.builder
+        transaksiPage: TransaksiPage.builder,
+        riwayatPage: RiwayatPage.builder
       };
 }

@@ -115,12 +115,17 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
     showDialog(
       context: NavigatorService.navigatorKey.currentContext!,
       builder: (_) => AlertDialog(
-        content: PopUpLengkapiDataDiriDialog.builder(
-          NavigatorService.navigatorKey.currentContext!,
+        content: Padding(
+          padding: const EdgeInsets.all(
+              16.0), // Tambahkan padding di dalam konten pop-up
+          child: PopUpLengkapiDataDiriDialog.builder(
+            NavigatorService.navigatorKey.currentContext!,
+          ),
         ),
         backgroundColor: Colors.transparent,
         contentPadding: EdgeInsets.zero,
-        insetPadding: EdgeInsets.zero,
+        insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20.0, vertical: 24.0), // Margin dari tepi layar
       ),
     );
   }
