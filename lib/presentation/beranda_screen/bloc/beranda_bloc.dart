@@ -68,22 +68,24 @@ class BerandaScreen extends StatelessWidget {
       itemCount: homelistItemList.length,
       itemBuilder: (context, index) {
         HomelistItemModel item = homelistItemList[index];
-        return GestureDetector(
+
+        return InkWell(
           onTap: () {
             if (item.image == ImageConstant.imgImage156x316) {
-              // Navigate to the detail mountain screen when the image is clicked
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => DetailMountainScreen(
-                    mountainName: item.gunungmerbabu!,
-                    location: item.jawatengah!,
+                    mountainName: item.gunungmerbabu ?? "Unknown Mountain",
+                    location: item.jawatengah ?? "Unknown Location",
                   ),
                 ),
               );
             }
           },
-          child: Image.asset(item.image!), // Display the image
+          child: item.image != null
+              ? Image.asset(item.image!, fit: BoxFit.cover)
+              : const SizedBox(),
         );
       },
     );
