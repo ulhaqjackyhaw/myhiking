@@ -174,7 +174,7 @@ Widget _buildProgressSection(BuildContext context) {
               StepperData(
                 iconWidget: Container(
                   height: 24.h,
-                  width: 26.h,
+                  width: 24.h,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadiusStyle.roundedBorder14,
@@ -194,14 +194,14 @@ Widget _buildProgressSection(BuildContext context) {
               StepperData(
                 iconWidget: Container(
                   height: 24.h,
-                  width: 26.h,
+                  width: 24.h,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadiusStyle.roundedBorder14,
-                    border: Border.all(
-                      color: theme.colorScheme.primary,
-                      width: 2.h,
-                    ),
+                    // border: Border.all(
+                    //   color: theme.colorScheme.primary,
+                    //   width: 2.h,
+                    // ),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
@@ -218,14 +218,14 @@ Widget _buildProgressSection(BuildContext context) {
               StepperData(
                 iconWidget: Container(
                   height: 24.h,
-                  width: 26.h,
+                  width: 24.h,
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primary,
                     borderRadius: BorderRadiusStyle.roundedBorder14,
-                    border: Border.all(
-                      color: theme.colorScheme.primary,
-                      width: 2.h,
-                    ),
+                    // border: Border.all(
+                    //   color: theme.colorScheme.primary,
+                    //   width: 2.h,
+                    // ),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
