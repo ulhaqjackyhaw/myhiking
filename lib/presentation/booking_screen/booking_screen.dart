@@ -167,7 +167,7 @@ class BookingScreen extends StatelessWidget {
           SizedBox(
             width: double.maxFinite,
             child: AnotherStepper(
-              iconHeight: 22,
+              iconHeight: 26,
               iconWidth: 26,
               stepperDirection: Axis.horizontal,
               activeIndex: 0,
@@ -176,7 +176,7 @@ class BookingScreen extends StatelessWidget {
               stepperList: [
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primaryContainer,
@@ -196,7 +196,7 @@ class BookingScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       // color: appTheme.gray5001,
@@ -210,7 +210,7 @@ class BookingScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: appTheme.gray5001,
