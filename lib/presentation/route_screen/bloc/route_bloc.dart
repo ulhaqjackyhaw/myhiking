@@ -29,17 +29,16 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     return [
       RoutelistsectionItemModel(
         tinggiOne: ImageConstant.imgDownload,
-        height: "Tinggi",
-        zipcode: "3432",
-        meters: "m",
+        height: "Jarak",
+        zipcode: "5km",
+        // meters: "m",
       ),
       RoutelistsectionItemModel(
         tinggiOne: ImageConstant.imgSettings,
-        height: "Jarak",
-        zipcode: "5",
-        meters: "km",
+        height: "Open",
+        zipcode: "Maps",
+        // meters: "km",
       ),
-      RoutelistsectionItemModel(),
     ];
   }
 }

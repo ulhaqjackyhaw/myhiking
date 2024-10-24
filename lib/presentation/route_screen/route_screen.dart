@@ -15,7 +15,8 @@ class RouteScreen extends StatelessWidget {
     return BlocProvider<RouteBloc>(
       create: (context) => RouteBloc(RouteState(
         routeModelObj: RouteModel(),
-      ))..add(RouteInitialEvent()),
+      ))
+        ..add(RouteInitialEvent()),
       child: const RouteScreen(),
     );
   }
@@ -79,7 +80,8 @@ class RouteScreen extends StatelessWidget {
                                 "msg_dipajaya_rt_01_rw_01".tr,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: CustomTextStyles.bodySmallGray50003.copyWith(
+                                style: CustomTextStyles.bodySmallGray50003
+                                    .copyWith(
                                   height: 2.00,
                                 ),
                               ),
@@ -92,6 +94,18 @@ class RouteScreen extends StatelessWidget {
                             height: 56.h,
                             text: "msg_tata_tertib_dan".tr,
                             margin: EdgeInsets.only(right: 6.h),
+                            decoration: BoxDecoration(
+                            color: theme.colorScheme.onPrimary,
+                            borderRadius: BorderRadiusStyle.roundedBorder14,
+                            boxShadow: [
+                              BoxShadow(
+                                color: appTheme.black900.withOpacity(0.08),
+                                spreadRadius: 1.h,
+                                blurRadius: 2.h,
+                                offset: const Offset(2, 2),
+                              )
+                            ],
+                          ),
                             leftIcon: Container(
                               margin: EdgeInsets.only(right: 16.h),
                               child: CustomImageView(
@@ -102,14 +116,15 @@ class RouteScreen extends StatelessWidget {
                               ),
                             ),
                             buttonStyle: CustomButtonStyles.outlineBlack,
-                            buttonTextStyle: CustomTextStyles.labelLargePrimarySemiBold,
+                            buttonTextStyle:
+                                CustomTextStyles.labelLargePrimarySemiBold,
                             onPressed: () {
                               onTapTatatertibdan(context);
                             },
                           ),
                           SizedBox(height: 8.h),
                           CustomElevatedButton(
-                            height: 78.h,
+                            height: 75.h,
                             text: "lbl_pesan_sekarang".tr,
                             margin: EdgeInsets.only(right: 6.h),
                             buttonStyle: CustomButtonStyles.outlineBlackTL14,
@@ -214,7 +229,7 @@ class RouteScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildRouteListSection(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(right: 4.h),
+      margin: EdgeInsets.only(right: 26.h),
       width: double.maxFinite,
       child: BlocSelector<RouteBloc, RouteState, RouteModel?>(
         selector: (state) => state.routeModelObj,
@@ -223,12 +238,13 @@ class RouteScreen extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Wrap(
               direction: Axis.horizontal,
-              spacing: 12.h,
+              spacing: 13.h,
               children: List.generate(
                 routeModelObj?.routelistsectionItemList.length ?? 0,
                 (index) {
                   RoutelistsectionItemModel model =
-                      routeModelObj?.routelistsectionItemList[index] ?? RoutelistsectionItemModel();
+                      routeModelObj?.routelistsectionItemList[index] ??
+                          RoutelistsectionItemModel();
                   return RoutelistsectionItemWidget(model);
                 },
               ),
