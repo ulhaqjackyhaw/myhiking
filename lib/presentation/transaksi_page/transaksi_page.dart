@@ -135,15 +135,18 @@ class TransaksiPage extends StatelessWidget {
             itemCount: transaksiModelObj?.transactionlistItemList.length ?? 0,
             itemBuilder: (context, index) {
               TransactionlistItemModel model =
-                  transaksiModelObj?.transactionlistItemList[index] ?? TransactionlistItemModel();
+                  transaksiModelObj?.transactionlistItemList[index] ??
+                      TransactionlistItemModel();
               return TransactionlistItemWidget(
                 model,
                 onTapRecentclimbing: () {
-                  _handleTapRecentClimbing(context, model.status, model.id); // Pass model.id sebagai parameter
+                  _handleTapRecentClimbing(context, model.status,
+                      model.id); // Pass model.id sebagai parameter
                 },
                 onChangeStatus: () {
                   if (model.id != null) {
-                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model.id!)); // Gunakan '!' untuk mengekstrak nilai non-null
+                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model
+                        .id!)); // Gunakan '!' untuk mengekstrak nilai non-null
                   }
                 },
               );
@@ -162,7 +165,9 @@ class TransaksiPage extends StatelessWidget {
     } else if (status == "Proses") {
       // Mengubah status
       if (id != null) {
-        context.read<TransaksiBloc>().add(ChangeStatusEvent(id)); // Mengubah status
+        context
+            .read<TransaksiBloc>()
+            .add(ChangeStatusEvent(id)); // Mengubah status
       }
     }
   }
