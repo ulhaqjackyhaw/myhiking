@@ -23,6 +23,15 @@ class TransaksiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // Navigate back to the previous screen
+            },
+          ),
+          title: Container(), // Set title to an empty Container to remove it
+        ),
         backgroundColor: appTheme.gray50,
         body: Container(
           width: double.maxFinite,
@@ -45,7 +54,7 @@ class TransaksiPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "lbl_transaksi".tr,
+                            "lbl_transaksi".tr, // This instance remains
                             style: CustomTextStyles.titleMediumBlack900,
                           ),
                           SizedBox(height: 10.h),
@@ -126,18 +135,15 @@ class TransaksiPage extends StatelessWidget {
             itemCount: transaksiModelObj?.transactionlistItemList.length ?? 0,
             itemBuilder: (context, index) {
               TransactionlistItemModel model =
-                  transaksiModelObj?.transactionlistItemList[index] ??
-                      TransactionlistItemModel();
+                  transaksiModelObj?.transactionlistItemList[index] ?? TransactionlistItemModel();
               return TransactionlistItemWidget(
                 model,
                 onTapRecentclimbing: () {
-                  _handleTapRecentClimbing(context, model.status,
-                      model.id); // Pass model.id sebagai parameter
+                  _handleTapRecentClimbing(context, model.status, model.id); // Pass model.id sebagai parameter
                 },
                 onChangeStatus: () {
                   if (model.id != null) {
-                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model
-                        .id!)); // Gunakan '!' untuk mengekstrak nilai non-null
+                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model.id!)); // Gunakan '!' untuk mengekstrak nilai non-null
                   }
                 },
               );
@@ -156,9 +162,7 @@ class TransaksiPage extends StatelessWidget {
     } else if (status == "Proses") {
       // Mengubah status
       if (id != null) {
-        context
-            .read<TransaksiBloc>()
-            .add(ChangeStatusEvent(id)); // Mengubah status
+        context.read<TransaksiBloc>().add(ChangeStatusEvent(id)); // Mengubah status
       }
     }
   }
