@@ -22,6 +22,16 @@ class TataTertibScreen extends StatelessWidget {
       builder: (context, state) {
         return SafeArea(
           child: Scaffold(
+            appBar: AppBar(
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Kembali ke layar sebelumnya
+                },
+              ),
+              backgroundColor: Colors.white, // Sesuaikan dengan tema Anda
+              elevation: 0, // Hilangkan shadow jika diinginkan
+            ),
             body: Container(
               width: double.maxFinite,
               padding: EdgeInsets.only(
@@ -31,6 +41,7 @@ class TataTertibScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // Title moved from AppBar to here
                   Text(
                     "lbl_tata_tertib".tr,
                     style: CustomTextStyles.titleSmallBlack90015,
