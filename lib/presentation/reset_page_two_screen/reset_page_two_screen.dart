@@ -178,7 +178,7 @@ class ResetPageTwoScreen extends StatelessWidget {
     showDialog(
       context: NavigatorService.navigatorKey.currentContext!,
       builder: (_) => Dialog(
-        child: Container(
+        child: SizedBox(
           width: dialogWidth,
           height: dialogHeight,
           child: PopUpPwDigantiDialog.builder(
