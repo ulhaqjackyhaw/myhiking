@@ -28,57 +28,60 @@ class BerandaInitialPage extends StatefulWidget {
 class BerandaInitialPageState extends State<BerandaInitialPage> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        width: double.maxFinite,
-        padding: EdgeInsets.symmetric(horizontal: 16.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20.h),
-            Padding(
+    return Container(
+      // child: Container(
+      width: double.maxFinite,
+      padding: EdgeInsets.symmetric(horizontal: 16.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.only(left: 14.h),
+            child: Text(
+              "User".tr,
+              style: CustomTextStyles.titleMediumGray80001,
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              onTapTxtIdCounter(context);
+            },
+            child: Padding(
               padding: EdgeInsets.only(left: 14.h),
               child: Text(
-                "User".tr,
-                style: CustomTextStyles.titleMediumGray80001,
+                "lbl_id_123456".tr,
+                style: CustomTextStyles.bodySmallGray800,
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                onTapTxtIdCounter(context);
+          ),
+          SizedBox(height: 4.h),
+          Padding(
+            padding: EdgeInsets.only(left: 8.h, right: 16.h),
+            child:
+                BlocSelector<BerandaBloc, BerandaState, TextEditingController?>(
+              selector: (state) => state.searchController,
+              builder: (context, searchController) {
+                return CustomSearchView(
+                  controller: searchController,
+                  hintText: "lbl_cari".tr,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10.h,
+                    vertical: 12.h,
+                  ),
+                );
               },
-              child: Padding(
-                padding: EdgeInsets.only(left: 14.h),
-                child: Text(
-                  "lbl_id_123456".tr,
-                  style: CustomTextStyles.bodySmallGray800,
-                ),
-              ),
             ),
-            SizedBox(height: 4.h),
-            Padding(
-              padding: EdgeInsets.only(left: 8.h, right: 16.h),
-              child: BlocSelector<BerandaBloc, BerandaState,
-                  TextEditingController?>(
-                selector: (state) => state.searchController,
-                builder: (context, searchController) {
-                  return CustomSearchView(
-                    controller: searchController,
-                    hintText: "lbl_cari".tr,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 10.h,
-                      vertical: 12.h,
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 6.h),
-            _buildHomeList(context),
-          ],
-        ),
+          ),
+          SizedBox(height: 6.h),
+          Expanded(
+              child: SingleChildScrollView(
+            child: _buildHomeList(context),
+          ))
+        ],
       ),
     );
+    // );
   }
 
   /// Section Widget
