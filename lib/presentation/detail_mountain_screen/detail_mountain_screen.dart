@@ -13,7 +13,8 @@ class DetailMountainScreen extends StatelessWidget {
   static Widget builder(BuildContext context) {
     return BlocProvider<DetailMountainBloc>(
       create: (context) => DetailMountainBloc(
-        DetailMountainState(detailMountainModelObj: const DetailMountainModel()),
+        DetailMountainState(
+            detailMountainModelObj: const DetailMountainModel()),
       )..add(DetailMountainInitialEvent()),
       child: const DetailMountainScreen(),
     );
@@ -28,35 +29,105 @@ class DetailMountainScreen extends StatelessWidget {
             backgroundColor: appTheme.gray50,
             body: SizedBox(
               width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 394.h,
-                        width: double.maxFinite,
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            _buildBackgroundStack(context),
-                            Text(
-                              "lbl_gunung_slamet".tr,
-                              style: CustomTextStyles.headlineSmall_1,
-                            ),
-                          ],
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 394.h,
+                    width: double.maxFinite,
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        _buildBackgroundStack(context),
+                        Text(
+                          "lbl_gunung_slamet".tr,
+                          style: CustomTextStyles.headlineSmall_1,
                         ),
-                      ),
-                      SizedBox(height: 16.h),
-                      _buildElevationColumn(context),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  SizedBox(height: 16.h),
+                  _buildElevationColumn(context),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: _buildRouteList(context),
+                  ))
+                ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildRouteList(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.h),
+      child: Column(
+        children: [
+          SizedBox(height: 10.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "msg_jalur_bambangan".tr,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "lbl_jalur_guci".tr,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "lbl_jalur_dipajaya2".tr,
+              onTapRouteTwo: () {
+                onTapRouteThree(context);
+              },
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "Jalur Baturaden".tr,
+              onTapRouteTwo: () {
+                onTapRouteThree(context);
+              },
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "Jalur Kaliwadas".tr,
+              onTapRouteTwo: () {
+                onTapRouteThree(context);
+              },
+            ),
+          ),
+          SizedBox(height: 8.h),
+          SizedBox(
+            width: double.maxFinite,
+            child: _buildRouteTwo(
+              context,
+              jalurGuciOne: "Jalur Gunung Malang".tr,
+              onTapRouteTwo: () {
+                onTapRouteThree(context);
+              },
+            ),
+          ),
+          SizedBox(height: 10.h),
+        ],
+      ),
     );
   }
 
@@ -179,80 +250,10 @@ class DetailMountainScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 40.h),
-          SizedBox(
-            width: 326.h,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "msg_jalur_bambangan".tr,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "lbl_jalur_guci".tr,
-                  ),
-                ),
-                SizedBox(height: 8.h),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "lbl_jalur_dipajaya2".tr,
-                    onTapRouteTwo: () {
-                      onTapRouteThree(context);
-                    },
-                  ),
-                ),SizedBox(height: 8.h),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "Jalur Baturaden".tr,
-                    onTapRouteTwo: () {
-                      onTapRouteThree(context);
-                    },
-                  ),
-                ),SizedBox(height: 8.h),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "Jalur Kaliwadas".tr,
-                    onTapRouteTwo: () {
-                      onTapRouteThree(context);
-                    },
-                  ),
-                ),SizedBox(height: 8.h),
-                SizedBox(
-                  width: double.maxFinite,
-                  child: _buildRouteTwo(
-                    context,
-                    jalurGuciOne: "Jalur Gunung Malang".tr,
-                    onTapRouteTwo: () {
-                      onTapRouteThree(context);
-                    },
-                  ),
-                ),
-                SizedBox(height: 80.h),
-                SizedBox(
-                  height: 10.h,
-                  width: double.maxFinite,
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
-
 
   /// Common widget
   Widget _buildRouteTwo(

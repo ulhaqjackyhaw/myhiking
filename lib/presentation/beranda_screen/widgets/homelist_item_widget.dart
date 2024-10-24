@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/beranda_screen/bloc/beranda_bloc.dart';
+import 'package:myhiking/presentation/detail_mountain_screen/detail_mountain_screen.dart';
+import 'package:myhiking/presentation/sukses_screen/sukses_screen.dart';
 import '../../../core/app_export.dart';
 import '../models/homelist_item_model.dart';
 
@@ -39,12 +42,29 @@ class HomelistItemWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                CustomImageView(
-                  imagePath: homelistItemModelObj.image!,
-                  height: 172.h,
-                  width: double.maxFinite,
-                  radius: BorderRadius.circular(20.h),
-                )
+                // Membungkus CustomImageView dengan InkWell untuk mendeteksi onTap
+                InkWell(
+                  onTap: () {
+                    // Hanya gambar tertentu yang bisa diklik
+                    if (homelistItemModelObj.gunungmerbabu! ==
+                        "Gunung Slamet") {
+                      // Navigasi hanya jika gambar adalah Gunung Merbabu
+                      onTapImgSlamet(context);
+                    }
+                    // } else {
+                    //   // Jika bukan gambar yang diizinkan, tampilkan pesan atau lakukan sesuatu
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     SnackBar(content: Text('Gambar ini tidak bisa diklik')),
+                    //   );
+                    // }
+                  },
+                  child: CustomImageView(
+                    imagePath: homelistItemModelObj.image!,
+                    height: 172.h,
+                    width: double.maxFinite,
+                    radius: BorderRadius.circular(20.h),
+                  ),
+                ),
               ],
             ),
           ),
@@ -68,3 +88,7 @@ class HomelistItemWidget extends StatelessWidget {
     );
   }
 }
+
+onTapImgSlamet(BuildContext context) {
+    NavigatorService.pushNamed(AppRoutes.detailMountainScreen);
+  }

@@ -58,57 +58,57 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
 }
 
 // UI implementation in the screen where the list is displayed
-class BerandaScreen extends StatelessWidget {
-  final List<HomelistItemModel> homelistItemList;
+// class BerandaScreen extends StatelessWidget {
+//   final List<HomelistItemModel> homelistItemList;
 
-  BerandaScreen({required this.homelistItemList});
+//   BerandaScreen({required this.homelistItemList});
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: homelistItemList.length,
-      itemBuilder: (context, index) {
-        HomelistItemModel item = homelistItemList[index];
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//       itemCount: homelistItemList.length,
+//       itemBuilder: (context, index) {
+//         HomelistItemModel item = homelistItemList[index];
 
-        return InkWell(
-          onTap: () {
-            if (item.image == ImageConstant.imgImage156x316) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailMountainScreen(
-                    mountainName: item.gunungmerbabu ?? "Unknown Mountain",
-                    location: item.jawatengah ?? "Unknown Location",
-                  ),
-                ),
-              );
-            }
-          },
-          child: item.image != null
-              ? Image.asset(item.image!, fit: BoxFit.cover)
-              : const SizedBox(),
-        );
-      },
-    );
-  }
-}
+//         return InkWell(
+//           onTap: () {
+//             if (item.image == ImageConstant.imgImage156x316) {
+//               Navigator.push(
+//                 context,
+//                 MaterialPageRoute(
+//                   builder: (context) => DetailMountainScreen(
+//                     mountainName: item.gunungmerbabu ?? "Unknown Mountain",
+//                     location: item.jawatengah ?? "Unknown Location",
+//                   ),
+//                 ),
+//               );
+//             }
+//           },
+//           child: item.image != null
+//               ? Image.asset(item.image!, fit: BoxFit.cover)
+//               : const SizedBox(),
+//         );
+//       },
+//     );
+//   }
+// }
 
-// DetailMountainScreen to display mountain details
-class DetailMountainScreen extends StatelessWidget {
-  final String mountainName;
-  final String location;
+// // DetailMountainScreen to display mountain details
+// class DetailMountainScreen extends StatelessWidget {
+//   final String mountainName;
+//   final String location;
 
-  DetailMountainScreen({required this.mountainName, required this.location});
+//   DetailMountainScreen({required this.mountainName, required this.location});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(mountainName),
-      ),
-      body: Center(
-        child: Text("Lokasi: $location"),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(mountainName),
+//       ),
+//       body: Center(
+//         child: Text("Lokasi: $location"),
+//       ),
+//     );
+//   }
+// }

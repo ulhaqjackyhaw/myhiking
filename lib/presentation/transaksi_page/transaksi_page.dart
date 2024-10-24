@@ -23,6 +23,15 @@ class TransaksiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // Navigate back to the previous screen
+            },
+          ),
+          title: Container(), // Set title to an empty Container to remove it
+        ),
         backgroundColor: appTheme.gray50,
         body: Container(
           width: double.maxFinite,
@@ -45,7 +54,7 @@ class TransaksiPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "lbl_transaksi".tr,
+                            "lbl_transaksi".tr, // This instance remains
                             style: CustomTextStyles.titleMediumBlack900,
                           ),
                           SizedBox(height: 10.h),
