@@ -138,7 +138,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
           SizedBox(
             width: double.maxFinite,
             child: AnotherStepper(
-              iconHeight: 22,
+              iconHeight: 24,
               iconWidth: 26,
               stepperDirection: Axis.horizontal,
               activeIndex: 0,
@@ -146,7 +146,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
               stepperList: [
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 24.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
@@ -166,7 +166,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 24.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
@@ -190,7 +190,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 22.h,
+                    height: 24.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
