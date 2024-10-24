@@ -113,7 +113,7 @@ class TransactionlistItemWidget extends StatelessWidget {
         // Logika untuk mengubah status menjadi "Berhasil"
         transactionlistItemModelObj.status = "Berhasil";
         // Panggil untuk navigasi
-        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        NavigatorService.pushNamed(AppRoutes.suksesScreen);
       },
     );
   }
@@ -126,8 +126,8 @@ class TransactionlistItemWidget extends StatelessWidget {
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Navigasi ke tiket screen
-        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        // Navigasi ke sukses screen
+        NavigatorService.pushNamed(AppRoutes.suksesScreen);
       },
     );
   }
