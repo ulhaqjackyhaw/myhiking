@@ -8,38 +8,38 @@ class RoutelistsectionItemModel extends Equatable {
     this.tinggiOne,
     this.height,
     this.zipcode,
-    this.meters,
-    this.id,
+    // this.meters,
+    // this.id,
   }) {
-    tinggiOne = tinggiOne ?? ImageConstant.imgDownload;
-    height = height ?? "Tinggi";
-    zipcode = zipcode ?? "3432";
-    meters = meters ?? "m";
-    id = id ?? "";
+    tinggiOne = tinggiOne ?? ImageConstant.imgSettings;
+    height = height ?? "Jarak";
+    zipcode = zipcode ?? "5Km";
+    // meters = meters ?? "m";
+    // id = id ?? "";
   }
 
   String? tinggiOne;
   String? height;
   String? zipcode;
-  String? meters;
-  String? id;
+  // String? meters;
+  // String? id;
 
   RoutelistsectionItemModel copyWith({
     String? tinggiOne,
     String? height,
     String? zipcode,
-    String? meters,
-    String? id,
+    // String? meters,
+    // String? id,
   }) {
     return RoutelistsectionItemModel(
       tinggiOne: tinggiOne ?? this.tinggiOne,
       height: height ?? this.height,
       zipcode: zipcode ?? this.zipcode,
-      meters: meters ?? this.meters,
-      id: id ?? this.id,
+      // meters: meters ?? this.meters,
+      // id: id ?? this.id,
     );
   }
 
   @override
-  List<Object?> get props => [tinggiOne, height, zipcode, meters, id];
+  List<Object?> get props => [tinggiOne, height, zipcode];
 }

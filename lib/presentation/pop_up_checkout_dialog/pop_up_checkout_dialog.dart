@@ -20,64 +20,75 @@ class PopUpCheckoutDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 26.h,
-            vertical: 40.h,
-          ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 72.h,
-                width: double.maxFinite,
-                margin: EdgeInsets.only(
-                  left: 34.h,
-                  right: 26.h,
-                ),
-                child: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    Text(
-                      "msg_konfirmasi_pendakian".tr,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: CustomTextStyles.titleSmallBlack900Medium.copyWith(
-                        height: 1.40,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        "lbl_checkout".tr,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                        style: CustomTextStyles.headlineLargeRed700.copyWith(
-                          height: 1.40,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14), // Rounded corners for dialog
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 24.0, // Atur padding horizontal sesuai kebutuhan Anda
+          vertical: 32.0, // Atur padding vertikal sesuai kebutuhan Anda
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.maxFinite,
+              padding: EdgeInsets.symmetric(
+                horizontal: 20.h,
+                vertical: 30.h,
               ),
-              SizedBox(height: 14.h),
-              buildBarcodeButtonsRow(context),
-              SizedBox(height: 6.h)
-            ],
-          ),
-        )
-      ],
+              decoration: BoxDecoration(
+                color: theme.colorScheme.onPrimary,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 72.h,
+                    width: double.maxFinite,
+                    margin: EdgeInsets.symmetric(horizontal: 16.h),
+                    child: Stack(
+                      alignment: Alignment.bottomLeft,
+                      children: [
+                        Text(
+                          "msg_konfirmasi_pendakian".tr,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: CustomTextStyles.titleSmallBlack900Medium
+                              .copyWith(
+                            fontSize: 15.0,
+                            height: 1.40,
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            "lbl_checkout".tr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style:
+                                CustomTextStyles.headlineLargeRed700.copyWith(
+                              fontSize: 28.0,
+                              height: 1.40,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 14.h),
+                  buildBarcodeButtonsRow(context),
+                  SizedBox(height: 6.h),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

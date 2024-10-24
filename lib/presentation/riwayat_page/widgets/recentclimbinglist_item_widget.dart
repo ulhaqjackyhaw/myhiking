@@ -3,6 +3,7 @@ import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../models/recentclimbinglist_item_model.dart';
+import '../../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
 
 // ignore_for_file: must_be_immutable
 class RecentclimbinglistItemWidget extends StatelessWidget {
@@ -80,6 +81,20 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       text: "lbl_mendaki".tr,
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Menampilkan popup checkout
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            content: PopUpCheckoutDialog.builder(
+              context,
+            ),
+            backgroundColor: Colors.transparent,
+            contentPadding: EdgeInsets.zero,
+            insetPadding: EdgeInsets.zero,
+          ),
+        );
+      },
     );
   }
 }

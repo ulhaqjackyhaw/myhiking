@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'dart:convert'; // Add this import
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
 import 'bloc/regist_bloc.dart';
 import 'models/regist_model.dart';
+import 'package:http/http.dart' as http;
+
 
 class RegistScreen extends StatelessWidget {
   const RegistScreen({super.key});
@@ -185,11 +188,40 @@ class RegistScreen extends StatelessWidget {
   }
 
   /// Handle register button tap
-  void onTapRegisterButton(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.loginScreen,
+  void onTapRegisterButton(BuildContext context) async {
+  final name = context.read<RegistBloc>().state.edittextoneController?.text;
+  final email = context.read<RegistBloc>().state.emailtwoController?.text;
+  final password = context.read<RegistBloc>().state.passwordtwoController?.text;
+  final confirmPassword = context.read<RegistBloc>().state.passwordthreeController?.text;
+
+  if (password == confirmPassword) {
+    // Kirim data ke server
+    final response = await http.post(
+      Uri.parse('https://your-backend-url/api/register'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'name': name ?? '',
+        'email': email ?? '',
+        'password': password ?? '',
+        'password_confirmation': confirmPassword ?? '', 
+      }),
     );
+
+      if (response.statusCode == 201) {
+        // Registrasi berhasil
+        NavigatorService.pushNamed(AppRoutes.loginScreen);
+      } else {
+        // Tampilkan pesan error
+        print('Failed to register: ${response.body}');
+      }
+    } else {
+      // Tampilkan pesan password tidak sesuai
+      print('Password tidak sesuai');
+    }
   }
+
 
   /// Full name input field
   Widget _buildEdittextone(BuildContext context) {

@@ -29,6 +29,14 @@ class DataProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         backgroundColor: appTheme.gray50,
         body: SizedBox(
           width: double.maxFinite,
@@ -382,30 +390,42 @@ class DataProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
-  Widget _buildBottomNavigation(BuildContext context) {
-    return SizedBox(
+ Widget _buildBottomNavigation(BuildContext context) {
+    return const SizedBox(
       width: double.maxFinite,
-      child: CustomBottomBar(
-        onChanged: (BottomBarEnum type) {
-          Navigator.pushNamed(
-              navigatorKey.currentContext!, getCurrentRoute(type));
-        },
-      ),
+      // child: CustomBottomBar(
+      //   onChanged: (BottomBarEnum type) {
+      //     Navigator.pushNamed(
+      //         navigatorKey.currentContext!, getCurrentRoute(type));
+      //   },
+      // ),
     );
   }
 
+  /// Section Widget
+  // Widget _buildBottomNavigation(BuildContext context) {
+  //   return SizedBox(
+  //     width: double.maxFinite,
+  //     child: CustomBottomBar(
+  //       onChanged: (BottomBarEnum type) {
+  //         Navigator.pushNamed(
+  //             navigatorKey.currentContext!, getCurrentRoute(type));
+  //       },
+  //     ),
+  //   );
+  // }
+
   ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Favorite:
-        return AppRoutes.berandaInitialPage;
-      case BottomBarEnum.Iconmap:
-        return AppRoutes.riwayatPage;
-      case BottomBarEnum.Iconprofile:
-        return AppRoutes.profileScreen;
-      default:
-        return "/";
-    }
-  }
+//   String getCurrentRoute(BottomBarEnum type) {
+//     switch (type) {
+//       case BottomBarEnum.Favorite:
+//         return AppRoutes.berandaInitialPage;
+//       case BottomBarEnum.Iconmap:
+//         return AppRoutes.riwayatPage;
+//       case BottomBarEnum.Iconprofile:
+//         return AppRoutes.profileScreen;
+//       // default:
+//       //   return "/";
+//     }
+//   }
 }

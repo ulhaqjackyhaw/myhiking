@@ -1,80 +1,74 @@
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
-import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
-import 'bloc/pop_up_pw_diganti_bloc.dart';
-import 'models/pop_up_pw_diganti_model.dart'; // ignore_for_file: rule
+import '../../presentation/login_screen/login_screen.dart';
 
 class PopUpPwDigantiDialog extends StatelessWidget {
   const PopUpPwDigantiDialog({super.key});
 
   static Widget builder(BuildContext context) {
-    return BlocProvider<PopUpPwDigantiBloc>(
-      create: (context) => PopUpPwDigantiBloc(
-        PopUpPwDigantiState(
-            popUpPwDigantiModelObj: const PopUpPwDigantiModel()),
-      )..add(PopUpPwDigantiInitialEvent()),
-      child: const PopUpPwDigantiDialog(),
-    );
+    return const PopUpPwDigantiDialog();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: 26.h),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary,
-            borderRadius: BorderRadiusStyle.roundedBorder14,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgCheckmark,
-                height: 70.h,
-                width: 70.h,
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          14, // Rounded corners
+        ),
+      ),
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        padding: const EdgeInsets.all(20.0), // Internal padding
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onPrimary,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Green Check Icon
+            const Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+              size: 70.0,
+            ),
+            const SizedBox(height: 20.0),
+            // Success Message
+            Text(
+              "Selamat Password Anda Berhasil Diganti",
+              textAlign: TextAlign.center,
+              style: CustomTextStyles.titleSmallBlack900.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
-              SizedBox(height: 15.h),
-              Text(
-                "msg_selamat_password".tr,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: CustomTextStyles.titleSmallBlack900.copyWith(
-                  height: 1.40,
+            ),
+            const SizedBox(height: 30.0),
+            // "Lanjut" Button
+            CustomElevatedButton(
+              height: 40.0,
+              width: 120.0,
+              text: "Lanjut",
+              buttonStyle: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Colors.green, // Green background color
+                ),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0), // Rounded button
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 30.h,
-              ),
-              CustomElevatedButton(
-                height: 24.h,
-                width: 72.h,
-                text: "lbl_lanjut".tr,
-                buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                buttonTextStyle: CustomTextStyles.labelMediumOnPrimarySemiBold,
-                onPressed: () {
-                  onTapContinueButton(context);
-                },
-              ),
-              SizedBox(height: 2.h)
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
-  // Navigates to the loginScreen when the action is triggered.
-  onTapContinueButton(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.loginScreen,
+              buttonTextStyle: CustomTextStyles.labelMediumOnPrimarySemiBold,
+              onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.loginScreen); // Close the dialog
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
