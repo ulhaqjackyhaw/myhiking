@@ -127,11 +127,10 @@ class DataProfileScreen extends StatelessWidget {
                                     height: 1.40,
                                   ),
                                 ),
-                                SizedBox(height: 10.h),
+                            SizedBox(height: 10.h),
                                 _buildEmailInput(context),
                                 SizedBox(height: 4.h),
                                 _buildIdentityUploadSection(context),
-                                // SizedBox(height: 4.h),
                                 CustomElevatedButton(
                                   margin: EdgeInsets.symmetric(vertical: 0.0),
                                   buttonStyle:
@@ -140,26 +139,90 @@ class DataProfileScreen extends StatelessWidget {
                                       .labelLargePrimarySemiBoldw,
                                   text: "Simpan".tr,
                                   alignment: Alignment.centerRight,
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    // Tampilkan dialog popup notifikasi berhasil disimpan
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                          ),
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 24.0),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                                size: 60, // Ukuran ikon
+                                              ),
+                                              SizedBox(height: 16),
+                                              Text(
+                                                "Data Berhasil Disimpan",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 20),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // Tutup popup
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: const Color.fromARGB(255, 33, 117, 84),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 32,
+                                                      vertical: 12),
+                                                ),
+                                                child: Text(
+                                                  "Lanjut",
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
                                 ),
-                                SizedBox(height: 20.h),
                                 GestureDetector(
-                                  onTap: () {},
-                                  child: Text(
-                                    "Ubah Password",
-                                    style: TextStyle(
-                                      color:
-                                          const Color.fromARGB(255, 4, 57, 101),
-                                      fontSize: 15.fSize,
-                                      fontWeight: FontWeight.w700,
-                                      decoration: TextDecoration.underline,
+                                  onTap: () {
+                                    onTapTxtIdCounter(context);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 8.h),
+                                    child: Text(
+                                      "Ubah Password",
+                                      style: TextStyle(
+                                        color: const Color.fromARGB(255, 4, 57, 101),
+                                        fontSize: 15.fSize,
+                                        fontWeight: FontWeight.w700,
+                                        decoration: TextDecoration.underline,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 SizedBox(height: 45.h),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -174,6 +237,56 @@ class DataProfileScreen extends StatelessWidget {
           child: _buildBottomNavigation(context),
         ),
       ),
+    );
+  }
+
+  // Method to show password change dialog
+  void onTapTxtIdCounter(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          title: Text("Ubah Password"),
+          content: SizedBox(
+            height: 200,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildPasswordField("Password Lama"),
+                _buildPasswordField("Password Baru"),
+                _buildPasswordField("Konfirmasi Password"),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Batal"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Simpan Password Baru"),
+              onPressed: () {
+                // Tambahkan logika untuk menyimpan password
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPasswordField(String label) {
+    return TextField(
+      decoration: InputDecoration(
+        labelText: label,
+      ),
+      obscureText: true,
     );
   }
 
