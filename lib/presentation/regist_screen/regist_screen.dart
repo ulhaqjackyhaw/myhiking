@@ -197,7 +197,7 @@ class RegistScreen extends StatelessWidget {
   if (password == confirmPassword) {
     // Kirim data ke server
     final response = await http.post(
-      Uri.parse('https://your-backend-url/api/register'),
+      Uri.parse('http://localhost:8000/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -221,6 +221,7 @@ class RegistScreen extends StatelessWidget {
       print('Password tidak sesuai');
     }
   }
+  
 
 
   /// Full name input field

@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -17,6 +19,7 @@ class LoginScreen extends StatelessWidget {
       child: const LoginScreen(),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -254,11 +257,75 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  /// Navigates to the berandaScreen when the action is triggered.
-  void onTapMasuk(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.berandaScreen,
-    );
+  // /// Navigates to the berandaScreen when the action is triggered.
+  // void onTapMasuk(BuildContext context) {
+  //   NavigatorService.pushNamed(
+  //     AppRoutes.berandaScreen,
+  //   );
+  // }
+
+    /// Navigates to the berandaScreen when the action is triggered.
+    void onTapMasuk(BuildContext context) async {
+      final emailController = context.read<LoginBloc>().state.lockoneController;
+      final passwordController = context.read<LoginBloc>().state.locationoneController;
+
+      if (emailController != null && passwordController != null) {
+        final email = emailController.text;
+        final password = passwordController.text;
+
+        // Endpoint URL
+        final url = Uri.parse("http://localhost:8000/api/login");
+
+        // Mengirim request ke server
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: jsonEncode({
+            "email": email,
+            "password": password,
+          }),
+        );
+
+        // Mengecek response dari server
+        if (response.statusCode == 200) {
+          // Parse response jika berhasil
+          final responseBody = jsonDecode(response.body);
+
+          // Misalnya cek token atau status login berhasil
+          if (responseBody['success'] == true) {
+            // Navigate to berandaScreen if login is successful
+            NavigatorService.pushNamed(AppRoutes.berandaScreen);
+          } else {
+            // Tampilkan pesan error jika gagal
+            _showErrorDialog(context, responseBody['message']);
+          }
+        } else {
+          _showErrorDialog(context, "Login failed, please try again.");
+        }
+      }
+    }
+
+    void _showErrorDialog(BuildContext context, String message) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(message),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   /// Navigates to the registScreen when the action is triggered.
@@ -267,4 +334,6 @@ class LoginScreen extends StatelessWidget {
       AppRoutes.registScreen,
     );
   }
-}
+
+
+
