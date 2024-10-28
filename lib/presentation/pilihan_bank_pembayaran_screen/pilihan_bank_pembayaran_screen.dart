@@ -231,12 +231,21 @@ class PilihanBankPembayaranScreen extends StatelessWidget {
           CustomElevatedButton(
             height: 48.h,
             text: "lbl_bayar_sekarang".tr.toUpperCase(),
+            onPressed: () {
+              onTapRincian(context);
+            },
             margin: EdgeInsets.only(bottom: 12.h),
             buttonStyle: CustomButtonStyles.fillPrimary,
-            buttonTextStyle: theme.textTheme.labelLarge!,
+            buttonTextStyle: CustomTextStyles.labelLarge13,
           ),
         ],
       ),
     );
   }
+}
+
+onTapRincian(BuildContext context) {
+  NavigatorService.pushNamed(
+    AppRoutes.rincianPembayaranUploadScreen,
+  );
 }

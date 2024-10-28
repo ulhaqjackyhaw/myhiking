@@ -120,7 +120,7 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
       builder: (_) => AlertDialog(
         content: Padding(
           padding: const EdgeInsets.all(
-              16.0), // Tambahkan padding di dalam konten pop-up
+              16.0), 
           child: PopUpLengkapiDataDiriDialog.builder(
             NavigatorService.navigatorKey.currentContext!,
           ),

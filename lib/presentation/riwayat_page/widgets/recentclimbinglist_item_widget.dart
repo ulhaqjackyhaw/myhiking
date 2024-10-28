@@ -36,8 +36,8 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
               spreadRadius: 2.h,
               blurRadius: 2.h,
               offset: const Offset(
-                0,
-                13,
+                4,
+                4,
               ),
             ),
           ],

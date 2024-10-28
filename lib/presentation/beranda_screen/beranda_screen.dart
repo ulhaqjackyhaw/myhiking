@@ -3,7 +3,6 @@ import 'package:myhiking/presentation/profile_screen/profile_screen.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import '../riwayat_page/riwayat_page.dart';
-import '../transaksi_page/transaksi_page.dart';
 import 'beranda_initial_page.dart';
 import 'bloc/beranda_bloc.dart';
 import 'models/beranda_model.dart';
@@ -95,7 +94,7 @@ class BerandaScreen extends StatelessWidget {
       case AppRoutes.profileScreen:
         return ProfileScreen.builder(context);
       default:
-        return DefaultWidget();
+        return const DefaultWidget();
     }
   }
 }

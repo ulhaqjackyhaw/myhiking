@@ -82,9 +82,11 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
       height: 40.h,
       title: Container(
         width: double.maxFinite,
-        margin: EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
+        margin:
+            EdgeInsets.symmetric(horizontal: 13.h), // Adjust margins as needed
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between items
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween, // Space between items
           children: [
             // Back Button
             IconButton(
@@ -254,7 +256,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
             ),
             boxShadow: [
               BoxShadow(
-                color: appTheme.black900.withOpacity(0.25),
+                color: appTheme.black900.withOpacity(0.025),
                 spreadRadius: 2.h,
                 blurRadius: 2.h,
                 offset: const Offset(0, 4),
@@ -298,7 +300,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                             height: 36.h,
                             width: 54.h,
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onPrimary,
+                              // color: theme.colorScheme.onPrimary,
                               borderRadius: BorderRadiusStyle.roundedBorder6,
                             ),
                             child: Stack(

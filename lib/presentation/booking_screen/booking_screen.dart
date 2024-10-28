@@ -357,7 +357,7 @@ class BookingScreen extends StatelessWidget {
         left: 8.h,
         right: 4.h,
       ),
-      buttonStyle: CustomButtonStyles.outlineBlueGray,
+      buttonStyle: CustomButtonStyles.fillPrimary,
       buttonTextStyle: CustomTextStyles.labelLarge13,
       onPressed: () {
         onTapContinueButton(context);
@@ -380,7 +380,7 @@ class BookingScreen extends StatelessWidget {
     DateTime? dateTime = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(1970),
+        firstDate: DateTime(2024),
         lastDate: DateTime(
             DateTime.now().year, DateTime.now().month, DateTime.now().day));
     if (dateTime != null) {

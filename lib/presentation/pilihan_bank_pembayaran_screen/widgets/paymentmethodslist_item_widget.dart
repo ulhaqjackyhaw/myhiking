@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_radio_button.dart';
 import '../models/paymentmethodslist_item_model.dart';
+import '../bloc/pilihan_bank_pembayaran_bloc.dart';
 
 // ignore_for_file: must_be_immutable
 class PaymentmethodslistItemWidget extends StatelessWidget {
@@ -17,17 +18,27 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 12.h,
+        vertical: 14.h,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimary,
-        borderRadius: BorderRadiusStyle.roundedBorder14,
+        borderRadius: BorderRadiusStyle.roundedBorder20,
+        border: Border.all(
+          color: theme.colorScheme.primary,
+          width: 0.75.h,
+        ),
         boxShadow: [
           BoxShadow(
-            color: appTheme.black900.withOpacity(0.04),
+            color: appTheme.blueGray40019,
             spreadRadius: 2.h,
-            blurRadius: 2.h,
-            offset: const Offset(0, 2),
-          )
+            blurRadius: 1.h,
+            offset: const Offset(
+              4,
+              4,
+            ),
+          ),
         ],
       ),
       child: Row(
@@ -35,8 +46,8 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
         children: [
           CustomImageView(
             imagePath: paymentmethodslistItemModelObj.gopayOne!,
-            height: 50.h,
-            width: 50.h,
+            height: 45.h,
+            width: 45.h,
             margin: EdgeInsets.only(left: 6.h),
           ),
           Align(
@@ -54,10 +65,10 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
           ),
           const Spacer(),
           CustomRadioButton(
-            value: "" ?? "",
+            value: ""??"",
             groupValue: paymentmethodslistItemModelObj.radioGroup!,
             onChange: (value) {
-              onTapRadioGroup?.call(value);
+              onTapRadioGroup??(value);
             },
           )
         ],

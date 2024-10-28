@@ -50,7 +50,8 @@ class PilihanBankPembayaranBloc
   List<PaymentmethodslistItemModel> fillPaymentmethodslistItemList() {
     return [
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgLogo, debitcard: "Gopay"),
+          gopayOne: ImageConstant.imgLogo, 
+          debitcard: "Gopay"),
       PaymentmethodslistItemModel(
           gopayOne: ImageConstant.imgPngwingCom1,
           debitcard: "Bank Central Asia"),
