@@ -87,9 +87,66 @@ class RouteScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(height: 16.h),
+                          SizedBox(height: 20.h),
+
+                          // Tambahkan Row untuk tombol "Jarak 5km" dan "Open Maps"
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: CustomElevatedButton(
+                                  height: 80.h,
+                                  text: "Jarak\n5km",
+                                  decoration: BoxDecoration(
+                                  borderRadius: BorderRadiusStyle.roundedBorder14,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: appTheme.black900.withOpacity(0.08),
+                                      spreadRadius: 1.h,
+                                      blurRadius: 2.h,
+                                      offset: const Offset(2, 2),
+                                    )
+                                  ],
+                                ),
+                                  buttonStyle: CustomButtonStyles.outlineBlack,
+                                  buttonTextStyle: CustomTextStyles.bodySmallGray50003.copyWith(fontSize: 15),
+                                  onPressed: () {
+                                    // Aksi untuk tombol Jarak 5km
+                                  },
+                                  leftIcon: Icon(Icons.location_on, color: theme.colorScheme.primary),
+                                ),
+                              ),
+                              SizedBox(width: 20.h), // Spasi antar tombol
+                              Expanded(
+                                child: CustomElevatedButton(
+                                  height: 80.h,
+                                  text: "Open\nMaps",
+                                  decoration: BoxDecoration(
+                                  borderRadius: BorderRadiusStyle.roundedBorder14,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: appTheme.black900.withOpacity(0.08),
+                                      spreadRadius: 1.h,
+                                      blurRadius: 2.h,
+                                      offset: const Offset(2, 2),
+                                    )
+                                  ],
+                                ),
+                                
+                                  buttonStyle: CustomButtonStyles.outlineBlack,
+                                  buttonTextStyle: CustomTextStyles.bodySmallGray50003.copyWith(fontSize: 15),
+                                  onPressed: () {
+                                    // Aksi untuk tombol Open Maps
+                                  },
+                                  leftIcon: Icon(Icons.map, color: theme.colorScheme.primary),
+                                  margin: EdgeInsets.only(right: 6.h),
+                                ),
+                              ),
+                            ],
+                          ),
+
                           _buildRouteListSection(context),
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 23.h),
                           CustomElevatedButton(
                             height: 56.h,
                             text: "msg_tata_tertib_dan".tr,

@@ -7,39 +7,40 @@ class RoutelistsectionItemModel extends Equatable {
   RoutelistsectionItemModel({
     this.tinggiOne,
     this.height,
-    this.zipcode,
+    // Hapus zipcode jika tidak perlu
+    // this.zipcode,
     // this.meters,
     // this.id,
   }) {
     tinggiOne = tinggiOne ?? ImageConstant.imgSettings;
-    height = height ?? "Jarak";
-    zipcode = zipcode ?? "5Km";
+    height = height ?? "Tinggi"; // Ubah nilai default jika diperlukan
+    // zipcode = zipcode ?? "5Km"; // Hapus atau ubah
     // meters = meters ?? "m";
     // id = id ?? "";
   }
 
   String? tinggiOne;
   String? height;
-  String? zipcode;
+  // String? zipcode; // Hapus baris ini
   // String? meters;
   // String? id;
 
   RoutelistsectionItemModel copyWith({
     String? tinggiOne,
     String? height,
-    String? zipcode,
+    // String? zipcode, // Hapus baris ini
     // String? meters,
     // String? id,
   }) {
     return RoutelistsectionItemModel(
       tinggiOne: tinggiOne ?? this.tinggiOne,
       height: height ?? this.height,
-      zipcode: zipcode ?? this.zipcode,
+      // zipcode: zipcode ?? this.zipcode, // Hapus baris ini
       // meters: meters ?? this.meters,
       // id: id ?? this.id,
     );
   }
 
   @override
-  List<Object?> get props => [tinggiOne, height, zipcode];
+  List<Object?> get props => [tinggiOne, height]; // Hapus zipcode dari props
 }

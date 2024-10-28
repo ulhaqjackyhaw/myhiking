@@ -27,18 +27,18 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
 
   List<RoutelistsectionItemModel> fillRoutelistsectionItemList() {
     return [
-      RoutelistsectionItemModel(
-        tinggiOne: ImageConstant.imgDownload,
-        height: "Jarak",
-        zipcode: "5km",
-        // meters: "m",
-      ),
-      RoutelistsectionItemModel(
-        tinggiOne: ImageConstant.imgSettings,
-        height: "Open",
-        zipcode: "Maps",
-        // meters: "km",
-      ),
+      // RoutelistsectionItemModel(
+      //   tinggiOne: ImageConstant.imgDownload,
+      //   height: "Jarak",
+      //   zipcode: "5km",
+      //   // meters: "m",
+      // ),
+      // RoutelistsectionItemModel(
+      //   tinggiOne: ImageConstant.imgSettings,
+      //   height: "Open",
+      //   zipcode: "Maps",
+      //   // meters: "km",
+      // ),
     ];
   }
 }
