@@ -15,49 +15,45 @@ class PilihanBankPembayaranBloc
     on<PaymentmethodslistItemEvent>(_paymentmethodslistItem);
   }
 
-  _onInitialize(
+  /// Initializes the state with a list of payment methods.
+  void _onInitialize(
     PilihanBankPembayaranInitialEvent event,
     Emitter<PilihanBankPembayaranState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        pilihanBankPembayaranModelObj:
-            state.pilihanBankPembayaranModelObj?.copyWith(
-          paymentmethodslistItemList: fillPaymentmethodslistItemList(),
-        ),
-      ),
+    final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
+      paymentmethodslistItemList: fillPaymentmethodslistItemList(),
     );
+
+    emit(state.copyWith(pilihanBankPembayaranModelObj: updatedModel));
   }
 
-  _paymentmethodslistItem(
+  /// Updates the selected payment method index based on the event.
+  void _paymentmethodslistItem(
     PaymentmethodslistItemEvent event,
     Emitter<PilihanBankPembayaranState> emit,
   ) {
-    List<PaymentmethodslistItemModel> newList =
-        List<PaymentmethodslistItemModel>.from(
-            state.pilihanBankPembayaranModelObj!.paymentmethodslistItemList);
-    newList[event.index] = newList[event.index].copyWith(
-      radioGroup: event.radioGroup,
+    final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
+      selectedPaymentMethodIndex: event.index,
     );
-    emit(
-      state.copyWith(
-        pilihanBankPembayaranModelObj: state.pilihanBankPembayaranModelObj
-            ?.copyWith(paymentmethodslistItemList: newList),
-      ),
-    );
+
+    emit(state.copyWith(pilihanBankPembayaranModelObj: updatedModel));
   }
 
+  /// Fills the list of available payment methods.
   List<PaymentmethodslistItemModel> fillPaymentmethodslistItemList() {
     return [
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgLogo, 
-          debitcard: "Gopay"),
+        gopayOne: ImageConstant.imgLogo,
+        debitcard: "Gopay",
+      ),
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgPngwingCom1,
-          debitcard: "Bank Central Asia"),
+        gopayOne: ImageConstant.imgPngwingCom1,
+        debitcard: "Bank Central Asia",
+      ),
       PaymentmethodslistItemModel(
-          gopayOne: ImageConstant.imgLogoBankBri,
-          debitcard: "Bank Rakyat Indonesia"),
+        gopayOne: ImageConstant.imgLogoBankBri,
+        debitcard: "Bank Rakyat Indonesia",
+      ),
     ];
   }
 }

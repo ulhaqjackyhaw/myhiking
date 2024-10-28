@@ -4,7 +4,7 @@ part of 'pilihan_bank_pembayaran_bloc.dart';
 /// PilihanBankPembayaran widget.
 ///
 /// Events must be immutable and implement the [Equatable] interface.
-class PilihanBankPembayaranEvent extends Equatable {
+abstract class PilihanBankPembayaranEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
@@ -12,17 +12,16 @@ class PilihanBankPembayaranEvent extends Equatable {
 /// Event that is dispatched when the PilihanBankPembayaran widget
 /// is first created.
 class PilihanBankPembayaranInitialEvent extends PilihanBankPembayaranEvent {
-  @override
-  List<Object?> get props => [];
+  // Constructor tidak perlu properti tambahan
 }
 
-// ignore_for_file: must_be_immutable
+/// Event that is dispatched when a payment method is selected.
 class PaymentmethodslistItemEvent extends PilihanBankPembayaranEvent {
-  PaymentmethodslistItemEvent({required this.index, this.radioGroup});
+  // Constructor dengan parameter yang required
+  PaymentmethodslistItemEvent({required this.index});
 
-  final int index;
-  final String? radioGroup;
+  final int index; // Index dari metode pembayaran yang dipilih
 
   @override
-  List<Object?> get props => [index, radioGroup];
+  List<Object?> get props => [index]; // Menyertakan index dalam props
 }

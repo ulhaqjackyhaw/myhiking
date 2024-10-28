@@ -1,26 +1,26 @@
 import 'package:equatable/equatable.dart';
 import '../../../core/app_export.dart';
 
-/// Class ini digunakan di layar [paymentmethodslist_item_widget].
-// ignore_for_file: must_be_immutable
+/// Model untuk metode pembayaran yang digunakan di widget [PaymentmethodslistItemWidget].
 class PaymentmethodslistItemModel extends Equatable {
+  // Constructor
   PaymentmethodslistItemModel({
-    this.gopayOne,
-    this.debitcard,
-    this.radioGroup,
-    this.id,
-  }) {
-    gopayOne = gopayOne ?? ImageConstant.imgLogo;
-    debitcard = debitcard ?? "Gopay";
-    radioGroup = radioGroup ?? "";
-    id = id ?? "";
-  }
+    String? gopayOne,
+    String? debitcard,
+    String? radioGroup,
+    String? id,
+  })  : gopayOne = gopayOne ?? ImageConstant.imgLogo,
+        debitcard = debitcard ?? "Gopay",
+        radioGroup = radioGroup ?? "",
+        id = id ?? "";
 
-  String? gopayOne;
-  String? debitcard;
-  String? radioGroup;
-  String? id;
+  // Properti dari model
+  final String gopayOne; // URL gambar untuk Gopay
+  final String debitcard; // Nama kartu debit
+  final String radioGroup; // Untuk grup radio
+  final String id; // ID unik untuk item
 
+  // Method untuk menyalin model dengan modifikasi
   PaymentmethodslistItemModel copyWith({
     String? gopayOne,
     String? debitcard,
