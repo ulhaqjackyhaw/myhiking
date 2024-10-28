@@ -135,9 +135,9 @@ class RiwayatPage extends StatelessWidget {
                       RecentclimbinglistItemModel();
               return RecentclimbinglistItemWidget(
                 model,
-                onTapRecentclimbing: () {
-                  onTapRecentclimbing(context);
-                },
+                // onTapRecentclimbing: () {
+                //   onTapRecentclimbing(context);
+                // },
               );
             },
           );

@@ -66,7 +66,7 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            _buildMendakiButton(context),
+            _buildStatusButton(context),
           ],
         ),
       ),
@@ -74,11 +74,43 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
   }
 
   /// Section Widget
+  // Widget _buildMendakiButton(BuildContext context) {
+  //   return CustomElevatedButton(
+  //     height: 26.h,
+  //     width: 98.h,
+  //     text: "lbl_mendaki".tr,
+  //     buttonStyle: CustomButtonStyles.outlineTeal,
+  //     buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+  //     onPressed: () {
+  //       // Menampilkan popup checkout
+  //       showDialog(
+  //         context: context,
+  //         builder: (_) => AlertDialog(
+  //           content: PopUpCheckoutDialog.builder(
+  //             context,
+  //           ),
+  //           backgroundColor: Colors.transparent,
+  //           contentPadding: EdgeInsets.zero,
+  //           insetPadding: EdgeInsets.zero,
+  //         ),
+  //       );
+  //     },
+      
+  //   );
+  // }
+
+  Widget _buildStatusButton(BuildContext context) {
+    if (recentclimbinglistItemModelObj.status == "Mendaki") {
+      return _buildMendakiButton(context);
+    } else {
+      return _buildSelesaiButton(context);
+    }
+  }
   Widget _buildMendakiButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
       width: 98.h,
-      text: "lbl_mendaki".tr,
+      text: "Mendaki".tr,
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
@@ -94,6 +126,19 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
             insetPadding: EdgeInsets.zero,
           ),
         );
+      },
+    );
+  }
+  Widget _buildSelesaiButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 26.h,
+      width: 98.h,
+      text: "Selesai".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal2,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Navigasi ke tiket screen
+        // NavigatorService.pushNamed(AppRoutes.tiketScreen);
       },
     );
   }

@@ -14,3 +14,13 @@ class RiwayatInitialEvent extends RiwayatEvent {
   @override
   List<Object?> get props => [];
 }
+
+
+class ChangeStatusEvent extends RiwayatEvent {
+  
+  final String riwayatId;
+
+  ChangeStatusEvent(this.riwayatId);
+  @override
+  List<Object?> get props => [riwayatId];
+}
