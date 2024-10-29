@@ -49,6 +49,16 @@ class CustomButtonStyles {
         padding: EdgeInsets.zero,
       );
 
+  // New gray button style for disabled state
+  static ButtonStyle get fillGray => ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey, // Gray background for disabled button
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(26.h),
+        ),
+        elevation: 0,
+        padding: EdgeInsets.zero,
+      );
+
   // Outline button styles
   static ButtonStyle get outlineBlack => ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.onPrimary,
@@ -113,6 +123,7 @@ class CustomButtonStyles {
         elevation: 16,
         padding: EdgeInsets.zero,
       );
+
   static ButtonStyle get outlineTeal1 => ElevatedButton.styleFrom(
         backgroundColor: appTheme.orange,
         shape: RoundedRectangleBorder(
@@ -122,6 +133,7 @@ class CustomButtonStyles {
         elevation: 16,
         padding: EdgeInsets.zero,
       );
+
   static ButtonStyle get outlineTeal2 => ElevatedButton.styleFrom(
         backgroundColor: appTheme.gray100,
         shape: RoundedRectangleBorder(
@@ -131,6 +143,7 @@ class CustomButtonStyles {
         elevation: 16,
         padding: EdgeInsets.zero,
       );
+
   static ButtonStyle get outlineTealTL12 => ElevatedButton.styleFrom(
         backgroundColor: appTheme.gray50003,
         shape: RoundedRectangleBorder(
@@ -143,10 +156,10 @@ class CustomButtonStyles {
 
   // Text button style
   static ButtonStyle get none => ButtonStyle(
-        backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-        elevation: WidgetStateProperty.all<double>(0),
-        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
-        side: WidgetStateProperty.all<BorderSide>(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        elevation: MaterialStateProperty.all<double>(0),
+        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero),
+        side: MaterialStateProperty.all<BorderSide>(
           const BorderSide(color: Colors.transparent),
         ),
       );
