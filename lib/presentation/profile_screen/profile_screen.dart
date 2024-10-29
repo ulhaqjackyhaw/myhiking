@@ -285,7 +285,7 @@ class ProfileScreen extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Logout"),
-          content: Text("Anda berhasil keluar."),
+          content: Text("Anda akan keluar."),
           actions: [
             TextButton(
               onPressed: () {
