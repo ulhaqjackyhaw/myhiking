@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:myhiking/presentation/landing_screen/landing_screen.dart';
 import 'package:myhiking/presentation/profile_screen/bloc/profile_bloc.dart';
 import '../../core/app_export.dart';
@@ -287,24 +287,27 @@ class ProfileScreen extends StatelessWidget {
         return AlertDialog(
           title: Text(
             "Keluar dari akun Anda?",
-            style: TextStyle(fontSize: 16, color: theme.colorScheme.primary), // Warna hijau dari palet
+            style: TextStyle(fontSize: 16, color: theme.colorScheme.primary),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                  Navigator.of(context).pop(); // Menutup pop-up
-                Navigator.of(context).popUntil((route) => route.isFirst);  // Kembali ke halaman awal atau login
-              },
-              child: Text(
-                "Keluar",
-                style: TextStyle(color: Colors.red), // Warna teks "Keluar" menjadi merah
-              ),
-            ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Tutup pop-up tanpa keluar
               },
               child: Text("Batalkan"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup pop-up
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    AppRoutes.loginScreen,
+                    (route) =>
+                        false); // Menuju ke halaman login dan menghapus stack
+              },
+              child: Text(
+                "Keluar",
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           ],
         );
