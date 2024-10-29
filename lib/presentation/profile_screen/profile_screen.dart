@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/landing_screen/landing_screen.dart';
 import 'package:myhiking/presentation/profile_screen/bloc/profile_bloc.dart';
 import '../../core/app_export.dart';
-import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_icon_button.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -34,11 +34,6 @@ class ProfileScreen extends StatelessWidget {
                 _buildProfileSettings(context),
               ],
             ),
-            // ),
-            // bottomNavigationBar: SizedBox(
-            //   width: double.maxFinite,
-            //   child: _buildBottomNavigation(context),
-            // ),
           ),
         ));
       },
@@ -223,7 +218,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           GestureDetector(
-              onTap: () => onTapTransaction(context), // Fungsi navigasi
+              onTap: () => onLogout(context),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 12.h),
                 decoration: BoxDecoration(
@@ -277,13 +272,31 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  /// Navigates to the dataProfileScreen when the action is triggered.
   void onTapProfileone(BuildContext context) {
     NavigatorService.pushNamed(AppRoutes.dataProfileScreen);
   }
 
-  // Fungsi untuk navigasi ke halaman Transaksi
   void onTapTransaction(BuildContext context) {
     NavigatorService.pushNamed(AppRoutes.transaksiPage);
+  }
+  void onLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Logout"),
+          content: Text("Anda berhasil keluar."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup pop-up
+                Navigator.of(context).popUntil((route) => route.isFirst);  // Kembali ke halaman awal atau login
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
