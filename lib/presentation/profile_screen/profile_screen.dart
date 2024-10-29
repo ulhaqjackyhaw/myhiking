@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:myhiking/presentation/landing_screen/landing_screen.dart';
 import 'package:myhiking/presentation/profile_screen/bloc/profile_bloc.dart';
 import '../../core/app_export.dart';
@@ -165,7 +165,7 @@ class ProfileScreen extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
           GestureDetector(
-            onTap: () => onTapTransaction(context), // Fungsi navigasi
+            onTap: () => onTapTransaction(context),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.h, vertical: 12.h),
               decoration: BoxDecoration(
@@ -279,20 +279,32 @@ class ProfileScreen extends StatelessWidget {
   void onTapTransaction(BuildContext context) {
     NavigatorService.pushNamed(AppRoutes.transaksiPage);
   }
+
   void onLogout(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Logout"),
-          content: Text("Anda akan keluar dari akun ini."),
+          title: Text(
+            "Keluar dari akun Anda?",
+            style: TextStyle(fontSize: 16, color: theme.colorScheme.primary), // Warna hijau dari palet
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Menutup pop-up
+                  Navigator.of(context).pop(); // Menutup pop-up
                 Navigator.of(context).popUntil((route) => route.isFirst);  // Kembali ke halaman awal atau login
               },
-              child: Text("OK"),
+              child: Text(
+                "Keluar",
+                style: TextStyle(color: Colors.red), // Warna teks "Keluar" menjadi merah
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup pop-up tanpa keluar
+              },
+              child: Text("Batalkan"),
             ),
           ],
         );
