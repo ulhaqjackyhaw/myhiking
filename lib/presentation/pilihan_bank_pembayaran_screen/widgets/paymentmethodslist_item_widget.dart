@@ -18,33 +18,31 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        onTapRadioGroup?.call(paymentmethodslistItemModelObj.debitcard!);
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 12.h,
-          vertical: 14.h,
-        ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.onPrimary,
-          borderRadius: BorderRadiusStyle.roundedBorder20,
-          border: Border.all(
-            color: theme.colorScheme.primary,
-            width: 0.75.h,
+        onTap: () {
+          onTapRadioGroup?.call(paymentmethodslistItemModelObj.debitcard!);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12.h,
+            vertical: 14.h,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: appTheme.blueGray40019,
-              spreadRadius: 2.h,
-              blurRadius: 1.h,
-              offset: const Offset(4, 4),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.onPrimary,
+            borderRadius: BorderRadiusStyle.roundedBorder20,
+            border: Border.all(
+              color: theme.colorScheme.primary,
+              width: 0.75.h,
             ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+            boxShadow: [
+              BoxShadow(
+                color: appTheme.blueGray40019,
+                spreadRadius: 2.h,
+                blurRadius: 1.h,
+                offset: const Offset(4, 4),
+              ),
+            ],
+          ),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             CustomImageView(
               imagePath: paymentmethodslistItemModelObj.gopayOne!,
               height: 45.h,
@@ -65,21 +63,36 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            CustomRadioButton(
-              value: paymentmethodslistItemModelObj
-                  .debitcard!, // Nilai unik sebagai value
-              groupValue: isSelected
-                  ? paymentmethodslistItemModelObj.debitcard
-                  : null, // Cocokkan dengan yang dipilih
-              onChange: (value) {
-                if (onTapRadioGroup != null) {
-                  onTapRadioGroup!(value); // Panggil callback saat dipilih
-                }
-              },
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 17.h,
+                  height: 17.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.transparent,
+                    border: Border.all(
+                      color: theme.colorScheme.primary,
+                      width: 1.5.h,
+                    ),
+                  ),
+                ),
+                CustomRadioButton(
+                  value: paymentmethodslistItemModelObj
+                      .debitcard!, // Nilai unik sebagai value
+                  groupValue: isSelected
+                      ? paymentmethodslistItemModelObj.debitcard
+                      : null, // Cocokkan dengan yang dipilih
+                  onChange: (value) {
+                    if (onTapRadioGroup != null) {
+                      onTapRadioGroup!(value); // Panggil callback saat dipilih
+                    }
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ]),
+        ));
   }
 }

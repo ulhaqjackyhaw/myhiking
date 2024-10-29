@@ -91,78 +91,117 @@ class RouteScreen extends StatelessWidget {
 
                           // Tambahkan Row untuk tombol "Jarak 5km" dan "Open Maps"
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Expanded(
                                 child: CustomElevatedButton(
-                                  height: 80.h,
-                                  text: "Jarak\n5km",
-                                  decoration: BoxDecoration(
-                                  borderRadius: BorderRadiusStyle.roundedBorder14,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: appTheme.black900.withOpacity(0.08),
-                                      spreadRadius: 1.h,
-                                      blurRadius: 2.h,
-                                      offset: const Offset(2, 2),
-                                    )
-                                  ],
-                                ),
-                                  buttonStyle: CustomButtonStyles.outlineBlack,
-                                  buttonTextStyle: CustomTextStyles.bodySmallGray50003.copyWith(fontSize: 15),
-                                  onPressed: () {
-                                    // Aksi untuk tombol Jarak 5km
-                                  },
-                                  leftIcon: Icon(Icons.location_on, color: theme.colorScheme.primary),
-                                ),
+                                    height: 75.h,
+                                    text: "",
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 135, 171, 136),
+                                      borderRadius:
+                                          BorderRadiusStyle.roundedBorder14,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: appTheme.black900
+                                              .withOpacity(0.08),
+                                          spreadRadius: 1.h,
+                                          blurRadius: 2.h,
+                                          offset: const Offset(2, 2),
+                                        )
+                                      ],
+                                    ),
+                                    buttonStyle:
+                                        CustomButtonStyles.outlineBlack,
+                                    buttonTextStyle: CustomTextStyles
+                                        .bodySmallGray50003
+                                        .copyWith(fontSize: 15),
+                                    leftIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.location_on,
+                                            color: theme.colorScheme.primary,
+                                            size: 35),
+                                        const SizedBox(
+                                            width:
+                                                13.0), // Jarak horizontal antara icon dan teks
+                                        Text("Jarak\n5km",
+                                            style: CustomTextStyles
+                                                .labelMediumPrimary10
+                                                .copyWith(fontSize: 17)),
+                                      ],
+                                    )),
                               ),
                               SizedBox(width: 20.h), // Spasi antar tombol
                               Expanded(
                                 child: CustomElevatedButton(
-                                  height: 80.h,
-                                  text: "Open\nMaps",
-                                  decoration: BoxDecoration(
-                                  borderRadius: BorderRadiusStyle.roundedBorder14,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: appTheme.black900.withOpacity(0.08),
-                                      spreadRadius: 1.h,
-                                      blurRadius: 2.h,
-                                      offset: const Offset(2, 2),
-                                    )
-                                  ],
-                                ),
-                                
-                                  buttonStyle: CustomButtonStyles.outlineBlack,
-                                  buttonTextStyle: CustomTextStyles.bodySmallGray50003.copyWith(fontSize: 15),
-                                  onPressed: () {
-                                    // Aksi untuk tombol Open Maps
-                                  },
-                                  leftIcon: Icon(Icons.map, color: theme.colorScheme.primary),
-                                  margin: EdgeInsets.only(right: 6.h),
-                                ),
+                                    height: 75.h,
+                                    text: "",
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                          255, 135, 171, 136),
+                                      borderRadius:
+                                          BorderRadiusStyle.roundedBorder14,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: appTheme.black900
+                                              .withOpacity(0.08),
+                                          spreadRadius: 1.h,
+                                          blurRadius: 2.h,
+                                          offset: const Offset(2, 2),
+                                        )
+                                      ],
+                                    ),
+                                    buttonStyle:
+                                        CustomButtonStyles.outlineBlack,
+                                    buttonTextStyle: CustomTextStyles
+                                        .bodySmallGray50003
+                                        .copyWith(fontSize: 15),
+                                    onPressed: () {
+                                      // Aksi untuk tombol Open Maps
+                                    },
+                                    leftIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(Icons.map,
+                                            color: theme.colorScheme.primary,
+                                            size: 35),
+                                        const SizedBox(
+                                            width:
+                                                13.0), // Jarak horizontal antara icon dan teks
+                                        Text("Open\nMaps",
+                                            style: CustomTextStyles
+                                                .labelMediumPrimary10
+                                                .copyWith(fontSize: 17)),
+                                      ],
+                                    )),
                               ),
                             ],
                           ),
 
                           _buildRouteListSection(context),
-                          SizedBox(height: 23.h),
+                          SizedBox(height: 18.h),
                           CustomElevatedButton(
                             height: 56.h,
                             text: "msg_tata_tertib_dan".tr,
-                            margin: EdgeInsets.only(right: 6.h),
+                            margin: EdgeInsets.only(right: 2.h),
                             decoration: BoxDecoration(
-                            color: theme.colorScheme.onPrimary,
-                            borderRadius: BorderRadiusStyle.roundedBorder14,
-                            boxShadow: [
-                              BoxShadow(
-                                color: appTheme.black900.withOpacity(0.08),
-                                spreadRadius: 1.h,
-                                blurRadius: 2.h,
-                                offset: const Offset(2, 2),
-                              )
-                            ],
-                          ),
+                              color: theme.colorScheme.onPrimary,
+                              borderRadius: BorderRadiusStyle.roundedBorder14,
+                              // border: Border.all(
+                              //   color: theme.colorScheme.primaryContainer,
+                              //   width: 1.h,
+                              // ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: appTheme.black900.withOpacity(0.08),
+                                  spreadRadius: 1.h,
+                                  blurRadius: 2.h,
+                                  offset: const Offset(2, 2),
+                                )
+                              ],
+                            ),
                             leftIcon: Container(
                               margin: EdgeInsets.only(right: 16.h),
                               child: CustomImageView(
@@ -183,7 +222,7 @@ class RouteScreen extends StatelessWidget {
                           CustomElevatedButton(
                             height: 75.h,
                             text: "lbl_pesan_sekarang".tr,
-                            margin: EdgeInsets.only(right: 6.h),
+                            margin: EdgeInsets.only(right: 2.h),
                             buttonStyle: CustomButtonStyles.outlineBlackTL14,
                             buttonTextStyle: CustomTextStyles.titleLarge_1,
                             onPressed: () {
