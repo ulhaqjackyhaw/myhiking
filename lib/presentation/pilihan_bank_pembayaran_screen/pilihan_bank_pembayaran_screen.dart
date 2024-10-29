@@ -182,21 +182,27 @@ class _PilihanBankPembayaranScreenState
     );
   }
 
-  Widget _buildPaymentButtonSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 18.h),
-      child: CustomElevatedButton(
-        height: 48.h,
-        text: "lbl_bayar_sekarang".tr.toUpperCase(),
-        onPressed: () {
-          onTapRincian(context);
-        },
-        margin: EdgeInsets.only(bottom: 12.h),
-        buttonStyle: CustomButtonStyles.fillPrimary,
-        buttonTextStyle: CustomTextStyles.labelLarge13,
-      ),
-    );
-  }
+Widget _buildPaymentButtonSection(BuildContext context) {
+  bool isBankSelected = selectedDebitCard != null;
+
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 18.h),
+    child: CustomElevatedButton(
+      height: 48.h,
+      text: "lbl_bayar_sekarang".tr.toUpperCase(),
+      onPressed: isBankSelected ? () {
+        onTapRincian(context);
+      } : null, // Disable button if no bank is selected
+      margin: EdgeInsets.only(bottom: 12.h),
+      buttonStyle: isBankSelected 
+          ? CustomButtonStyles.fillPrimary // Primary color if bank is selected
+          : CustomButtonStyles.fillGray, // Gray color if no bank is selected
+      buttonTextStyle: CustomTextStyles.labelLarge13,
+    ),
+  );
+}
+
+
 }
 
 void onTapRincian(BuildContext context) {
