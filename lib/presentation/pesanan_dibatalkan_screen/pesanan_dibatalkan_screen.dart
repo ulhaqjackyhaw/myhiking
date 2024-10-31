@@ -117,13 +117,15 @@ class PesananDibatalkanScreen extends StatelessWidget {
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      title: AppbarSubtitle(
-        text: "lbl_dibatalkan".tr,
-        margin: EdgeInsets.only(right: 123.h),
+    return AppBar(
+      title: Center(
+        child: AppbarSubtitle(
+          text: "lbl_dibatalkan".tr, // Tambahkan textAlign sebagai parameter
+        ),
       ),
     );
   }
+
 
   /// Section Widget
   Widget _buildProgressSection(BuildContext context) {
@@ -138,7 +140,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
           SizedBox(
             width: double.maxFinite,
             child: AnotherStepper(
-              iconHeight: 24,
+              iconHeight: 26,
               iconWidth: 26,
               stepperDirection: Axis.horizontal,
               activeIndex: 0,
@@ -146,7 +148,7 @@ class PesananDibatalkanScreen extends StatelessWidget {
               stepperList: [
                 StepperData(
                   iconWidget: Container(
-                    height: 24.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
@@ -166,15 +168,11 @@ class PesananDibatalkanScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 24.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       borderRadius: BorderRadiusStyle.roundedBorder14,
-                      border: Border.all(
-                        color: theme.colorScheme.primary,
-                        width: 2.h,
-                      ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -190,15 +188,11 @@ class PesananDibatalkanScreen extends StatelessWidget {
                 ),
                 StepperData(
                   iconWidget: Container(
-                    height: 24.h,
+                    height: 26.h,
                     width: 26.h,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       borderRadius: BorderRadiusStyle.roundedBorder14,
-                      border: Border.all(
-                        color: theme.colorScheme.primary,
-                        width: 2.h,
-                      ),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
