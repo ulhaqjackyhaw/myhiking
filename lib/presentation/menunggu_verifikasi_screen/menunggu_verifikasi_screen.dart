@@ -28,143 +28,123 @@ class MenungguVerifikasiScreen extends StatelessWidget {
         return SafeArea(
           child: Scaffold(
             backgroundColor: appTheme.gray5001,
-            body: SizedBox(
+            body: Container(
               width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.only(
-                    left: 12.h,
-                    top: 2.h,
-                    right: 12.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.h,
+                vertical: 20.h, // Added vertical padding for more space at the top
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  _buildVerificationHeader(context),
+                  SizedBox(height: 18.h),
+                  _buildBookingDetailsSection(context),
+                  SizedBox(height: 8.h),
+                  Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.h,
+                      vertical: 14.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onPrimary,
+                      borderRadius: BorderRadiusStyle.roundedBorder14,
+                      boxShadow: [
+                        BoxShadow(
+                          color: appTheme.black900.withOpacity(0.04),
+                          spreadRadius: 2.h,
+                          blurRadius: 2.h,
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "msg_menunggu_verifikasi".tr,
+                          style: CustomTextStyles.titleLargeBlack900,
+                        ),
+                        SizedBox(height: 20.h),
+                        CustomImageView(
+                          imagePath: ImageConstant.imgVectorPrimary,
+                          height: 138.h,
+                          width: 138.h,
+                        ),
+                        SizedBox(height: 38.h),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 14.h),
+                          child: _buildOrderDateRow(
+                            context,
+                            tanggalpesanan: "lbl_no_pesanan".tr,
+                            date: "lbl_12312312323".tr,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 14.h),
+                          child: _buildOrderDateRow(
+                            context,
+                            tanggalpesanan: "msg_tanggal_pesanan".tr,
+                            date: "lbl_20_10_2024".tr,
+                          ),
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 14.h),
+                          child: _buildOrderDateRow(
+                            context,
+                            tanggalpesanan: "lbl_nama_pemesan".tr,
+                            date: "lbl_pratista_s".tr,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 14.h),
+                          child: _buildOrderDateRow(
+                            context,
+                            tanggalpesanan: "lbl_total_anggota".tr,
+                            date: "lbl_5".tr,
+                          ),
+                        ),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.symmetric(horizontal: 14.h),
+                          child: _buildOrderDateRow(
+                            context,
+                            tanggalpesanan: "lbl_total_harga".tr,
+                            date: "lbl_25_000".tr,
+                          ),
+                        ),
+                        SizedBox(height: 28.h), // Adjusted height to fit within screen
+                        Text(
+                          "msg_pesanan_akan_diverifikasi".tr,
+                          style: CustomTextStyles.labelMediumGray50002,
+                        ),
+                        SizedBox(height: 10.h),
+                        CustomElevatedButton(
+                          height: 48.h,
+                          text: "msg_batalkan_pesanan".tr.toUpperCase(),
+                          buttonStyle: CustomButtonStyles.fillPrimary,
+                          buttonTextStyle: theme.textTheme.labelLarge!,
+                        ),
+                        SizedBox(height: 16.h),
+                        CustomOutlinedButton(
+                          text: "lbl_kembali_ke_home".tr.toUpperCase(),
+                          onPressed: () {
+                            onTapKembalikehome(context);
+                          },
+                        ),
+                        SizedBox(height: 6.h),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      _buildVerificationHeader(context),
-                      SizedBox(height: 18.h),
-                      _buildBookingDetailsSection(context),
-                      SizedBox(height: 8.h),
-                      Container(
-                        width: double.maxFinite,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.h,
-                          vertical: 14.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onPrimary,
-                          borderRadius: BorderRadiusStyle.roundedBorder14,
-                          boxShadow: [
-                            BoxShadow(
-                              color: appTheme.black900.withOpacity(0.04),
-                              spreadRadius: 2.h,
-                              blurRadius: 2.h,
-                              offset: Offset(0, 2),
-                            )
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "msg_menunggu_verifikasi".tr,
-                              style: CustomTextStyles.titleLargeBlack900,
-                            ),
-                            SizedBox(height: 20.h),
-                            CustomImageView(
-                              imagePath: ImageConstant.imgVectorPrimary,
-                              height: 138.h,
-                              width: 138.h,
-                            ),
-                            SizedBox(height: 38.h),
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(
-                                left: 14.h,
-                                right: 20.h,
-                              ),
-                              child: _buildOrderDateRow(
-                                context,
-                                tanggalpesanan: "lbl_no_pesanan".tr,
-                                date: "lbl_12312312323".tr,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(
-                                left: 12.h,
-                                right: 20.h,
-                              ),
-                              child: _buildOrderDateRow(
-                                context,
-                                tanggalpesanan: "msg_tanggal_pesanan".tr,
-                                date: "lbl_20_10_2024".tr,
-                              ),
-                            ),
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(
-                                left: 14.h,
-                                right: 20.h,
-                              ),
-                              child: _buildOrderDateRow(
-                                context,
-                                tanggalpesanan: "lbl_nama_pemesan".tr,
-                                date: "lbl_pratista_s".tr,
-                              ),
-                            ),
-                            SizedBox(height: 2.h),
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(
-                                left: 12.h,
-                                right: 20.h,
-                              ),
-                              child: _buildOrderDateRow(
-                                context,
-                                tanggalpesanan: "lbl_total_anggota".tr,
-                                date: "lbl_5".tr,
-                              ),
-                            ),
-                            Container(
-                              width: double.maxFinite,
-                              margin: EdgeInsets.only(
-                                left: 14.h,
-                                right: 20.h,
-                              ),
-                              child: _buildOrderDateRow(
-                                context,
-                                tanggalpesanan: "lbl_total_harga".tr,
-                                date: "lbl_25_000".tr,
-                              ),
-                            ),
-                            SizedBox(height: 68.h),
-                            Text(
-                              "msg_pesanan_akan_diverifikasi".tr,
-                              style: CustomTextStyles.labelMediumGray50002,
-                            ),
-                            SizedBox(height: 10.h),
-                            CustomElevatedButton(
-                              height: 48.h,
-                              text: "msg_batalkan_pesanan".tr.toUpperCase(),
-                              buttonStyle: CustomButtonStyles.fillPrimary,
-                              buttonTextStyle: theme.textTheme.labelLarge!,
-                            ),
-                            SizedBox(height: 16.h),
-                            CustomOutlinedButton(
-                              text: "lbl_kembali_ke_home".tr.toUpperCase(),
-                              onPressed: () {
-                                onTapKembalikehome(context);
-                              },
-                            ),
-                            SizedBox(height: 6.h)
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.h)
-                    ],
-                  ),
-                ),
+                  SizedBox(height: 12.h),
+                ],
               ),
             ),
           ),
@@ -175,30 +155,36 @@ class MenungguVerifikasiScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildVerificationHeader(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Colors.transparent, // Temporary background color for visibility
       width: double.maxFinite,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgArrowDown,
-            height: 18.h,
-            width: 18.h,
-            onTap: () {
-              onTapImgArrowdownone(context);
-            },
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: EdgeInsets.only(right: 120.h),
-              child: Text(
-                "lbl_verifikasi".tr,
-                style: CustomTextStyles.titleMediumGray900,
+          Padding(
+            padding: EdgeInsets.only(left: 8.0), // Add some padding if needed
+            child: GestureDetector(
+              onTap: () {
+                onTapImgArrowdownone(context);
+              },
+              child: Icon(
+                Icons.arrow_back, // Use a default back arrow icon for testing
+                size: 24, // Set size explicitly
+                color: Colors.black, // Ensure visibility
               ),
             ),
-          )
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(right: 24.0), // Adjust padding if needed
+                child: Text(
+                  "lbl_verifikasi".tr,
+                  style: CustomTextStyles.titleMediumGray900,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -283,7 +269,7 @@ class MenungguVerifikasiScreen extends StatelessWidget {
           Text(
             "lbl_detail_pesanan".tr,
             style: CustomTextStyles.titleMediumGray900_1,
-          )
+          ),
         ],
       ),
     );
@@ -315,14 +301,14 @@ class MenungguVerifikasiScreen extends StatelessWidget {
   }
 
   /// Navigates to the berandaScreen when the action is triggered.
-  onTapImgArrowdownone(BuildContext context) {
+  void onTapImgArrowdownone(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
     );
   }
 
   /// Navigates to the berandaScreen when the action is triggered.
-  onTapKembalikehome(BuildContext context) {
+  void onTapKembalikehome(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
     );
