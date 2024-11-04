@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:myhiking/presentation/pesanan_dibatalkan_screen/bloc/pesanan_dibatalkan_bloc.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -129,8 +130,11 @@ class MenungguVerifikasiScreen extends StatelessWidget {
                         CustomElevatedButton(
                           height: 48.h,
                           text: "msg_batalkan_pesanan".tr.toUpperCase(),
-                          buttonStyle: CustomButtonStyles.fillPrimary,
+                          buttonStyle: CustomButtonStyles.fillRed2,
                           buttonTextStyle: theme.textTheme.labelLarge!,
+                          onPressed: () {
+                            onTapBatal(context);
+                          },
                         ),
                         SizedBox(height: 16.h),
                         CustomOutlinedButton(
@@ -311,6 +315,38 @@ class MenungguVerifikasiScreen extends StatelessWidget {
   void onTapKembalikehome(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
+    );
+  }
+
+  void onTapBatal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Apakah Anda yakin ingin membatalkan pesanan ini?",
+            style: TextStyle(fontSize: 16, color: Colors.black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Tutup pop-up tanpa keluar
+              },
+              child: Text("TIDAK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Menutup pop-up
+                Navigator.of(context).pushNamed(AppRoutes.pesananDibatalkanScreen);
+                },
+              child: Text(
+                "YA",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

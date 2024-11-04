@@ -49,6 +49,14 @@ class CustomButtonStyles {
         padding: EdgeInsets.zero,
       );
 
+  static ButtonStyle get fillRed2 => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.red700,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(26.h),
+        ),
+        elevation: 0,
+        padding: EdgeInsets.zero,
+      );
   // New gray button style for disabled state
   static ButtonStyle get fillGray => ElevatedButton.styleFrom(
         backgroundColor: Colors.grey, // Gray background for disabled button
