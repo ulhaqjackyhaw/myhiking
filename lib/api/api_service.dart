@@ -9,8 +9,8 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getUser(String token) async {
-    print(
-        "Token: $token"); // Log token untuk memverifikasi nilai yang digunakan
+    // print(
+    //     "Token: $token"); // Log token untuk memverifikasi nilai yang digunakan
 
     final url = Uri.parse('http://localhost:8000/api/user');
     final response = await http.get(
