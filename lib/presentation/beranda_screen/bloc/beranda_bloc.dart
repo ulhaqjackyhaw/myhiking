@@ -44,50 +44,13 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);
+      // print(jsonData); // Menampilkan data JSON yang diterima
+
       return jsonData.map((data) => HomelistItemModel.fromJson(data)).toList();
     } else {
       throw Exception('Failed to load data');
     }
   }
 
-  // Future<void> _onInitialize(
-  //   BerandaInitialEvent event,
-  //   Emitter<BerandaState> emit,
-  // ) async {
-  //   emit(
-  //     state.copyWith(
-  //       searchController: TextEditingController(),
-  //     ),
-  //   );
-  //   emit(
-  //     state.copyWith(
-  //       berandaInitialModelObj: state.berandaInitialModelObj?.copyWith(
-  //         homelistItemList: fillHomelistItemList(),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // List<HomelistItemModel> fillHomelistItemList() {
-  //   return [
-  //     HomelistItemModel(
-  //       malangcentral: "Malang, Central Java, Indonesia",
-  //       image: ImageConstant.imgImage,
-  //       gunungmerbabu: "Gunung Merbabu",
-  //       jawatengah: "Jawa Tengah",
-  //     ),
-  //     HomelistItemModel(
-  //       malangcentral: "Pemalang, Central Java, Indonesia",
-  //       image: ImageConstant.imgImage156x316,
-  //       gunungmerbabu: "Gunung Slamet",
-  //       jawatengah: "Jawa Tengah",
-  //     ),
-  //     HomelistItemModel(
-  //       malangcentral: "Malang, Central Java, Indonesia",
-  //       image: ImageConstant.imgImage158x314,
-  //       gunungmerbabu: "Gunung Sumbing",
-  //       jawatengah: "Jawa Tengah",
-  //     ),
-  //   ];
-  // }
+  
 }

@@ -7,28 +7,33 @@ class BerandaState extends Equatable {
     this.searchController,
     this.berandaInitialModelObj,
     this.berandaModelObj,
+    this.errorMessage, // Menambahkan errorMessage
   });
 
   TextEditingController? searchController;
   BerandaModel? berandaModelObj;
   BerandaInitialModel? berandaInitialModelObj;
+  String? errorMessage; // Field untuk menyimpan pesan error
 
   @override
   List<Object?> get props => [
         searchController,
         berandaInitialModelObj,
         berandaModelObj,
+        errorMessage,
       ];
 
   BerandaState copyWith({
     TextEditingController? searchController,
     BerandaInitialModel? berandaInitialModelObj,
     BerandaModel? berandaModelObj,
+    String? errorMessage,
   }) {
     return BerandaState(
       searchController: searchController ?? this.searchController,
       berandaInitialModelObj: berandaInitialModelObj ?? this.berandaInitialModelObj,
       berandaModelObj: berandaModelObj ?? this.berandaModelObj,
+      errorMessage: errorMessage ?? this.errorMessage, // Update copyWith
     );
   }
 }
