@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:myhiking/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -19,7 +21,6 @@ class LoginScreen extends StatelessWidget {
       child: const LoginScreen(),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -264,68 +265,64 @@ class LoginScreen extends StatelessWidget {
   //   );
   // }
 
-    /// Navigates to the berandaScreen when the action is triggered.
-    void onTapMasuk(BuildContext context) async {
-      final emailController = context.read<LoginBloc>().state.lockoneController;
-      final passwordController = context.read<LoginBloc>().state.locationoneController;
+  /// Navigates to the berandaScreen when the action is triggered.
+  void onTapMasuk(BuildContext context) async {
+    final emailController = context.read<LoginBloc>().state.lockoneController;
+    final passwordController =
+        context.read<LoginBloc>().state.locationoneController;
 
-      if (emailController != null && passwordController != null) {
-        final email = emailController.text;
-        final password = passwordController.text;
+    if (emailController != null && passwordController != null) {
+      final email = emailController.text;
+      final password = passwordController.text;
 
-        // Endpoint URL
-        final url = Uri.parse("http://localhost:8000/api/login");
+      // Endpoint URL
+      final url = Uri.parse("http://localhost:8000/api/login");
 
-        // Mengirim request ke server
-        final response = await http.post(
-          url,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: jsonEncode({
-            "email": email,
-            "password": password,
-          }),
-        );
+      // Mengirim request ke server
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "email": email,
+          "password": password,
+        }),
+      );
 
-        // Mengecek response dari server
-        if (response.statusCode == 200) {
-          // Parse response jika berhasil
-          final responseBody = jsonDecode(response.body);
+      // Mengecek response dari server
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', responseData['token']);
 
-          // Misalnya cek token atau status login berhasil
-          if (responseBody['success'] == true) {
-            // Navigate to berandaScreen if login is successful
-            NavigatorService.pushNamed(AppRoutes.berandaScreen);
-          } else {
-            // Tampilkan pesan error jika gagal
-            _showErrorDialog(context, responseBody['message']);
-          }
-        } else {
-          _showErrorDialog(context, "Login failed, please try again.");
-        }
+        // Navigate to berandaScreen after successful login
+        NavigatorService.pushNamed(AppRoutes.berandaScreen);
+      } else {
+        final errorData = jsonDecode(response.body);
+        _showErrorDialog(context, errorData['data'] ?? errorData);
       }
     }
+  }
 
-    void _showErrorDialog(BuildContext context, String message) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text(message),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Error"),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   /// Navigates to the registScreen when the action is triggered.
@@ -334,6 +331,4 @@ class LoginScreen extends StatelessWidget {
       AppRoutes.registScreen,
     );
   }
-
-
-
+}
