@@ -158,49 +158,6 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
     );
   }
 
-//   Widget _buildRouteList(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 24.h),
-//       child: FutureBuilder<List<String>>(
-//         future: _jalurFuture,
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(child: CircularProgressIndicator()); // Menunggu data
-//           } else if (snapshot.hasError) {
-//             return Center(
-//                 child: Text(
-//                     'Error: ${snapshot.error}')); // Menampilkan error jika ada
-//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-//             return Center(
-//                 child: Text('No routes available')); // Jika tidak ada data
-//           }
-
-//           // Jika data tersedia, bangun list jalur
-//           List<String> routes = snapshot.data!;
-
-//           return Column(
-//             children: routes.map((route) {
-//               return Padding(
-//                 padding: EdgeInsets.only(bottom: 8.h),
-//                 child: SizedBox(
-//                   width: double.maxFinite,
-//                   child: _buildRouteTwo(
-//                     context,
-//                     jalurGuciOne: route, // Menampilkan nama jalur dari database
-//                     onTapRouteTwo: () {
-//                       onTapRouteThree(context);
-//                     },
-//                   ),
-//                 ),
-//               );
-//             }).toList(),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
   /// Section Widget
   Widget _buildBackgroundStack(BuildContext context) {
     return Align(
@@ -329,8 +286,7 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
 
   Widget _buildRouteTwo(
     BuildContext context, {
-    required String jalurGuciOne,
-    required bool isSelected, // Tambahkan parameter isSelected
+    // required String jalurGuciOne,
     Function? onTapRouteTwo,
   }) {
     return GestureDetector(
@@ -340,17 +296,7 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primary
-                  .withOpacity(0.1) // Highlight jika dipilih
-              : theme.colorScheme.onPrimary,
           borderRadius: BorderRadiusStyle.roundedBorder6,
-          border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary // Warna border berbeda jika dipilih
-                : theme.colorScheme.outline,
-            width: 1.h,
-          ),
           boxShadow: [
             BoxShadow(
               color: appTheme.blueGray40019,
@@ -371,15 +317,9 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
               margin: EdgeInsets.only(left: 6.h),
             ),
             const Spacer(flex: 20),
-            Text(
-              jalurGuciOne,
-              style: theme.textTheme.titleMedium!.copyWith(
-                color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme
-                        .onSurface, // Warna teks berdasarkan isSelected
-              ),
-            ),
+            // Text(
+            //   jalurGuciOne,
+            // ),
             const Spacer(flex: 79),
             CustomImageView(
               imagePath: ImageConstant.imgArrowRight,
@@ -392,81 +332,12 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
     );
   }
 
-  /// Common widget
-// Widget _buildRouteTwo(
-//   BuildContext context, {
-//   required String jalurGuciOne,
-//   Function? onTapRouteTwo,
-// }) {
-//   return GestureDetector(
-//     onTap: () {
-//       onTapRouteTwo?.call();
-//     },
-//     child: Container(
-//       padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
-//       decoration: BoxDecoration(
-//         color: theme.colorScheme.onPrimary,
-//         borderRadius: BorderRadiusStyle.roundedBorder6,
-//         border: Border.all(
-//           color: theme.colorScheme.primary,
-//           width: 1.h,
-//         ),
-//         boxShadow: [
-//           BoxShadow(
-//             color: appTheme.blueGray40019,
-//             spreadRadius: 2.h,
-//             blurRadius: 2.h,
-//             offset: const Offset(0, 13),
-//           ),
-//         ],
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           CustomImageView(
-//             imagePath: ImageConstant.imgLinkedin,
-//             height: 20.h,
-//             width: 18.h,
-//             alignment: Alignment.topCenter,
-//             margin: EdgeInsets.only(left: 6.h),
-//           ),
-//           const Spacer(flex: 20),
-//           Text(
-//             jalurGuciOne,
-//             style: theme.textTheme.titleMedium!.copyWith(
-//               color: theme.colorScheme.primary,
-//             ),
-//           ),
-//           const Spacer(flex: 79),
-//           CustomImageView(
-//             imagePath: ImageConstant.imgArrowRight,
-//             height: 24.h,
-//             width: 24.h,
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
-
 // Navigates to the berandaScreen when the action is triggered.
   onTapIconarrowone(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
     );
   }
-
-// // Navigates to the routeScreen when the action is triggered.
-//   onTapRouteThree() {
-//     NavigatorService.pushNamed(
-//       AppRoutes.routeScreen,
-//       MaterialPageRoute(
-//         builder: (context) => RouteScreen(
-//           jalurid: jalurmodel[index].id,
-//         ),
-//       ), // Kirim idJalur ke layar berikutnya
-//     );
-//   }
 
   Future<List<Jalur>> fetchJalur(int idGunung) async {
     final apiService = ApiService();

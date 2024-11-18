@@ -38,52 +38,52 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
   }
 
   Future<void> _getUser() async {
-  final token = await ApiService().getToken();
+    final token = await ApiService().getToken();
 
-  // Cek apakah token null atau kosong
-  if (token == null || token.isEmpty) {
-    // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
-    // print("Token is null or empty");
-    if (mounted) {
-      setState(() {
-        isLoading = false; // Menyelesaikan status loading jika token tidak ada
-      });
-    }
-    return; // Keluar dari fungsi jika token tidak ada
-  }
-
-  // print("Token: $token"); // Debugging, pastikan token ada
-
-  try {
-    final response = await ApiService().getUser(token);
-    if (response['success']) {
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
       if (mounted) {
         setState(() {
-          userName = response['data']['name'];
-          userId = response['data']['id'];
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userName = response['data']['name'];
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
           isLoading = false;
         });
       }
-    } else {
-      // Menangani error jika API gagal
-      // print("Error: ${response['message']}");
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  } catch (e) {
-    // Tangani error jaringan atau kesalahan lainnya
-    // print("Error fetching user: $e");
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +146,7 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
   /// Section Widget
   Widget _buildHomeList(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 4.h),
+      padding: EdgeInsets.only(right: 4),
       child: BlocSelector<BerandaBloc, BerandaState, BerandaInitialModel?>(
         selector: (state) => state.berandaInitialModelObj,
         builder: (context, berandaInitialModelObj) {
@@ -155,9 +155,7 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 10.h,
-              );
+              return SizedBox(height: 0);
             },
             itemCount: berandaInitialModelObj?.homelistItemList.length ?? 0,
             itemBuilder: (context, index) {
