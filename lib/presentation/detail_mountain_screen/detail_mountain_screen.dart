@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/models/jalur_model.dart';
+import 'package:myhiking/presentation/route_screen/route_screen.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
@@ -7,23 +10,37 @@ import '../../widgets/custom_elevated_button.dart';
 import 'bloc/detail_mountain_bloc.dart';
 import 'models/detail_mountain_model.dart';
 
-class DetailMountainScreen extends StatelessWidget {
-  const DetailMountainScreen({super.key});
+class DetailMountainScreen extends StatefulWidget {
+  final int idGunung;
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<DetailMountainBloc>(
-      create: (context) => DetailMountainBloc(
-        DetailMountainState(
-            detailMountainModelObj: const DetailMountainModel()),
-      )..add(DetailMountainInitialEvent()),
-      child: const DetailMountainScreen(),
-    );
+  // Constructor untuk menerima idGunung
+  const DetailMountainScreen({Key? key, required this.idGunung})
+      : super(key: key);
+
+  static WidgetBuilder builder(int idGunung) {
+    return (BuildContext context) => DetailMountainScreen(idGunung: idGunung);
+  }
+
+  @override
+  _DetailMountainScreenState createState() => _DetailMountainScreenState();
+}
+
+class _DetailMountainScreenState extends State<DetailMountainScreen> {
+  late Future<List<Jalur>> _jalurFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // Memanggil API untuk mengambil jalur berdasarkan idGunung
+    _jalurFuture = fetchJalur(widget.idGunung);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DetailMountainBloc, DetailMountainState>(
       builder: (context, state) {
+        final detailMountain = state.detailMountainModelObj;
+
         return SafeArea(
           child: Scaffold(
             backgroundColor: appTheme.gray50,
@@ -32,25 +49,29 @@ class DetailMountainScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 394.h,
+                    height: 396.h,
                     width: double.maxFinite,
                     child: Stack(
                       alignment: Alignment.bottomCenter,
                       children: [
                         _buildBackgroundStack(context),
                         Text(
-                          "lbl_gunung_slamet".tr,
+                          detailMountain?.name ?? "Loading...", // Nama gunung
                           style: CustomTextStyles.headlineSmall_1,
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                   ),
                   SizedBox(height: 16.h),
-                  _buildElevationColumn(context),
+                  if (detailMountain != null)
+                    _buildElevationColumn(context, detailMountain),
+                  SizedBox(height: 16.h),
                   Expanded(
-                      child: SingleChildScrollView(
-                    child: _buildRouteList(context),
-                  ))
+                    child: SingleChildScrollView(
+                      child: _buildRouteList(context),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -63,73 +84,122 @@ class DetailMountainScreen extends StatelessWidget {
   Widget _buildRouteList(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.h),
-      child: Column(
-        children: [
-          SizedBox(height: 10.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "msg_jalur_bambangan".tr,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "lbl_jalur_guci".tr,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "lbl_jalur_dipajaya2".tr,
-              onTapRouteTwo: () {
-                onTapRouteThree(context);
-              },
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "Jalur Baturaden".tr,
-              onTapRouteTwo: () {
-                onTapRouteThree(context);
-              },
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "Jalur Kaliwadas".tr,
-              onTapRouteTwo: () {
-                onTapRouteThree(context);
-              },
-            ),
-          ),
-          SizedBox(height: 8.h),
-          SizedBox(
-            width: double.maxFinite,
-            child: _buildRouteTwo(
-              context,
-              jalurGuciOne: "Jalur Gunung Malang".tr,
-              onTapRouteTwo: () {
-                onTapRouteThree(context);
-              },
-            ),
-          ),
-          SizedBox(height: 10.h),
-        ],
+      child: FutureBuilder<List<Jalur>>(
+        future: _jalurFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No routes available'));
+          }
+
+          List<Jalur> routes = snapshot.data!;
+          return Column(
+            children: routes.map((jalur) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RouteScreen(jalurid: jalur.id),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 14.h, vertical: 16.h),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        borderRadius: BorderRadius.circular(8.h),
+                      ),
+                      child: Row(
+                        children: [
+                          // Menambahkan ikon di sebelah kiri teks
+                          Container(
+                            margin: EdgeInsets.only(right: 12.h),
+                            child: CustomImageView(
+                              imagePath: ImageConstant
+                                  .imgLinkedin, // Ganti dengan path gambar yang sesuai
+                              height: 20.h,
+                              width: 18.h,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          // Menampilkan nama jalur
+                          Text(
+                            jalur.nama,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                          const Spacer(),
+                          // Ikon panah
+                          Icon(
+                            Icons.arrow_forward,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        },
       ),
     );
   }
+
+//   Widget _buildRouteList(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 24.h),
+//       child: FutureBuilder<List<String>>(
+//         future: _jalurFuture,
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return Center(child: CircularProgressIndicator()); // Menunggu data
+//           } else if (snapshot.hasError) {
+//             return Center(
+//                 child: Text(
+//                     'Error: ${snapshot.error}')); // Menampilkan error jika ada
+//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+//             return Center(
+//                 child: Text('No routes available')); // Jika tidak ada data
+//           }
+
+//           // Jika data tersedia, bangun list jalur
+//           List<String> routes = snapshot.data!;
+
+//           return Column(
+//             children: routes.map((route) {
+//               return Padding(
+//                 padding: EdgeInsets.only(bottom: 8.h),
+//                 child: SizedBox(
+//                   width: double.maxFinite,
+//                   child: _buildRouteTwo(
+//                     context,
+//                     jalurGuciOne: route, // Menampilkan nama jalur dari database
+//                     onTapRouteTwo: () {
+//                       onTapRouteThree(context);
+//                     },
+//                   ),
+//                 ),
+//               );
+//             }).toList(),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
 
   /// Section Widget
   Widget _buildBackgroundStack(BuildContext context) {
@@ -173,7 +243,7 @@ class DetailMountainScreen extends StatelessWidget {
                         end: const Alignment(0.43, 0.05),
                         colors: [
                           appTheme.gray50,
-                          appTheme.gray50.withOpacity(0)
+                          appTheme.gray50.withOpacity(0.1)
                         ],
                       ),
                     ),
@@ -206,7 +276,8 @@ class DetailMountainScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildElevationColumn(BuildContext context) {
+  Widget _buildElevationColumn(
+      BuildContext context, DetailMountainModel detailMountain) {
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.symmetric(horizontal: 24.h),
@@ -226,7 +297,7 @@ class DetailMountainScreen extends StatelessWidget {
                       style: CustomTextStyles.bodySmallBlack900,
                     ),
                     Text(
-                      "lbl_3_432_m".tr,
+                      "${detailMountain.height} m", // Menampilkan ketinggian dari database
                       style: CustomTextStyles.titleMediumSemiBold,
                     ),
                   ],
@@ -234,7 +305,8 @@ class DetailMountainScreen extends StatelessWidget {
                 CustomElevatedButton(
                   height: 42.h,
                   width: 188.h,
-                  text: "lbl_jawa_tengah".tr,
+                  text: detailMountain
+                      .province, // Menampilkan nama provinsi dari database
                   leftIcon: Container(
                     margin: EdgeInsets.only(right: 12.h),
                     child: CustomImageView(
@@ -255,10 +327,10 @@ class DetailMountainScreen extends StatelessWidget {
     );
   }
 
-  /// Common widget
   Widget _buildRouteTwo(
     BuildContext context, {
     required String jalurGuciOne,
+    required bool isSelected, // Tambahkan parameter isSelected
     Function? onTapRouteTwo,
   }) {
     return GestureDetector(
@@ -268,10 +340,15 @@ class DetailMountainScreen extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
         decoration: BoxDecoration(
-          color: theme.colorScheme.onPrimary,
+          color: isSelected
+              ? theme.colorScheme.primary
+                  .withOpacity(0.1) // Highlight jika dipilih
+              : theme.colorScheme.onPrimary,
           borderRadius: BorderRadiusStyle.roundedBorder6,
           border: Border.all(
-            color: theme.colorScheme.primary,
+            color: isSelected
+                ? theme.colorScheme.primary // Warna border berbeda jika dipilih
+                : theme.colorScheme.outline,
             width: 1.h,
           ),
           boxShadow: [
@@ -297,7 +374,10 @@ class DetailMountainScreen extends StatelessWidget {
             Text(
               jalurGuciOne,
               style: theme.textTheme.titleMedium!.copyWith(
-                color: theme.colorScheme.primary,
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme
+                        .onSurface, // Warna teks berdasarkan isSelected
               ),
             ),
             const Spacer(flex: 79),
@@ -312,17 +392,111 @@ class DetailMountainScreen extends StatelessWidget {
     );
   }
 
-  // Navigates to the berandaScreen when the action is triggered.
+  /// Common widget
+// Widget _buildRouteTwo(
+//   BuildContext context, {
+//   required String jalurGuciOne,
+//   Function? onTapRouteTwo,
+// }) {
+//   return GestureDetector(
+//     onTap: () {
+//       onTapRouteTwo?.call();
+//     },
+//     child: Container(
+//       padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
+//       decoration: BoxDecoration(
+//         color: theme.colorScheme.onPrimary,
+//         borderRadius: BorderRadiusStyle.roundedBorder6,
+//         border: Border.all(
+//           color: theme.colorScheme.primary,
+//           width: 1.h,
+//         ),
+//         boxShadow: [
+//           BoxShadow(
+//             color: appTheme.blueGray40019,
+//             spreadRadius: 2.h,
+//             blurRadius: 2.h,
+//             offset: const Offset(0, 13),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           CustomImageView(
+//             imagePath: ImageConstant.imgLinkedin,
+//             height: 20.h,
+//             width: 18.h,
+//             alignment: Alignment.topCenter,
+//             margin: EdgeInsets.only(left: 6.h),
+//           ),
+//           const Spacer(flex: 20),
+//           Text(
+//             jalurGuciOne,
+//             style: theme.textTheme.titleMedium!.copyWith(
+//               color: theme.colorScheme.primary,
+//             ),
+//           ),
+//           const Spacer(flex: 79),
+//           CustomImageView(
+//             imagePath: ImageConstant.imgArrowRight,
+//             height: 24.h,
+//             width: 24.h,
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }
+
+// Navigates to the berandaScreen when the action is triggered.
   onTapIconarrowone(BuildContext context) {
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
     );
   }
 
-  // Navigates to the routeScreen when the action is triggered.
-  onTapRouteThree(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.routeScreen,
-    );
+// // Navigates to the routeScreen when the action is triggered.
+//   onTapRouteThree() {
+//     NavigatorService.pushNamed(
+//       AppRoutes.routeScreen,
+//       MaterialPageRoute(
+//         builder: (context) => RouteScreen(
+//           jalurid: jalurmodel[index].id,
+//         ),
+//       ), // Kirim idJalur ke layar berikutnya
+//     );
+//   }
+
+  Future<List<Jalur>> fetchJalur(int idGunung) async {
+    final apiService = ApiService();
+
+    try {
+      // Mengambil respons dari API
+      final response = await apiService.fetchJalur(idGunung);
+
+      // Debugging untuk memastikan respons API
+      print('Response from API: $response');
+
+      // Memeriksa apakah 'gunung' dan 'data' ada dalam respons
+      if (response != null &&
+          response['gunung'] != null &&
+          response['gunung']['data'] != null) {
+        // Membuat daftar jalur dari data yang diterima
+        List<Jalur> jalurList = (response['gunung']['data'] as List<dynamic>)
+            .map((item) =>
+                Jalur.fromJson(item)) // Membuat objek Jalur untuk setiap item
+            .toList();
+
+        // Mengembalikan daftar jalur
+        return jalurList;
+      } else {
+        throw Exception('Jalur data not found or empty');
+      }
+    } catch (e) {
+      // Tangani kesalahan dan lempar exception
+      print('Error fetching jalur: $e');
+      throw Exception('Failed to fetch jalur: $e');
+    }
   }
 }
