@@ -51,6 +51,4 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
       throw Exception('Failed to load data');
     }
   }
-
-  
 }

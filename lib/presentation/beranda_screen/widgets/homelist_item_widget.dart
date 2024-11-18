@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/presentation/detail_mountain_screen/bloc/detail_mountain_bloc.dart';
+import 'package:myhiking/presentation/detail_mountain_screen/detail_mountain_screen.dart';
 import '../../../core/app_export.dart';
 import '../models/homelist_item_model.dart';
 
@@ -49,9 +52,10 @@ class HomelistItemWidget extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    if (homelistItemModelObj.namaGunung! == "Gunung Slamet") {
-                      onTapImgSlamet(context);
-                    }
+                    // if (homelistItemModelObj.namaGunung! == "Gunung Slamet") {
+                    //   onTapImgSlamet(context);
+                    // }
+                    onTapImgGunung(context, homelistItemModelObj);
                   },
                   child: Image.network(
                     imageUrl,
@@ -96,6 +100,28 @@ class HomelistItemWidget extends StatelessWidget {
   }
 }
 
-onTapImgSlamet(BuildContext context) {
-  NavigatorService.pushNamed(AppRoutes.detailMountainScreen);
+// onTapImgSlamet(BuildContext context) {
+//   NavigatorService.pushNamed(AppRoutes.detailMountainScreen);
+// }
+
+// Fungsi untuk menangani onTap dan mengarahkan ke halaman detail gunung
+onTapImgGunung(BuildContext context, HomelistItemModel homelistItemModelObj) {
+  final idGunung =
+      homelistItemModelObj.id; // Mengambil mountainId dari objek model
+
+  if (idGunung != null) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => DetailMountainBloc(ApiService())
+            ..add(DetailMountainInitialEvent(idGunung)),
+          child: DetailMountainScreen(idGunung: idGunung),
+        ),
+      ),
+    );
+  } else {
+    // Tindakan jika mountainId tidak ditemukan
+    print('Mountain ID tidak ditemukan');
+  }
 }

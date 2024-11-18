@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 // Model untuk data gunung
 class HomelistItemModel {
-  String? id;
+  int? id;
   String? namaGunung;
   String? gambar;
   // String? province;
@@ -17,7 +17,7 @@ class HomelistItemModel {
 
   factory HomelistItemModel.fromJson(Map<String, dynamic> json) {
     return HomelistItemModel(
-      id: json['id']?.toString(),
+      id: json['id'],
       namaGunung: json['nama'] ?? 'Nama Gunung Tidak Tersedia',
       gambar: json['gambar'] ?? 'URL Gambar Tidak Tersedia',
       // province: json['province_name'] ?? 'Provinsi Tidak Tersedia',
