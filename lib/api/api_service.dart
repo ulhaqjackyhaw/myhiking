@@ -1,11 +1,11 @@
 import 'package:http/http.dart' as http;
-import 'package:myhiking/models/jalur_model.dart';
+import 'package:myhiking/models/model.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ApiService {
-  String bashUrl = 'http://localhost:8000/api';
+const String baseUrl = 'http://localhost:8000/api';
 
+class ApiService {
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
@@ -15,7 +15,7 @@ class ApiService {
     // print(
     //     "Token: $token"); // Log token untuk memverifikasi nilai yang digunakan
 
-    final url = Uri.parse('$bashUrl/user');
+    final url = Uri.parse('$baseUrl/user');
     final response = await http.get(
       url,
       headers: {
@@ -37,7 +37,7 @@ class ApiService {
   }
 
   Future<List<Gunung>> fetchGunung() async {
-    final response = await http.get(Uri.parse('$bashUrl/gunung'));
+    final response = await http.get(Uri.parse('$baseUrl/gunung'));
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
@@ -48,7 +48,19 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> fetchJalur(int idGunung) async {
-    final url = Uri.parse('$bashUrl/gunung/$idGunung');
+    final url = Uri.parse('$baseUrl/gunung/$idGunung');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch jalur');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchRouteDetails(
+      int idGunung, int jalurid) async {
+    final url = Uri.parse('$baseUrl/gunung/$idGunung/$jalurid');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myhiking/api/api_service.dart';
-import 'package:myhiking/models/jalur_model.dart';
+import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/route_screen/route_screen.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
@@ -26,13 +26,14 @@ class DetailMountainScreen extends StatefulWidget {
 }
 
 class _DetailMountainScreenState extends State<DetailMountainScreen> {
-  late Future<List<Jalur>> _jalurFuture;
+  bool isLoading = false;
+  Future<List<Jalur>>? _jalurFuture;
 
   @override
   void initState() {
     super.initState();
     // Memanggil API untuk mengambil jalur berdasarkan idGunung
-    _jalurFuture = fetchJalur(widget.idGunung);
+    _jalurFuture = fetchJalur(widget.idGunung) as Future<List<Jalur>>?;
   }
 
   @override
@@ -104,10 +105,17 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
                   width: double.maxFinite,
                   child: GestureDetector(
                     onTap: () {
+                      // Get the idGunung from the selected jalur (route)
+                      int idGunung =
+                          jalur.id; // Assume jalur has the idGunung field
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RouteScreen(jalurid: jalur.id),
+                          builder: (context) => RouteScreen(
+                            // Pass the id of the selected route
+                            idGunung:
+                                idGunung, // Pass the idGunung of the selected route
+                          ),
                         ),
                       );
                     },

@@ -64,8 +64,22 @@ class AppRoutes {
         suksesScreen: SuksesScreen.builder,
         pesananDibatalkanScreen: PesananDibatalkanScreen.builder,
         berandaScreen: BerandaScreen.builder,
-        detailMountainScreen: DetailMountainScreen.builder,
-        routeScreen: RouteScreen.builder,
+        detailMountainScreen: (context) {
+          // Periksa apakah arguments ada dan lakukan casting dengan aman
+          final idGunung = ModalRoute.of(context)!.settings.arguments as int?;
+
+          // Periksa jika idGunung null, bisa mengarahkan ke halaman lain atau memberikan nilai default
+          if (idGunung == null) {
+            // Jika idGunung null, kembalikan halaman error atau halaman lain
+            return Scaffold(
+              body: Center(child: Text("ID Gunung tidak ditemukan")),
+            );
+          }
+
+          // Jika idGunung tidak null, lanjutkan dengan navigasi
+          return DetailMountainScreen.builder(idGunung)(context);
+        },
+        // routeScreen: RouteScreen.builder,
         tataTertibScreen: TataTertibScreen.builder,
         profileScreen: ProfileScreen.builder,
         dataProfileScreen: DataProfileScreen.builder,

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:myhiking/models/jalur_model.dart';
+import 'package:myhiking/models/model.dart';
 import '../../../core/app_export.dart';
 import '../models/detail_mountain_model.dart';
 import 'package:myhiking/api/api_service.dart';

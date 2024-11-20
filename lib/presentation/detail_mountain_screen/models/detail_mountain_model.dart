@@ -1,4 +1,4 @@
-import 'package:myhiking/models/jalur_model.dart';
+import 'package:myhiking/models/model.dart';
 
 class DetailMountainModel {
   final String name;
