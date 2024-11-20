@@ -1,46 +1,81 @@
 import 'package:equatable/equatable.dart';
+import 'package:myhiking/models/model.dart';
 import '../../../core/app_export.dart';
 
 /// This class is used in the [routelistsection_item_widget] screen.
 // ignore_for_file: must_be_immutable
 class RoutelistsectionItemModel extends Equatable {
   RoutelistsectionItemModel({
-    this.tinggiOne,
-    this.height,
-    // Hapus zipcode jika tidak perlu
-    // this.zipcode,
-    // this.meters,
-    // this.id,
-  }) {
-    tinggiOne = tinggiOne ?? ImageConstant.imgSettings;
-    height = height ?? "Tinggi"; // Ubah nilai default jika diperlukan
-    // zipcode = zipcode ?? "5Km"; // Hapus atau ubah
-    // meters = meters ?? "m";
-    // id = id ?? "";
+    this.id,
+    this.nama,
+    this.deskripsi,
+    this.mapBasecamp,
+    this.village,
+    this.district,
+    this.regency,
+    this.province,
+    this.jarak,
+    this.biaya,
+    this.gunung, // Menambahkan objek gunung
+  });
+
+  final int? id; // id jalur
+  final String? nama; // nama jalur
+  final String? deskripsi; // deskripsi jalur
+  final String? mapBasecamp; // basecamp jalur
+  final String? village; // desa
+  final String? district; // kecamatan
+  final String? regency; // kabupaten
+  final String? province; // provinsi
+  final double? jarak; // jarak jalur
+  final int? biaya; // biaya jalur
+  final Gunung? gunung; // Model Gunung
+
+  String get jarakString {
+    // Mengonversi jarak ke string dengan format yang sesuai (misalnya, dengan 2 angka di belakang koma)
+    return jarak != null ? "${jarak!.toStringAsFixed(2)} km" : "Tidak tersedia";
   }
 
-  String? tinggiOne;
-  String? height;
-  // String? zipcode; // Hapus baris ini
-  // String? meters;
-  // String? id;
-
   RoutelistsectionItemModel copyWith({
-    String? tinggiOne,
-    String? height,
-    // String? zipcode, // Hapus baris ini
-    // String? meters,
-    // String? id,
+    int? id,
+    String? nama,
+    String? deskripsi,
+    String? mapBasecamp,
+    String? village,
+    String? district,
+    String? regency,
+    String? province,
+    double? jarak,
+    int? biaya,
+    Gunung? gunung,
   }) {
     return RoutelistsectionItemModel(
-      tinggiOne: tinggiOne ?? this.tinggiOne,
-      height: height ?? this.height,
-      // zipcode: zipcode ?? this.zipcode, // Hapus baris ini
-      // meters: meters ?? this.meters,
-      // id: id ?? this.id,
+      id: id ?? this.id,
+      nama: nama ?? this.nama,
+      deskripsi: deskripsi ?? this.deskripsi,
+      mapBasecamp: mapBasecamp ?? this.mapBasecamp,
+      village: village ?? this.village,
+      district: district ?? this.district,
+      regency: regency ?? this.regency,
+      province: province ?? this.province,
+      jarak: jarak ?? this.jarak,
+      biaya: biaya ?? this.biaya,
+      gunung: gunung ?? this.gunung,
     );
   }
 
   @override
-  List<Object?> get props => [tinggiOne, height]; // Hapus zipcode dari props
+  List<Object?> get props => [
+        id,
+        nama,
+        deskripsi,
+        mapBasecamp,
+        village,
+        district,
+        regency,
+        province,
+        jarak,
+        biaya,
+        gunung,
+      ];
 }

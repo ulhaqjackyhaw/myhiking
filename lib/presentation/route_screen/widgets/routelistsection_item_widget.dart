@@ -8,6 +8,7 @@ class RoutelistsectionItemWidget extends StatelessWidget {
 
   RoutelistsectionItemModel routelistsectionItemModelObj;
 
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
@@ -31,19 +32,23 @@ class RoutelistsectionItemWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomImageView(
-              imagePath: routelistsectionItemModelObj.tinggiOne!,
-              height: 40.h,
-              width: 40.h,
-            ),
-            SizedBox(height: 2.h),
+            // Menampilkan tinggi dari model
             Text(
-              routelistsectionItemModelObj.height!,
+              routelistsectionItemModelObj.jarak! as String,
               style: CustomTextStyles.labelLargeInterGray500,
             ),
             SizedBox(height: 1.h),
-            // Hapus bagian yang menggunakan zipcode
-            // Jika Anda ingin menampilkan informasi lain, tambahkan di sini
+            // Menampilkan nama dari model
+            Text(
+              routelistsectionItemModelObj.nama ?? "Nama Tidak Tersedia",
+              style: CustomTextStyles.labelLargeInterGray500,
+            ),
+            SizedBox(height: 1.h),
+            // Menampilkan lokasi dari model
+            Text(
+              routelistsectionItemModelObj.province ?? "Lokasi Tidak Tersedia",
+              style: CustomTextStyles.labelLargeInterGray500,
+            ),
           ],
         ),
       ),
