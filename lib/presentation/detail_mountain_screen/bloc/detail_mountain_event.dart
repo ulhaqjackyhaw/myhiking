@@ -11,10 +11,10 @@ class DetailMountainEvent extends Equatable {
 
 /// Event that is dispatched when the DetailMountain widget is first created.
 class DetailMountainInitialEvent extends DetailMountainEvent {
-  final int id;
+  final int idGunung;
 
-  DetailMountainInitialEvent(this.id);
+  DetailMountainInitialEvent(this.idGunung);
 
-  @override
-  List<Object?> get props => [id];
+  // @override
+  // List<Object?> get props => [idGunung];
 }

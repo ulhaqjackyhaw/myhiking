@@ -1,28 +1,18 @@
 part of 'route_bloc.dart';
 
+/// Represents the state of Route in the application.
+// ignore_for_file: must_be_immutable
 class RouteState extends Equatable {
-  final RouteModel? routeModelObj;
-  final String? error;
-  final bool isLoading;  // Menambahkan status loading
+  RouteState({this.routeModelObj});
 
-  const RouteState({
-    this.routeModelObj,
-    this.error,
-    this.isLoading = false,  // Default nilai loading adalah false
-  });
-
-  RouteState copyWith({
-    RouteModel? routeModelObj,
-    String? error,
-    bool? isLoading,  // Menambahkan parameter isLoading
-  }) {
-    return RouteState(
-      routeModelObj: routeModelObj ?? this.routeModelObj,
-      error: error ?? this.error,
-      isLoading: isLoading ?? this.isLoading,  // Menyalin nilai isLoading
-    );
-  }
+  RouteModel? routeModelObj;
 
   @override
-  List<Object?> get props => [routeModelObj, error, isLoading];
+  List<Object?> get props => [routeModelObj];
+
+  RouteState copyWith({RouteModel? routeModelObj}) {
+    return RouteState(
+      routeModelObj: routeModelObj ?? this.routeModelObj,
+    );
+  }
 }

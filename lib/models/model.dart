@@ -7,58 +7,63 @@ String resRouteCentresToJson(ResRouteCentres data) =>
     json.encode(data.toJson());
 
 class ResRouteCentres {
-  bool success;
+  bool status;
   String message;
   List<Jalur> data;
 
   ResRouteCentres({
-    required this.success,
+    required this.status,
     required this.message,
     required this.data,
   });
 
   factory ResRouteCentres.fromJson(Map<String, dynamic> json) =>
       ResRouteCentres(
-        success: json["success"],
+        status: json["status"],
         message: json["message"],
-        data: List<Jalur>.from(json["data"].map((x) => Jalur.fromJson(x))),
+        data: List<Jalur>.from(
+            json["gunung"]["data"].map((x) => Jalur.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "success": success,
+        "status": status,
         "message": message,
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "gunung": {
+          "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        },
       };
 }
 
 class Gunung {
-  final int id;
-  final String nama;
-  final int ketinggian;
-  final String province;
-  final List<Jalur> jalur;
+  int id;
+  String nama;
+  int ketinggian;
+  String province;
+  List<Jalur> data;
 
   Gunung({
     required this.id,
     required this.nama,
     required this.ketinggian,
     required this.province,
-    required this.jalur,
+    required this.data,
   });
 
-  factory Gunung.fromJson(Map<String, dynamic> json) {
-    var jalurList = json['data'] as List;
-    List<Jalur> jalurItems =
-        jalurList.map((item) => Jalur.fromJson(item)).toList();
+  factory Gunung.fromJson(Map<String, dynamic> json) => Gunung(
+        id: json["id"],
+        nama: json["nama"],
+        ketinggian: json["ketinggian"],
+        province: json["province"],
+        data: List<Jalur>.from(json["data"].map((x) => Jalur.fromJson(x))),
+      );
 
-    return Gunung(
-      id: json['id'],
-      nama: json['nama'],
-      ketinggian: json['ketinggian'],
-      province: json['province'],
-      jalur: jalurItems,
-    );
-  }
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "nama": nama,
+        "ketinggian": ketinggian,
+        "province": province,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
 }
 
 class Jalur {

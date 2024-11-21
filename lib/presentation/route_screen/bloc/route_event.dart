@@ -9,14 +9,19 @@ class RouteEvent extends Equatable {
 }
 
 /// Event that is dispatched when the Route widget is first created.
+class RouteInitialEvent extends RouteEvent {
+  final int? jalurId;
 
-class RouteInitialEvent extends RouteEvent {}
-
-class RouteSelectEvent extends RouteEvent {
-  final String selectedRouteId; // ID jalur yang dipilih
-
-  RouteSelectEvent({required this.selectedRouteId});
-
-  @override
-  List<Object> get props => [selectedRouteId];
+  RouteInitialEvent({this.jalurId}); // Parameter jalurId ditambahkan
 }
+
+// class RouteInitialEvent extends RouteEvent {}
+
+// class RouteSelectEvent extends RouteEvent {
+//   final String selectedRouteId; // ID jalur yang dipilih
+
+//   RouteSelectEvent({required this.selectedRouteId});
+
+//   @override
+//   List<Object> get props => [selectedRouteId];
+// }

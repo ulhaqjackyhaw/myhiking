@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/route_screen/route_screen.dart';
@@ -14,26 +17,89 @@ class DetailMountainScreen extends StatefulWidget {
   final int idGunung;
 
   // Constructor untuk menerima idGunung
-  const DetailMountainScreen({Key? key, required this.idGunung})
-      : super(key: key);
+  // Constructor untuk menerima idGunung
+  const DetailMountainScreen({super.key, required this.idGunung});
 
-  static WidgetBuilder builder(int idGunung) {
-    return (BuildContext context) => DetailMountainScreen(idGunung: idGunung);
-  }
+  // Ubah builder menjadi fungsi statis yang menerima parameter idGunung
+  // static Widget builder(BuildContext context, {required int idGunung}) {
+  //   return DetailMountainScreen(idGunung: idGunung);
+  // }
 
   @override
-  _DetailMountainScreenState createState() => _DetailMountainScreenState();
+  State<DetailMountainScreen> createState() => _DetailMountainScreenState();
+
+  // static builder(int idGunung) {}
+
+  // @override
+  // _DetailMountainScreenState createState() => _DetailMountainScreenState();
 }
 
 class _DetailMountainScreenState extends State<DetailMountainScreen> {
   bool isLoading = false;
-  Future<List<Jalur>>? _jalurFuture;
+  // Future<List<Jalur>>? _jalurFuture;
+  List<Jalur> listJalur = [];
+  List<Jalur> jalurCentre = [];
+  Future<List<Jalur>>? _jalurFuture; // Add this line to define the future
+
+  Future<List<Jalur>> getRouteCentres() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      String? token = await ApiService().getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      final response = await http.get(
+        Uri.parse('http://localhost:8000/api/gunung/${widget.idGunung}'),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        // Decode JSON response
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        // Parse JSON into ResRouteCentres model
+        ResRouteCentres resRouteCentres = ResRouteCentres.fromJson(jsonData);
+
+        // Extract list of Jalur from the parsed data
+        List<Jalur> jalurList = resRouteCentres.data;
+
+        setState(() {
+          isLoading = false;
+          listJalur = jalurList;
+          jalurCentre = listJalur;
+        });
+
+        return jalurList; // Return the list of Jalur
+      } else {
+        throw Exception(
+            'Failed to fetch route centres: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+
+      // Tampilkan pesan error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+
+      return []; // Return an empty list in case of an error
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     // Memanggil API untuk mengambil jalur berdasarkan idGunung
-    _jalurFuture = fetchJalur(widget.idGunung) as Future<List<Jalur>>?;
+    _jalurFuture = getRouteCentres();
   }
 
   @override
@@ -97,69 +163,89 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
           }
 
           List<Jalur> routes = snapshot.data!;
-          return Column(
-            children: routes.map((jalur) {
+
+          // Menggunakan ListView.builder untuk menampilkan daftar jalur
+          return ListView.builder(
+            shrinkWrap: true, // Agar ListView tidak melampaui batas
+            physics:
+                const NeverScrollableScrollPhysics(), // Hanya scroll di dalam ScrollView
+            itemCount: routes.length, // Menentukan jumlah item yang ditampilkan
+            itemBuilder: (context, index) {
+              // Jalur jalur = routes[index]; // Ambil jalur berdasarkan index
+
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: GestureDetector(
-                    onTap: () {
-                      // Get the idGunung from the selected jalur (route)
-                      int idGunung =
-                          jalur.id; // Assume jalur has the idGunung field
+                child: GestureDetector(
+                  // onTap: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => RouteScreen(
+                  //         jalurId: jalurCentre[index].id,
+                  //         // Gunakan id dari jalur yang dipilih
+                  //       ),
+                  onTap: () {
+                    // Pastikan jalur memiliki data valid
+                    // if (jalur.id != null) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => RouteScreen(
-                            // Pass the id of the selected route
-                            idGunung:
-                                idGunung, // Pass the idGunung of the selected route
+                            jalurId: jalurCentre[index]
+                                .id, // Gunakan id dari jalur yang dipilih
                           ),
                         ),
                       );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 14.h, vertical: 16.h),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        border: Border.all(
+                    // } else {
+                    //   // Tampilkan pesan jika jalur tidak valid
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     const SnackBar(
+                    //       content: Text('Data jalur tidak valid.'),
+                    //       backgroundColor: Colors.red,
+                    //     ),
+                    //   );
+                    // }
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      borderRadius: BorderRadius.circular(8.h),
+                    ),
+                    child: Row(
+                      children: [
+                        // Menambahkan ikon di sebelah kiri teks
+                        Container(
+                          margin: EdgeInsets.only(right: 12.h),
+                          child: CustomImageView(
+                            imagePath: ImageConstant
+                                .imgLinkedin, // Ganti dengan path gambar yang sesuai
+                            height: 20.h,
+                            width: 18.h,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        // Menampilkan nama jalur
+                        Text(
+                          jalurCentre[index].nama, // Menampilkan nama jalur
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const Spacer(),
+                        // Ikon panah
+                        Icon(
+                          Icons.arrow_forward,
                           color: Theme.of(context).colorScheme.primary,
                         ),
-                        borderRadius: BorderRadius.circular(8.h),
-                      ),
-                      child: Row(
-                        children: [
-                          // Menambahkan ikon di sebelah kiri teks
-                          Container(
-                            margin: EdgeInsets.only(right: 12.h),
-                            child: CustomImageView(
-                              imagePath: ImageConstant
-                                  .imgLinkedin, // Ganti dengan path gambar yang sesuai
-                              height: 20.h,
-                              width: 18.h,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          // Menampilkan nama jalur
-                          Text(
-                            jalur.nama,
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          const Spacer(),
-                          // Ikon panah
-                          Icon(
-                            Icons.arrow_forward,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
               );
-            }).toList(),
+            },
           );
         },
       ),
@@ -347,35 +433,35 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
     );
   }
 
-  Future<List<Jalur>> fetchJalur(int idGunung) async {
-    final apiService = ApiService();
+  //   Future<List<Jalur>> fetchJalur(int idGunung) async {
+  //   final apiService = ApiService();
 
-    try {
-      // Mengambil respons dari API
-      final response = await apiService.fetchJalur(idGunung);
+  //   try {
+  //     // Mengambil respons dari API
+  //     final response = await apiService.fetchJalur(idGunung);
 
-      // Debugging untuk memastikan respons API
-      print('Response from API: $response');
+  //     // Debugging untuk memastikan respons API
+  //     print('Response from API: $response');
 
-      // Memeriksa apakah 'gunung' dan 'data' ada dalam respons
-      if (response != null &&
-          response['gunung'] != null &&
-          response['gunung']['data'] != null) {
-        // Membuat daftar jalur dari data yang diterima
-        List<Jalur> jalurList = (response['gunung']['data'] as List<dynamic>)
-            .map((item) =>
-                Jalur.fromJson(item)) // Membuat objek Jalur untuk setiap item
-            .toList();
+  //     // Memeriksa apakah 'gunung' dan 'data' ada dalam respons
+  //     if (response != null &&
+  //         response['gunung'] != null &&
+  //         response['gunung']['data'] != null) {
+  //       // Membuat daftar jalur dari data yang diterima
+  //       List<Jalur> listJalur = (response['gunung']['data'] as List<dynamic>)
+  //           .map((item) =>
+  //               Jalur.fromJson(item)) // Membuat objek Jalur untuk setiap item
+  //           .toList();
 
-        // Mengembalikan daftar jalur
-        return jalurList;
-      } else {
-        throw Exception('Jalur data not found or empty');
-      }
-    } catch (e) {
-      // Tangani kesalahan dan lempar exception
-      print('Error fetching jalur: $e');
-      throw Exception('Failed to fetch jalur: $e');
-    }
-  }
+  //       // Mengembalikan daftar jalur
+  //       return listJalur;
+  //     } else {
+  //       throw Exception('Jalur data not found or empty');
+  //     }
+  //   } catch (e) {
+  //     // Tangani kesalahan dan lempar exception
+  //     print('Error fetching jalur: $e');
+  //     throw Exception('Failed to fetch jalur: $e');
+  //   }
+  // }
 }

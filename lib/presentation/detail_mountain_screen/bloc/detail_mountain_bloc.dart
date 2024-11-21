@@ -53,7 +53,7 @@ class DetailMountainBloc
     try {
       // Ambil data dari API (langsung JSON Map)
       final Map<String, dynamic> detailMountainData =
-          await apiService.fetchJalur(event.id);
+          await apiService.fetchJalur(event.idGunung);
 
       // Bangun model langsung dari JSON
       final detailMountainModel =
