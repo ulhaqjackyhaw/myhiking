@@ -2,40 +2,35 @@ import 'package:myhiking/models/model.dart';
 
 class DetailMountainModel {
   final String name;
-  final int height;
+  final int elevation;
   final String province;
-  // final List<Route> routes; // Ini bisa digunakan untuk data jalur dengan nama
-  final List<Jalur>
-      jalurList; // Ini untuk menyimpan data lengkap jalur dengan deskripsi, biaya, dll.
+  final double height; // Menambahkan properti height
 
   DetailMountainModel({
     required this.name,
-    required this.height,
+    required this.elevation,
     required this.province,
-    // required this.routes,
-    required this.jalurList,
+    required this.height, // Menambahkan parameter height
   });
 
-  factory DetailMountainModel.fromJson(Map<String, dynamic> json) {
+  // Konstruktor untuk membuat DetailMountainModel dari Gunung
+  factory DetailMountainModel.fromGunung(Gunung gunung) {
     return DetailMountainModel(
-        name: json['gunung']?['nama'] ?? 'Nama Gunung Tidak Ditemukan',
-        // Ambil ketinggian, atau beri default 0 jika null
-        height: json['gunung']?['ketinggian'] ?? 0,
-        province: json['gunung']?['province'] ?? 'Nama Province Tidak Ditemukan',
-        // routes: List<Route>.from(
-        //     json['routes'].map((route) => Route.fromJson(route))),
-        jalurList: List<Jalur>.from(
-          json['data']?.map((jalur) => Jalur.fromJson(jalur)) ?? [],
-        ));
+      name: gunung.nama,
+      elevation: gunung.ketinggian,
+      province: gunung.province,
+      height: gunung.ketinggian
+          .toDouble(), // Misalnya ketinggian digunakan untuk height
+    );
   }
-}
 
-class Route {
-  final String name;
-
-  Route({required this.name});
-
-  factory Route.fromJson(Map<String, dynamic> json) {
-    return Route(name: json['nama']);
+  // Metode untuk mengubah DetailMountainModel menjadi Map JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'elevation': elevation,
+      'province': province,
+      'height': height, // Menambahkan height ke dalam JSON
+    };
   }
 }

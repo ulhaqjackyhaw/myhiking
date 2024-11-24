@@ -1,20 +1,17 @@
 part of 'detail_mountain_bloc.dart';
 
-/// Abstract class for all events that can be dispatched from the
-/// DetailMountain widget.
-///
-/// Events must be immutable and implement the [Equatable] interface.
-class DetailMountainEvent extends Equatable {
+/// Event yang dapat dikirim ke DetailMountainBloc
+abstract class DetailMountainEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-/// Event that is dispatched when the DetailMountain widget is first created.
+/// Event untuk inisialisasi DetailMountain
 class DetailMountainInitialEvent extends DetailMountainEvent {
-  final int idGunung;
+  final int idGunung; // ID gunung untuk diambil datanya
 
   DetailMountainInitialEvent(this.idGunung);
 
-  // @override
-  // List<Object?> get props => [idGunung];
+  @override
+  List<Object?> get props => [idGunung];
 }

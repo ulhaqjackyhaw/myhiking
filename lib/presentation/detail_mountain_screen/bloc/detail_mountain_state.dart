@@ -1,30 +1,34 @@
 part of 'detail_mountain_bloc.dart';
 
-/// Represents the state of DetailMountain in the application.
+/// Representasi state dari DetailMountain
 class DetailMountainState extends Equatable {
-  final DetailMountainModel? detailMountainModelObj;
-  final String? error; // Menambahkan properti error
-  final bool isLoading; // Menambahkan status loading
+  final String? error; // Untuk menyimpan pesan error
+  final bool isLoading; // Untuk menandai apakah sedang memuat data
+  final List<Jalur>? jalurList; // Daftar jalur pendakian
+  final Gunung? gunung; // Detail gunung yang terkait
 
   const DetailMountainState({
-    this.detailMountainModelObj,
     this.error,
-    this.isLoading = false, // Default nilai loading adalah false
+    this.isLoading = false,
+    this.jalurList,
+    this.gunung,
   });
 
+  /// Membuat salinan state dengan perubahan tertentu
   DetailMountainState copyWith({
-    DetailMountainModel? detailMountainModelObj,
     String? error,
-    bool? isLoading, // Menambahkan parameter isLoading
+    bool? isLoading,
+    List<Jalur>? jalurList,
+    Gunung? gunung,
   }) {
     return DetailMountainState(
-      detailMountainModelObj:
-          detailMountainModelObj ?? this.detailMountainModelObj,
       error: error ?? this.error,
-      isLoading: isLoading ?? this.isLoading, // Menyalin nilai isLoading
+      isLoading: isLoading ?? this.isLoading,
+      jalurList: jalurList ?? this.jalurList,
+      gunung: gunung ?? this.gunung,
     );
   }
 
   @override
-  List<Object?> get props => [detailMountainModelObj, error, isLoading];
+  List<Object?> get props => [error, isLoading, jalurList, gunung];
 }

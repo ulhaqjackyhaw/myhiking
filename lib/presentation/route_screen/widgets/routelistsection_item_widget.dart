@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/route_screen/models/route_model.dart';
 import '../../../core/app_export.dart';
 import '../models/routelistsection_item_model.dart';
-
 // ignore_for_file: must_be_immutable
 class RoutelistsectionItemWidget extends StatelessWidget {
-  RoutelistsectionItemWidget(this.routelistsectionItemModelObj, {super.key});
+  final RouteModel routeModel; // Model data untuk item
 
-  RoutelistsectionItemModel routelistsectionItemModelObj;
+  RoutelistsectionItemWidget(this.routeModel, {super.key});
 
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
         width: 145.h,
         padding: EdgeInsets.symmetric(
-          horizontal: 45.h,
-          vertical: 5.h,
+          horizontal: 20.h,
+          vertical: 12.h,
         ),
         decoration: BoxDecoration(
           color: theme.colorScheme.onPrimary,
@@ -31,19 +32,36 @@ class RoutelistsectionItemWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Menampilkan gambar basecamp jika ada
             CustomImageView(
-              imagePath: routelistsectionItemModelObj.tinggiOne!,
+              imagePath: routeModel.basecamp.isNotEmpty
+                  ? ImageConstant.imagePath
+                  : ImageConstant.imgLinkedin,
               height: 40.h,
               width: 40.h,
+              fit: BoxFit.cover,
             ),
-            SizedBox(height: 2.h),
+            SizedBox(height: 8.h),
+            // Menampilkan nama jalur
             Text(
-              routelistsectionItemModelObj.height!,
+              routeModel.name,
               style: CustomTextStyles.labelLargeInterGray500,
+              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 1.h),
-            // Hapus bagian yang menggunakan zipcode
-            // Jika Anda ingin menampilkan informasi lain, tambahkan di sini
+            SizedBox(height: 4.h),
+            // Menampilkan jarak
+            Text(
+              "${routeModel.jarak} km",
+              style: CustomTextStyles.labelMediumPrimary,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 4.h),
+            // Menampilkan nama gunung jika diperlukan
+            Text(
+              routeModel.gunung.nama,
+              style: CustomTextStyles.bodySmallGray50003,
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
