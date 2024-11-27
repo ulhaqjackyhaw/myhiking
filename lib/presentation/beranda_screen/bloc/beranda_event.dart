@@ -14,3 +14,12 @@ class BerandaInitialEvent extends BerandaEvent {
   @override
   List<Object?> get props => [];
 }
+
+class BerandaSearchEvent extends BerandaEvent {
+  final String query;
+
+  BerandaSearchEvent(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}

@@ -15,7 +15,7 @@ part 'beranda_state.dart';
 class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
   BerandaBloc(BerandaState initialState) : super(initialState) {
     on<BerandaInitialEvent>(_onInitialize);
-    // on<BerandaInitialEvent>(_onInitialize);
+    on<BerandaSearchEvent>(_onSearch);
   }
 
   Future<void> _onInitialize(
@@ -34,6 +34,33 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
     } catch (e) {
       // Tangani kesalahan jika API tidak berhasil diambil
       print('Error fetching data: $e');
+    }
+  }
+
+  Future<void> _onSearch(
+    BerandaSearchEvent event,
+    Emitter<BerandaState> emit,
+  ) async {
+    final query = event.query.toLowerCase();
+
+    if (query.isEmpty) {
+      // If the search query is empty, show all items again
+      final homelistItems = await fetchGunungData();
+      emit(state.copyWith(
+        berandaInitialModelObj: state.berandaInitialModelObj?.copyWith(
+          homelistItemList: homelistItems,
+        ),
+      ));
+    } else {
+      // Filter the list based on the search query
+      final filteredList = state.berandaInitialModelObj?.homelistItemList
+          .where((item) => item.namaGunung?.toLowerCase().contains(query) ?? false)
+          .toList();
+      emit(state.copyWith(
+        berandaInitialModelObj: state.berandaInitialModelObj?.copyWith(
+          homelistItemList: filteredList ?? [],
+        ),
+      ));
     }
   }
 
