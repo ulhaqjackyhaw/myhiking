@@ -33,14 +33,14 @@ class RoutelistsectionItemWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Menampilkan gambar basecamp jika ada
-            CustomImageView(
-              imagePath: routeModel.basecamp.isNotEmpty
-                  ? ImageConstant.imagePath
-                  : ImageConstant.imgLinkedin,
-              height: 40.h,
-              width: 40.h,
-              fit: BoxFit.cover,
-            ),
+            // CustomImageView(
+            //   imagePath: routeModel.basecamp.isNotEmpty
+            //       ? ImageConstant.imagePath
+            //       : ImageConstant.imgLinkedin,
+            //   height: 40.h,
+            //   width: 40.h,
+            //   fit: BoxFit.cover,
+            // ),
             SizedBox(height: 8.h),
             // Menampilkan nama jalur
             Text(
@@ -51,7 +51,7 @@ class RoutelistsectionItemWidget extends StatelessWidget {
             SizedBox(height: 4.h),
             // Menampilkan jarak
             Text(
-              "${routeModel.jarak} km",
+              "${routeModel.distance} km",
               style: CustomTextStyles.labelMediumPrimary,
               textAlign: TextAlign.center,
             ),

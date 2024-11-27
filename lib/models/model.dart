@@ -118,6 +118,7 @@ class Jalur {
   final String? regency;
   final String? province;
   final int jarak;
+  final String? gambar;
   final int biaya;
 
   Jalur({
@@ -130,6 +131,7 @@ class Jalur {
     this.regency,
     this.province,
     required this.jarak,
+    this.gambar,
     required this.biaya,
   });
 
@@ -144,6 +146,7 @@ class Jalur {
       regency: json['regency'],
       province: json['province'],
       jarak: json['jarak'] ?? 0,
+      gambar: json['gambar']?? "Gambar tidak tersedia",
       biaya: json['biaya'] ?? 0,
     );
   }
@@ -159,6 +162,7 @@ class Jalur {
       "regency": regency,
       "province": province,
       "jarak": jarak,
+      "gambar": gambar,
       "biaya": biaya,
     };
   }
