@@ -5,12 +5,14 @@ class DetailMountainModel {
   final int elevation;
   final String province;
   final double height; // Menambahkan properti height
+  final String? gambar;
 
   DetailMountainModel({
     required this.name,
     required this.elevation,
     required this.province,
     required this.height, // Menambahkan parameter height
+    required this.gambar,
   });
 
   // Konstruktor untuk membuat DetailMountainModel dari Gunung
@@ -21,6 +23,7 @@ class DetailMountainModel {
       province: gunung.province,
       height: gunung.ketinggian
           .toDouble(), // Misalnya ketinggian digunakan untuk height
+      gambar: gunung.gambar,
     );
   }
 
@@ -31,6 +34,7 @@ class DetailMountainModel {
       'elevation': elevation,
       'province': province,
       'height': height, // Menambahkan height ke dalam JSON
+      'gambar': gambar,
     };
   }
 }

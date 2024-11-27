@@ -38,6 +38,7 @@ class Gunung {
   final String nama;
   final int ketinggian;
   final String province;
+  String? gambar;
   final List<Jalur> data; // Tambahkan data sebagai List<Jalur>
 
   Gunung({
@@ -46,6 +47,7 @@ class Gunung {
     required this.ketinggian,
     required this.province,
     required this.data,
+    this.gambar,
   });
 
   factory Gunung.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class Gunung {
       nama: json['nama'] ?? '',
       ketinggian: json['ketinggian'] ?? 0,
       province: json['province'] ?? '',
+      gambar: json['gambar'] ?? 'URL Gambar Tidak Tersedia',
       data: json['data'] != null
           ? List<Jalur>.from(json['data'].map((x) => Jalur.fromJson(x)))
           : [],
@@ -66,6 +69,7 @@ class Gunung {
       "nama": nama,
       "ketinggian": ketinggian,
       "province": province,
+      'gambar': gambar,
       "data": List<dynamic>.from(data.map((x) => x.toJson())),
     };
   }

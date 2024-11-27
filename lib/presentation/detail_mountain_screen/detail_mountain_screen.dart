@@ -22,6 +22,8 @@ class DetailMountainScreen extends StatefulWidget {
 }
 
 class _DetailMountainScreenState extends State<DetailMountainScreen> {
+  late String imageUrl; // Deklarasi imageUrl
+
   @override
   void initState() {
     super.initState();
@@ -35,15 +37,25 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<DetailMountainBloc, DetailMountainState>(
       builder: (context, state) {
+        // Jika data sedang dimuat
         if (state.isLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state.error != null) {
+        }
+
+        // Jika ada error
+        if (state.error != null) {
           return Center(child: Text('Error: ${state.error}'));
         }
 
+        // Pastikan data gunung ada
         final detailMountain = state.gunung != null
             ? DetailMountainModel.fromGunung(state.gunung!)
             : null;
+
+        // Ambil URL gambar dari detailMountain
+        imageUrl = detailMountain?.gambar ??
+            'assets/images/placeholder.png'; // Gunakan gambar default jika null
+
         final routes = state.jalurList;
 
         return SafeArea(
@@ -104,76 +116,71 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.h),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics:
-            const NeverScrollableScrollPhysics(), // Non-scrollable jika dalam scroll lain
-        itemCount: routes.length,
-        itemBuilder: (context, index) {
-          final route = routes[index];
+      child: SingleChildScrollView(
+        // Membuat list jalur dapat digulir
+        child: Column(
+          children: routes.map((route) {
+            // Validasi properti route
+            if (route.id == null || route.nama.isEmpty) {
+              return const SizedBox.shrink(); // Abaikan jika data tidak valid
+            }
 
-          // Validasi properti route
-          if (route.id == null || route.nama.isEmpty) {
-            return const SizedBox.shrink(); // Abaikan jika data tidak valid
-          }
-
-          return GestureDetector(
-            onTap: () {
-              // Navigasi ke RouteScreen jika ID valid
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => RouteBloc(apiService: ApiService()),
-                    child: RouteScreen(
-                      jalurId: route.id,
-                      idGunung: widget.idGunung,
+            return GestureDetector(
+              onTap: () {
+                // Navigasi ke RouteScreen jika ID valid
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BlocProvider(
+                      create: (context) => RouteBloc(apiService: ApiService()),
+                      child: RouteScreen(
+                        jalurId: route.id,
+                        idGunung: widget.idGunung,
+                      ),
                     ),
                   ),
-                ),
-              );
-
-// Log nilai idGunung dan jalurId
-              print(
-                  "Navigating to RouteScreen with idGunung: ${widget.idGunung}, jalurId: ${route.id}");
-            },
-            child: Container(
-              margin: EdgeInsets.only(bottom: 8.h),
-              padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimary,
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                borderRadius: BorderRadius.circular(8.h),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(right: 12.h),
-                    child: CustomImageView(
-                      imagePath:
-                          ImageConstant.imgLinkedin, // Gunakan gambar default
-                      height: 20.h,
-                      width: 18.h,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      route.nama, // Nama jalur
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
+                );
+                print(
+                    "Navigating to RouteScreen with idGunung: ${widget.idGunung}, jalurId: ${route.id}");
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 8.h),
+                padding: EdgeInsets.symmetric(horizontal: 14.h, vertical: 16.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  border: Border.all(
                     color: Theme.of(context).colorScheme.primary,
                   ),
-                ],
+                  borderRadius: BorderRadius.circular(8.h),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 12.h),
+                      child: CustomImageView(
+                        imagePath:
+                            ImageConstant.imgLinkedin, // Gunakan gambar default
+                        height: 20.h,
+                        width: 18.h,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        route.nama, // Nama jalur
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          }).toList(), // Konversi list jalur ke widget
+        ),
       ),
     );
   }
@@ -232,10 +239,12 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
+            // Gunakan imageUrl untuk gambar latar belakang
             CustomImageView(
-              imagePath: ImageConstant.imgBg,
-              height: 372.h,
+              imagePath: imageUrl, // Pastikan imageUrl valid
+              height: 371.h, // Sesuaikan dengan tinggi yang lebih besar
               width: double.maxFinite,
+              fit: BoxFit.cover, // Memastikan gambar memenuhi ar
             ),
             Container(
               width: double.maxFinite,
@@ -265,7 +274,7 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
                         end: const Alignment(0.43, 0.05),
                         colors: [
                           appTheme.gray50,
-                          appTheme.gray50.withOpacity(0.1)
+                          appTheme.gray50.withOpacity(0.1),
                         ],
                       ),
                     ),
@@ -276,11 +285,29 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
                           width: double.maxFinite,
                           child: Column(
                             children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.imgMountainPicture,
-                                height: 120.h,
-                                width: 120.h,
-                                radius: BorderRadius.circular(60.h),
+                              // SizedBox(height: 30.h),
+                              // Gambar gunung di tengah yang lebih besar dan berbentuk bulat
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 24.h),
+                                width: 120.h, // Ukuran gambar lebih besar
+                                height: 120.h, // Ukuran gambar lebih besar
+                                decoration: BoxDecoration(
+                                  shape: BoxShape
+                                      .circle, // Membuatnya berbentuk bulat
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 12.h,
+                                      spreadRadius: 2.h,
+                                    ),
+                                  ],
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        imageUrl), // Gambar yang digunakan
+                                    fit: BoxFit
+                                        .cover, // Gambar mengisi area bulat
+                                  ),
+                                ),
                               ),
                             ],
                           ),
