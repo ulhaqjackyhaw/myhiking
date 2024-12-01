@@ -77,7 +77,7 @@ class AppRoutes {
           }
 
           // Jika idGunung tidak null, lanjutkan dengan navigasi
-          return DetailMountainScreen.builder(idGunung)(context);
+          return DetailMountainScreen(idGunung: idGunung);
         },
         // routeScreen: RouteScreen.builder,
         tataTertibScreen: TataTertibScreen.builder,

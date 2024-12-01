@@ -106,22 +106,21 @@ class HomelistItemWidget extends StatelessWidget {
 
 // Fungsi untuk menangani onTap dan mengarahkan ke halaman detail gunung
 onTapImgGunung(BuildContext context, HomelistItemModel homelistItemModelObj) {
-  final idGunung =
-      homelistItemModelObj.id; // Mengambil mountainId dari objek model
+  final idGunung = homelistItemModelObj.id;
 
   if (idGunung != null) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => BlocProvider(
-          create: (context) => DetailMountainBloc(ApiService())
+          create: (context) => DetailMountainBloc(
+              apiService: ApiService()) // Menyediakan ApiService ke Bloc
             ..add(DetailMountainInitialEvent(idGunung)),
           child: DetailMountainScreen(idGunung: idGunung),
         ),
       ),
     );
   } else {
-    // Tindakan jika mountainId tidak ditemukan
     print('Mountain ID tidak ditemukan');
   }
 }

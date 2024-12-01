@@ -8,6 +8,8 @@ class HomelistItemModel {
   // String? province;
   Province? province;
 
+  var title;
+
   HomelistItemModel({
     this.id,
     this.namaGunung,

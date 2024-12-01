@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:equatable/equatable.dart';
 import 'package:myhiking/models/model.dart';
 import '../../../core/app_export.dart';
@@ -11,58 +13,47 @@ class DetailMountainBloc
     extends Bloc<DetailMountainEvent, DetailMountainState> {
   final ApiService apiService;
 
-  DetailMountainBloc(this.apiService) : super(DetailMountainState()) {
+  DetailMountainBloc({required this.apiService})
+      : super(const DetailMountainState()) {
     on<DetailMountainInitialEvent>(_onInitialize);
   }
-  // Future<void> _onInitialize(
-  //   DetailMountainInitialEvent event,
-  //   Emitter<DetailMountainState> emit,
-  // ) async {
-  //   try {
-  //     // Mengambil data dari API
-  //     final ApiResponse detailMountainData =
-  //         await apiService.fetchJalur(event.id);
 
-  //     // Pastikan response API memiliki data yang diperlukan
-  //     final detailMountainModel = DetailMountainModel(
-  //       name: detailMountainData.data.isNotEmpty
-  //           ? detailMountainData.data[0].nama // Ambil nama dari data pertama
-  //           : 'Nama Gunung Tidak Ditemukan',
-  //       height:
-  //           3000, // Misalnya data tinggi gunung bisa datang dari API jika tersedia
-  //       province: detailMountainData.data.isNotEmpty
-  //           ? detailMountainData.data[0].province// Ambil nama dari data pertama
-  //           : 'Nama Gunung Tidak Ditemukan',
-  //       routes: detailMountainData.data
-  //           .map((jalur) => Route(name: jalur.nama))
-  //           .toList(),
-  //       jalurList: detailMountainData.data, // Menyimpan list Jalur yang lengkap
-  //     );
+  /// Fungsi untuk mengambil data dari API dan mengubah state
+  Future<void> fetchRouteCentres(
+      int idGunung, Emitter<DetailMountainState> emit) async {
+    emit(state.copyWith(isLoading: true));
 
-  //     // Emit state dengan detailMountainModel yang baru
-  //     emit(state.copyWith(detailMountainModelObj: detailMountainModel));
-  //   } catch (e) {
-  //     // Handle error
-  //     print("Error fetching mountain details: $e");
-  //   }
-  // }
+    try {
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:8000/api/gunung/$idGunung'),
+        headers: {'Authorization': 'Bearer your_token'},
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final resRouteCentres = ResRouteCentres.fromJson(jsonData);
+
+        emit(state.copyWith(
+          isLoading: false,
+          gunung: resRouteCentres.gunung,
+          jalurList: resRouteCentres
+              .data, // Pastikan jalur berasal dari ResRouteCentres
+        ));
+      } else {
+        emit(
+            state.copyWith(isLoading: false, error: 'Failed to fetch routes.'));
+      }
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: 'Failed to fetch data: $e'));
+    }
+  }
+
+  /// Handler untuk inisialisasi data
   Future<void> _onInitialize(
     DetailMountainInitialEvent event,
     Emitter<DetailMountainState> emit,
   ) async {
-    try {
-      // Ambil data dari API (langsung JSON Map)
-      final Map<String, dynamic> detailMountainData =
-          await apiService.fetchJalur(event.idGunung);
-
-      // Bangun model langsung dari JSON
-      final detailMountainModel =
-          DetailMountainModel.fromJson(detailMountainData);
-
-      // Emit state dengan model
-      emit(state.copyWith(detailMountainModelObj: detailMountainModel));
-    } catch (e) {
-      print("Error fetching mountain details: $e");
-    }
+    // Panggil fetchRouteCentres untuk mendapatkan data
+    await fetchRouteCentres(event.idGunung, emit);
   }
 }

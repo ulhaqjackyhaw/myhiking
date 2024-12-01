@@ -1,22 +1,32 @@
-import 'package:equatable/equatable.dart';
-import 'routelistsection_item_model.dart';
+import 'package:myhiking/models/model.dart';
 
-/// This class defines the variables used in the [route_screen],
-/// and is typically used to hold data that is passed between different parts of the application.
-// ignore_for_file: must_be_immutable
-class RouteModel extends Equatable {
-  RouteModel({this.routelistsectionItemList = const []});
+class RouteModel {
+  final String name;
+  final String description; // Deskripsi jalur
+  final String location; // Lokasi detail (gabungan alamat)
+  final String gambar;
+  final int distance; // Jarak
+  final Gunung gunung; // Informasi gunung
 
-  List<RoutelistsectionItemModel> routelistsectionItemList;
+  RouteModel({
+    required this.name,
+    required this.description,
+    required this.location,
+    required this.distance,
+    required this.gunung,
+    required this.gambar,
+  });
 
-  RouteModel copyWith(
-      {List<RoutelistsectionItemModel>? routelistsectionItemList}) {
+  /// Membuat model dari ResDetailRouteCentres
+  factory RouteModel.fromResDetailRouteCentres(ResDetailRouteCentres data) {
     return RouteModel(
-      routelistsectionItemList:
-          routelistsectionItemList ?? this.routelistsectionItemList,
+      name: data.jalur.nama,
+      description: data.jalur.deskripsi ?? '',
+      location:
+          "${data.jalur.village}, ${data.jalur.district}, ${data.jalur.regency}, ${data.jalur.province}",
+      distance: data.jalur.jarak,
+      gunung: data.gunung,
+      gambar: data.jalur.gambar ?? "gambar tidak ada",
     );
   }
-
-  @override
-  List<Object?> get props => [routelistsectionItemList];
 }
