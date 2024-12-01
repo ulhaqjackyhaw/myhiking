@@ -1,7 +1,10 @@
 import 'package:equatable/equatable.dart';
+import '../../../api/api_service.dart';
 import '../../../core/app_export.dart';
 import '../models/transactionlist_item_model.dart';
 import '../models/transaksi_model.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 part 'transaksi_event.dart';
 part 'transaksi_state.dart';
@@ -10,38 +13,63 @@ part 'transaksi_state.dart';
 class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
   TransaksiBloc(super.initialState) {
     on<TransaksiInitialEvent>(_onInitialize);
-     on<ChangeStatusEvent>(_onChangeStatus); // Tambahkan event handler ini
+    on<ChangeStatusEvent>(_onChangeStatus); // Tambahkan event handler ini
   }
 
   _onInitialize(
     TransaksiInitialEvent event,
     Emitter<TransaksiState> emit,
   ) async {
-    emit(
-      state.copyWith(
-        transaksiModelObj: state.transaksiModelObj?.copyWith(
-          transactionlistItemList: fillTransactionlistItemList(),
+    try {
+      List<TransactionlistItemModel> transactionListItems =
+          await fetchTransactions();
+
+      emit(
+        state.copyWith(
+          transaksiModelObj: state.transaksiModelObj?.copyWith(
+            transactionlistItemList: transactionListItems,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
+
   // Logika untuk mengubah status transaksi
   _onChangeStatus(
     ChangeStatusEvent event,
     Emitter<TransaksiState> emit,
   ) {
-    final updatedList = state.transaksiModelObj?.transactionlistItemList.map((item) {
-      if (item.id == event.transactionId && item.status == "Proses") {
-        return item.copyWith(status: "Berhasil"); // Ubah status menjadi Berhasil
-      }
-      return item; // Kembalikan item yang tidak berubah
-    }).toList();
+    //   final updatedList =
+    //       state.transaksiModelObj?.transactionlistItemList.map((item) {
+    //     if (item.id == event.transactionId && item.status == "Proses") {
+    //       return item.copyWith(
+    //           status: "Berhasil"); // Ubah status menjadi Berhasil
+    //     }
+    //     return item; // Kembalikan item yang tidak berubah
+    //   }).toList();
 
-    final updatedModel = state.transaksiModelObj?.copyWith(
-      transactionlistItemList: updatedList,
-    );
+    //   final updatedModel = state.transaksiModelObj?.copyWith(
+    //     transactionlistItemList: updatedList,
+    //   );
 
-    emit(state.copyWith(transaksiModelObj: updatedModel)); // Emit state baru
+    //   emit(state.copyWith(transaksiModelObj: updatedModel)); // Emit state baru
+  }
+
+  Future<List<TransactionlistItemModel>> fetchTransactions() async {
+    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonData = json.decode(response.body);
+      // print(jsonData); // Menampilkan data JSON yang diterima
+
+      return jsonData
+          .map((data) => TransactionlistItemModel.fromJson(data))
+          .toList();
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
   }
 
   List<TransactionlistItemModel> fillTransactionlistItemList() {

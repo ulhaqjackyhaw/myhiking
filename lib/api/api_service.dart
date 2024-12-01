@@ -69,4 +69,14 @@ class ApiService {
       throw Exception('Failed to fetch jalur');
     }
   }
+
+  Future<Map<String, dynamic>> fetchTransactions() async {
+    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }     
+  }
 }

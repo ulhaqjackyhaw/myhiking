@@ -28,7 +28,7 @@ class DetailMountainScreen extends StatefulWidget {
   @override
   State<DetailMountainScreen> createState() => _DetailMountainScreenState();
 
-  // static builder(int idGunung) {}
+  static builder(int idGunung) {}
 
   // @override
   // _DetailMountainScreenState createState() => _DetailMountainScreenState();
@@ -187,15 +187,15 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
                   onTap: () {
                     // Pastikan jalur memiliki data valid
                     // if (jalur.id != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RouteScreen(
-                            jalurId: jalurCentre[index]
-                                .id, // Gunakan id dari jalur yang dipilih
-                          ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RouteScreen(
+                          jalurId: jalurCentre[index]
+                              .id, // Gunakan id dari jalur yang dipilih
                         ),
-                      );
+                      ),
+                    );
                     // } else {
                     //   // Tampilkan pesan jika jalur tidak valid
                     //   ScaffoldMessenger.of(context).showSnackBar(

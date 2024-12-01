@@ -11,9 +11,18 @@ class TransactionlistItemModel extends Equatable {
     status = status ?? "Proses";
   }
 
+  factory TransactionlistItemModel.fromJson(Map<String, dynamic> json) {
+    return TransactionlistItemModel(
+      id: json['id'],
+      senintwentyseve: json['senintwentyseve'],
+      gunungslamet: json['gunungslamet'],
+      status: json['status'],
+    );
+  }
+
   String? senintwentyseve;
   String? gunungslamet;
-  String?   id;
+  String? id;
   String? status;
 
   TransactionlistItemModel copyWith(
