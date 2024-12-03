@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/model.dart';
+import 'package:myhiking/presentation/booking_screen/bloc/booking_bloc.dart';
+import 'package:myhiking/presentation/booking_screen/booking_screen.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -9,19 +11,89 @@ import '../../widgets/custom_icon_button.dart';
 import 'bloc/route_bloc.dart';
 import 'models/route_model.dart';
 
-class RouteScreen extends StatelessWidget {
+class RouteScreen extends StatefulWidget {
   final int? jalurId;
   final int? idGunung;
 
   const RouteScreen({super.key, this.jalurId, this.idGunung});
 
   @override
+  State<RouteScreen> createState() => _RouteScreenState();
+}
+
+class _RouteScreenState extends State<RouteScreen> {
+  late String imageUrl; // Deklarasi imageUrl
+  String userName = '';
+  int userId = 0;
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    // Memicu event untuk mengambil data saat screen diinisialisasi
+    // context
+    //     .read<DetailMountainBloc>()
+    //     .add(DetailMountainInitialEvent(widget.idGunung));
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userName = response['data']['name'];
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RouteBloc(apiService: ApiService())
-        ..add(RouteInitialEvent(jalurId: jalurId!, idGunung: idGunung!)),
+        ..add(RouteInitialEvent(
+            jalurId: widget.jalurId!, idGunung: widget.idGunung!)),
       child: BlocBuilder<RouteBloc, RouteState>(
         builder: (context, state) {
+          // print('jalur: $state.jalur');
+          // print('gunung: $state.gunung');
           // Handle loading state
           if (state.isLoading) {
             return Scaffold(
@@ -148,10 +220,6 @@ class RouteScreen extends StatelessWidget {
         children: [
           // Image with proper height and fit
           ClipRRect(
-            // borderRadius: BorderRadius.only(
-            //   bottomLeft: Radius.circular(16.h),
-            //   bottomRight: Radius.circular(16.h),
-            // ),
             child: Image.network(
               imageUrl,
               height: 600.h, // Adjusted height as per the second image
@@ -175,7 +243,6 @@ class RouteScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Information Box (white background) below the image
         ],
       ),
     );
@@ -188,42 +255,29 @@ class RouteScreen extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.onPrimary,
           borderRadius: BorderRadiusStyle.roundedBorder10,
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: appTheme.black900.withOpacity(0.1),
-          //     blurRadius: 4.h,
-          //     offset: Offset(0, 2.h),
-          //   ),
-          // ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Membuat Row untuk gambar dan teks berada di samping
             Row(
-              crossAxisAlignment: CrossAxisAlignment
-                  .center, // Memastikan gambar dan teks sejajar di tengah
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Gambar lokasi
                 CustomImageView(
                   imagePath: ImageConstant.imgLinkedin,
-                  height: 24.h, // Memperbesar ukuran gambar
-                  width: 24.h, // Sesuaikan agar gambar lebih besar
-                  margin: EdgeInsets.only(
-                      right: 8.h), // Memberikan jarak antara gambar dan teks
+                  height: 24.h,
+                  width: 24.h,
+                  margin: EdgeInsets.only(right: 8.h),
                 ),
-                // Nama jalur
                 Text(
                   routeModel.name,
                   style: CustomTextStyles.titleLargePrimaryBlack.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20, // Menyesuaikan ukuran font untuk nama jalur
+                    fontSize: 20,
                   ),
                 ),
               ],
             ),
             SizedBox(height: 8.h),
-            // Menampilkan lokasi
             Text(
               "${routeModel.location}",
               style: CustomTextStyles.bodyMediumGray500,
@@ -232,7 +286,6 @@ class RouteScreen extends StatelessWidget {
         ));
   }
 
-  // **Route Actions Section**
   Widget _buildRouteActions(BuildContext context, RouteModel routeModel) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,6 +378,33 @@ class RouteScreen extends StatelessWidget {
     );
   }
 
+  // **Pesan Sekarang Button**
+  Widget _buildPesanSekarangButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 56.h,
+      text: "Pesan Sekarang",
+      buttonStyle: CustomButtonStyles.outlineBlackTL14,
+      buttonTextStyle: CustomTextStyles.titleLarge_1,
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => BookingBloc(apiService: ApiService()),
+              child: BookingScreen(
+                jalurId: widget.jalurId, // Use widget to access jalurId
+                idGunung: widget.idGunung, // Use widget to access idGunung
+                // userId: userId,
+              ),
+            ),
+          ),
+        );
+        print(
+            "Navigating to BookingScreen with idGunung: ${widget.idGunung}, jalurId: ${widget.jalurId}, ${userId.toString()}");
+      },
+    );
+  }
+
   // **Tata Tertib Button**
   Widget _buildTataTertibButton(BuildContext context) {
     return CustomElevatedButton(
@@ -360,16 +440,29 @@ class RouteScreen extends StatelessWidget {
     );
   }
 
-  // **Pesan Sekarang Button**
-  Widget _buildPesanSekarangButton(BuildContext context) {
-    return CustomElevatedButton(
-      height: 56.h,
-      text: "Pesan Sekarang",
-      buttonStyle: CustomButtonStyles.outlineBlackTL14,
-      buttonTextStyle: CustomTextStyles.titleLarge_1,
-      onPressed: () {
-        NavigatorService.pushNamed(AppRoutes.bookingScreen);
-      },
-    );
-  }
+  // // **Pesan Sekarang Button**
+  // Widget _buildPesanSekarangButton(BuildContext context) {
+  //   return CustomElevatedButton(
+  //     height: 56.h,
+  //     text: "Pesan Sekarang",
+  //     buttonStyle: CustomButtonStyles.outlineBlackTL14,
+  //     buttonTextStyle: CustomTextStyles.titleLarge_1,
+  //     onPressed: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => BlocProvider(
+  //             create: (context) => BookingBloc(apiService: ApiService()),
+  //             child: BookingScreen(
+  //               jalurId: jalurId,
+  //               idGunung: idGunung,
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //       print(
+  //           "Navigating to RouteScreen with idGunung: ${idGunung}, jalurId: ${jalurId}, ${userId.toString()}");
+  //     },
+  //   );
+  // }
 }
