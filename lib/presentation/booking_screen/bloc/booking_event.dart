@@ -1,26 +1,89 @@
 part of 'booking_bloc.dart';
 
-/// Abstract class for all events that can be dispatched from the
-/// Booking widget.
-///
-/// Events must be immutable and implement the [Equatable] interface.
+/// Abstract class for all events related to Booking.
 class BookingEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-/// Event that is dispatched when the Booking widget is first created.
+/// Event triggered when the Booking widget is first created.
 class BookingInitialEvent extends BookingEvent {
+  // final int userId;
+  final int idGunung;
+  final int jalurId;
+  // final String tanggalNaik;
+  // final String tanggalTurun;
+  // final String totalHargaTiket;
+
+  BookingInitialEvent({
+    // required this.userId,
+    required this.idGunung,
+    required this.jalurId,
+    // required this.tanggalNaik,
+    // required this.tanggalTurun,
+    // required this.totalHargaTiket,
+  });
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        // userId,
+        idGunung,
+        jalurId,
+        // tanggalNaik,
+        // tanggalTurun,
+        // totalHargaTiket,
+      ];
 }
 
-/// Event for changing date
-// ignore_for_file: must_be_immutable
+/// Event triggered when the user changes the booking date.
 class ChangeDateEvent extends BookingEvent {
+  final DateTime date;
+
   ChangeDateEvent({required this.date});
-  DateTime date;
 
   @override
   List<Object?> get props => [date];
 }
+
+// Event untuk mengupdate tanggal
+class UpdateBookingDateEvent extends BookingEvent {
+  final String formattedDate;
+
+  UpdateBookingDateEvent(this.formattedDate);
+
+  @override
+  List<Object?> get props => [formattedDate];
+}
+
+/// Event triggered when the user updates their booking details.
+// class UpdateBookingEvent extends BookingEvent {
+//   final int bookingId;
+//   final DateTime newTanggalNaik;
+//   final DateTime newTanggalTurun;
+//   final double newTotalHargaTiket;
+
+//   UpdateBookingEvent({
+//     required this.bookingId,
+//     required this.newTanggalNaik,
+//     required this.newTanggalTurun,
+//     required this.newTotalHargaTiket,
+//   });
+
+//   @override
+//   List<Object?> get props => [
+//         bookingId,
+//         newTanggalNaik,
+//         newTanggalTurun,
+//         newTotalHargaTiket,
+//       ];
+// }
+
+// /// Event triggered when the user cancels their booking.
+// class CancelBookingEvent extends BookingEvent {
+//   final int bookingId;
+
+//   CancelBookingEvent({required this.bookingId});
+
+//   @override
+//   List<Object?> get props => [bookingId];
+// }

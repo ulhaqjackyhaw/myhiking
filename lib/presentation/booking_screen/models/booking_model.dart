@@ -1,26 +1,34 @@
-import 'package:equatable/equatable.dart';
+import 'package:myhiking/models/jalurmodel.dart';
 
-/// This class defines the variables used in the [booking_screen],
-/// and is typically used to hold data that is passed between different parts of the application.
-// ignore_for_file: must_be_immutable
-class BookingModel extends Equatable {
-  BookingModel({this.selectedBookingDateField, this.bookingDateField = "dd/mm/yyyy"}) {
-    selectedBookingDateField = selectedBookingDateField ?? DateTime.now();
-  }
+class BookingModel {
+  final String name;
+  final String location; // Lokasi detail (gabungan alamat)
+  final String gambar;
+  final double biaya;
+  final Gunung gunung; // Informasi gunung
 
-  DateTime? selectedBookingDateField;
-  String bookingDateField;
+  BookingModel({
+    required this.name,
+    required this.location,
+    required this.biaya,
+    required this.gunung,
+    required this.gambar,
+  });
 
-  BookingModel copyWith({
-    DateTime? selectedBookingDateField,
-    String? bookingDateField,
-  }) {
+  /// Membuat model dari ResJalurModel yang berisi satu jalur
+  static BookingModel resJalurModelFromJson(ResJalurModel data) {
+    // Return a single BookingModel from the first jalur in the list
+    // You can select which jalur to use, here we are using the first one
+
     return BookingModel(
-      selectedBookingDateField: selectedBookingDateField ?? this.selectedBookingDateField,
-      bookingDateField: bookingDateField ?? this.bookingDateField,
+      name: data.jalur.nama,
+
+      location:
+          "${data.jalur.village}, ${data.jalur.district}, ${data.jalur.regency}, ${data.jalur.province}",
+      biaya: data.jalur.biaya,
+      gunung: data.jalur.gunung,
+      gambar: data.jalur.gambar ??
+          "gambar tidak ada", // Default message for missing image
     );
   }
-
-  @override
-  List<Object?> get props => [ selectedBookingDateField, bookingDateField];
 }
