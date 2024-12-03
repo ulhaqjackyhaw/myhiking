@@ -19,6 +19,11 @@ class DetailMountainScreen extends StatefulWidget {
 
   @override
   State<DetailMountainScreen> createState() => _DetailMountainScreenState();
+
+  static builder(int idGunung) {}
+
+  // @override
+  // _DetailMountainScreenState createState() => _DetailMountainScreenState();
 }
 
 class _DetailMountainScreenState extends State<DetailMountainScreen> {

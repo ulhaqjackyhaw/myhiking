@@ -163,12 +163,14 @@ class TransaksiPage extends StatelessWidget {
     if (status == "Selesai") {
       NavigatorService.pushNamed(AppRoutes.tiketScreen);
     } else if (status == "Proses") {
+      NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
       // Mengubah status
-      if (id != null) {
-        context
-            .read<TransaksiBloc>()
-            .add(ChangeStatusEvent(id)); // Mengubah status
-      }
+      // if (id != null) {
+      //   context
+      //       .read<TransaksiBloc>()
+      //       .add(ChangeStatusEvent(id)); // Mengubah status
+      // }
     }
+    // else if (status == "Proses") {}
   }
 }

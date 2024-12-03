@@ -65,6 +65,22 @@ class ApiService {
   //     throw Exception('ID Gunung atau ID Jalur tidak valid');
   //   }
 
+  //   if (response.statusCode == 200) {
+  //     return jsonDecode(response.body);
+  //   } else {
+  //     throw Exception('Failed to fetch jalur');
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> fetchTransactions() async {
+    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch transactions');
+    }
+  }
   //   final url = Uri.parse('$baseUrl/gunung/$idGunung/jalur/$jalurid');
   //   final response = await http.get(url);
 
