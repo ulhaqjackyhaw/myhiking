@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:intl/intl.dart';
+import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/models/jalurmodel.dart';
 import '../../core/app_export.dart';
 import '../../core/utils/date_time_utils.dart';
 import '../../core/utils/validation_functions.dart';
@@ -13,110 +16,201 @@ import '../../widgets/custom_text_form_field.dart';
 import 'bloc/booking_bloc.dart';
 import 'models/booking_model.dart';
 
-class BookingScreen extends StatelessWidget {
-  const BookingScreen({super.key});
+class BookingScreen extends StatefulWidget {
+  final int? jalurId;
+  final int? idGunung;
+  const BookingScreen(
+      {super.key, required this.jalurId, required this.idGunung});
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<BookingBloc>(
-      create: (context) => BookingBloc(BookingState(
-        bookingModelObj: BookingModel(),
-      ))
-        ..add(BookingInitialEvent()),
-      child: const BookingScreen(),
-    );
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+  // static Widget builder(BuildContext context) {
+  //   return BlocProvider<BookingBloc>(
+  //     create: (context) => BookingBloc(BookingState(
+  //       bookingModelObj: BookingModel(),
+  //     ))
+  //       ..add(BookingInitialEvent()),
+  //     child: const BookingScreen(),
+  //   );
+  // }
+}
+
+class _BookingScreenState extends State<BookingScreen> {
+  late String imageUrl; // Deklarasi imageUrl
+  String userName = '';
+  String userId = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserProfile();
+    if (widget.idGunung != null && widget.jalurId != null) {
+      BlocProvider.of<BookingBloc>(context).add(BookingInitialEvent(
+        idGunung: widget.idGunung!,
+        jalurId: widget.jalurId!,
+      ));
+      print(
+          "Navigating with idGunung: ${widget.idGunung} and jalurId: ${widget.jalurId},");
+    }
+  }
+
+  Future<void> _getUserProfile() async {
+    final token = await ApiService().getToken();
+    if (token != null) {
+      final response = await ApiService().getUserProfile(token);
+      if (response['success']) {
+        setState(() {
+          userId = response['data']['id'].toString();
+          // userName = response['data']['name'];
+        });
+      }
+    }
+    print("Navigating with $userId");
+
+    // print(userName);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: appTheme.gray5001,
-        appBar: _buildAppbar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.symmetric(horizontal: 12.h),
-              child: Column(
-                children: [
-                  SizedBox(height: 4.h),
-                  _buildProgressSection(context),
-                  SizedBox(height: 28.h),
-                  _buildHotelCard(context),
-                  SizedBox(height: 28.h),
-                  Container(
-                    width: double.maxFinite,
-                    margin: EdgeInsets.only(
-                      left: 4.h,
-                      right: 6.h,
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.maxFinite,
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadiusStyle.roundedBorder20,
-                            border: Border.all(
-                              color: theme.colorScheme.primaryContainer,
-                              width: 2.h,
+    // Perform null check for jalurId and idGunung before passing them to the Bloc
+    // final jalurId = widget.jalurId;
+    // final idGunung = widget.idGunung;
+
+    // if (jalurId == null || idGunung == null) {
+    //   return Scaffold(
+    //     body: Center(
+    //       child: Text('Missing required parameters (jalurId or idGunung).'),
+    //     ),
+    //   );
+    // }
+
+    return BlocProvider(
+      create: (context) => BookingBloc(apiService: ApiService())
+        ..add(BookingInitialEvent(
+          idGunung: widget.idGunung!,
+          jalurId: widget.jalurId!,
+        )),
+      // child: SafeArea(
+      //   child: Scaffold(
+      //     backgroundColor: appTheme.gray5001,
+      //     appBar: _buildAppbar(context),
+      child: BlocBuilder<BookingBloc, BookingState>(
+        builder: (context, state) {
+          // final jalur = state.jalur;
+          // final gunung = state.gunung;
+          if (state.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state.jalur == null || state.gunung == null) {
+            return Center(
+                child: Text('Data jalur atau gunung tidak tersedia.'));
+          }
+
+          // Log untuk memeriksa nilai jalur dan gunung
+          // print('jalur: $jalur');
+          // print('gunung: $gunung');
+
+          // if (jalur == null || gunung == null) {
+          //   return Center(
+          //       child: Text('Data jalur atau gunung tidak tersedia.'));
+          // }
+
+          final resDetailRouteCentres = ResJalurModel(
+            status: true,
+            message: "Success",
+            //error disini
+            jalur: state.jalur!,
+            // gunung: state.gunung!,
+          );
+
+          final jalurModel =
+              BookingModel.resJalurModelFromJson(resDetailRouteCentres);
+
+          return SizedBox(
+            width: double.maxFinite,
+            child: SingleChildScrollView(
+              child: Container(
+                width: double.maxFinite,
+                padding: EdgeInsets.symmetric(horizontal: 12.h),
+                child: Column(
+                  children: [
+                    SizedBox(height: 4.h),
+                    _buildProgressSection(context),
+                    SizedBox(height: 28.h),
+                    _buildHotelCard(context, jalurModel),
+                    SizedBox(height: 28.h),
+                    Container(
+                      width: double.maxFinite,
+                      margin: EdgeInsets.only(
+                        left: 4.h,
+                        right: 6.h,
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: double.maxFinite,
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadiusStyle.roundedBorder20,
+                              border: Border.all(
+                                color: theme.colorScheme.primaryContainer,
+                                width: 2.h,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    "FORM PESANAN".tr,
+                                    style: CustomTextStyles.titleMediumManrope,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                SizedBox(
+                                  width: double.maxFinite,
+                                  child: Divider(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                                SizedBox(height: 24.h),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 24.h),
+                                  child: Text(
+                                    "msg_tanggal_pemesanan".tr.toUpperCase(),
+                                    style: CustomTextStyles.labelLargePrimary,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                _buildBookingDateField(context),
+                                SizedBox(height: 14.h),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 24.h),
+                                  child: Text(
+                                    "lbl_tambah_anggota".tr.toUpperCase(),
+                                    style: CustomTextStyles.labelLargePrimary,
+                                  ),
+                                ),
+                                SizedBox(height: 14.h),
+                                _buildMemberIdField(context),
+                                SizedBox(height: 124.h),
+                              ],
                             ),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  "FORM PESANAN".tr,
-                                  style: CustomTextStyles.titleMediumManrope,
-                                ),
-                              ),
-                              SizedBox(height: 10.h),
-                              SizedBox(
-                                width: double.maxFinite,
-                                child: Divider(
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                              SizedBox(height: 24.h),
-                              Padding(
-                                padding: EdgeInsets.only(left: 24.h),
-                                child: Text(
-                                  "msg_tanggal_pemesanan".tr.toUpperCase(),
-                                  style: CustomTextStyles.labelLargePrimary,
-                                ),
-                              ),
-                              SizedBox(height: 10.h),
-                              _buildBookingDateField(context),
-                              SizedBox(height: 14.h),
-                              Padding(
-                                padding: EdgeInsets.only(left: 24.h),
-                                child: Text(
-                                  "lbl_tambah_anggota".tr.toUpperCase(),
-                                  style: CustomTextStyles.labelLargePrimary,
-                                ),
-                              ),
-                              SizedBox(height: 14.h),
-                              _buildMemberIdField(context),
-                              // SizedBox(height: 8.h),
-                              // _buildMemberNameField(context),
-                              SizedBox(height: 124.h)
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 22.h),
-                        _buildContinueButton(context)
-                      ],
+                          SizedBox(height: 22.h),
+                          _buildContinueButton(context),
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -231,7 +325,7 @@ class BookingScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildHotelCard(BuildContext context) {
+  Widget _buildHotelCard(BuildContext context, BookingModel jalur) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 12.h,
@@ -256,7 +350,7 @@ class BookingScreen extends StatelessWidget {
       child: Row(
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgImage1,
+            imagePath: jalur.gambar,
             height: 110.h,
             width: 146.h,
             radius: BorderRadius.circular(10.h),
@@ -270,7 +364,7 @@ class BookingScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(left: 16.h),
                     child: Text(
-                      "lbl_jalur_dipajaya".tr,
+                      jalur.name ?? 'Nama Jalur',
                       style: CustomTextStyles.titleSmallGray900,
                     ),
                   ),
@@ -281,7 +375,7 @@ class BookingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "lbl_rp_5_000_00".tr,
+                          " ${NumberFormat('#,##0', 'id_ID').format(jalur.biaya)}",
                           style: CustomTextStyles.titleSmallPrimary,
                         ),
                         Text(
@@ -375,18 +469,28 @@ class BookingScreen extends StatelessWidget {
   /// Displays a date picker dialog and updates the selected date in the
   /// current [bookingModelObj] object if the user selects a valid date.
   /// This function returns a `Future` that completes with `void`.
-  Future<void> onTapBookingDateInput(BuildContext context) async {
-    var initialState = BlocProvider.of<BookingBloc>(context).state;
-    DateTime? dateTime = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2024),
-        lastDate: DateTime(
-            DateTime.now().year, DateTime.now().month, DateTime.now().day));
-    if (dateTime != null) {
-      context.read<BookingBloc>().add(ChangeDateEvent(date: dateTime));
-      initialState.bookingDateFieldController?.text =
-          dateTime.format(pattern: SHORT_DATE);
+  void onTapBookingDateInput(BuildContext context) async {
+    // Mendapatkan tanggal saat ini
+    DateTime currentDate = DateTime.now();
+
+    // Menampilkan date picker
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: currentDate, // Tanggal saat ini sebagai tanggal awal
+      firstDate:
+          currentDate, // Membatasi agar tidak bisa memilih tanggal sebelumnya
+      lastDate: DateTime(currentDate.year +
+          1), // Bisa memilih sampai setahun ke depan, sesuaikan dengan kebutuhan
+    );
+
+    if (pickedDate != null && pickedDate != currentDate) {
+      // Jika tanggal dipilih, update controller dengan format yang diinginkan
+      String formattedDate =
+          "${pickedDate.day}-${pickedDate.month}-${pickedDate.year}";
+
+      // Dispatch UpdateBookingDateEvent
+      BlocProvider.of<BookingBloc>(context)
+          .add(UpdateBookingDateEvent(formattedDate));
     }
   }
 

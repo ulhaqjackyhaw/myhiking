@@ -19,16 +19,13 @@ class DetailMountainScreen extends StatefulWidget {
 
   @override
   State<DetailMountainScreen> createState() => _DetailMountainScreenState();
-
-  static builder(int idGunung) {}
-
-  // @override
-  // _DetailMountainScreenState createState() => _DetailMountainScreenState();
 }
 
 class _DetailMountainScreenState extends State<DetailMountainScreen> {
   late String imageUrl; // Deklarasi imageUrl
-
+  String userName = '';
+  int userId = 0;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -36,6 +33,55 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
     context
         .read<DetailMountainBloc>()
         .add(DetailMountainInitialEvent(widget.idGunung));
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userName = response['data']['name'];
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -59,7 +105,7 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
 
         // Ambil URL gambar dari detailMountain
         imageUrl = detailMountain?.gambar ??
-            'assets/images/placeholder.png'; // Gunakan gambar default jika null
+            'assets/images/img_error.png'; // Gunakan gambar default jika null
 
         final routes = state.jalurList;
 
@@ -141,12 +187,13 @@ class _DetailMountainScreenState extends State<DetailMountainScreen> {
                       child: RouteScreen(
                         jalurId: route.id,
                         idGunung: widget.idGunung,
+
                       ),
                     ),
                   ),
                 );
                 print(
-                    "Navigating to RouteScreen with idGunung: ${widget.idGunung}, jalurId: ${route.id}");
+                    "Navigating to RouteScreen with idGunung: ${widget.idGunung}, jalurId: ${route.id}, ${userId.toString()}");
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 8.h),

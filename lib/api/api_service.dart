@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/model.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,79 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> getUserProfile(String token) async {
+    final url = Uri.parse('$baseUrl/user');
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      return {
+        'success': true,
+        'data': responseData,
+      };
+    } else {
+      final errorData = jsonDecode(response.body);
+      return {'success': false, 'errors': errorData};
+    }
+  }
+
+  Future<Booking?> createBooking(
+    int idGunung,
+    int jalurId,
+    int userId,
+    String tanggalNaik,
+    String tanggalTurun,
+    String totalHargaTiket,
+  ) async {
+    try {
+      // Fetch token
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      // Send POST request to create a new booking
+      final response = await http.post(
+        Uri.parse("$baseUrl/pesanan"), // API URL
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "id_gunung": idGunung,
+          "id_jalur": jalurId,
+          "id_user": userId, // Use the correct user_id key
+          "tanggal_naik": tanggalNaik,
+          "tanggal_turun": tanggalTurun,
+          "total_harga_tiket":
+              totalHargaTiket, // Renamed to match the API response
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        // Successfully created booking, parse the response
+        final jsonResponse = jsonDecode(response.body);
+
+        // Assuming the response contains a "pesanan" object
+        final pesananData = jsonResponse['pesanan'];
+
+        // Convert the "pesanan" data to the Booking model
+        return Booking.fromJson(pesananData);
+      } else {
+        // Handle non-201 responses
+        print('Failed to create booking: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error creating booking: $e');
+      return null;
+    }
+  }
   // Future<Map<String, dynamic>> fetchJalur(int idGunung) async {
   //   final url = Uri.parse('$baseUrl/gunung/$idGunung');
   //   final response = await http.get(url);
