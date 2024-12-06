@@ -58,7 +58,7 @@ class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
   }
 
   Future<List<TransactionlistItemModel>> fetchTransactions() async {
-    final response = await http.get(Uri.parse('$baseUrl/transactions'));
+    final response = await http.get(Uri.parse('$baseUrl/transaksi'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);

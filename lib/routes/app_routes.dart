@@ -83,7 +83,17 @@ class AppRoutes {
         tataTertibScreen: TataTertibScreen.builder,
         profileScreen: ProfileScreen.builder,
         dataProfileScreen: DataProfileScreen.builder,
-        tiketScreen: TiketScreen.builder,
+        tiketScreen: (context) {
+          final pesananId = ModalRoute.of(context)?.settings.arguments as int?;
+          
+          if (pesananId == null) {
+            // Handle the case where pesananId is not provided or invalid
+            return Scaffold(
+              body: Center(child: Text("Pesanan ID is required")),
+            );
+          }
+          return TiketScreen.builder(context, pesananId);
+        },
         appNavigationScreen: AppNavigationScreen.builder,
         initialRoute: LandingScreen.builder,
         transaksiPage: TransaksiPage.builder,

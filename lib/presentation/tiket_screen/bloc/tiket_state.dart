@@ -1,18 +1,30 @@
 part of 'tiket_bloc.dart';
 
-/// Represents the state of Tiket in the application.
-// ignore_for_file: must_be_immutable
-class TiketState extends Equatable {
-  TiketState({this.tiketModelObj});
-
-  TiketModel? tiketModelObj;
+abstract class TiketState extends Equatable {
+  const TiketState();
 
   @override
-  List<Object?> get props => [tiketModelObj];
+  List<Object> get props => [];
+}
 
-  TiketState copyWith({TiketModel? tiketModelObj}) {
-    return TiketState(
-      tiketModelObj: tiketModelObj ?? this.tiketModelObj,
-    );
-  }
+class TiketInitialState extends TiketState {}
+
+class TiketLoadingState extends TiketState {}
+
+class TiketLoadedState extends TiketState {
+  final TiketModel tiketModel;
+
+  const TiketLoadedState({required this.tiketModel});
+
+  @override
+  List<Object> get props => [tiketModel];
+}
+
+class TiketErrorState extends TiketState {
+  final String message;
+
+  const TiketErrorState({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }

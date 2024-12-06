@@ -114,7 +114,13 @@ class PopUpCheckoutDialog extends StatelessWidget {
               height: 36.h,
               text: "lbl_gform".tr,
               buttonTextStyle: CustomTextStyles.titleSmallOnPrimary,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.tiketScreen,
+                  arguments: 3, // Ganti 3 dengan ID pesanan yang benar
+                );
+              },
             ),
           ),
         ],
@@ -123,8 +129,11 @@ class PopUpCheckoutDialog extends StatelessWidget {
   }
 
   onTapBarcode(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.tiketScreen,
-    );
+    Navigator.pushNamed(
+  context,
+  AppRoutes.tiketScreen,
+  arguments: 3, // Ganti 3 dengan nilai ID pesanan yang sesuai
+);
+
   }
 }

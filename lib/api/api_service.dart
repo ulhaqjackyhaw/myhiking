@@ -90,4 +90,17 @@ class ApiService {
   //     throw Exception('Failed to fetch jalur');
   //   }
   // }
+  
+    // Fungsi untuk mengambil data Pesanan berdasarkan ID
+  Future<Map<String, dynamic>> fetchPesanan(int pesananId) async {
+      final response = await http.get(Uri.parse('$baseUrl/pesanan/$pesananId'));
+      print(response);
+      if (response.statusCode == 200) {
+        // Debug: Print the response body to check
+        print('Response Body: ${response.body}');
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load pesanan');
+      }
+    }
 }

@@ -11,22 +11,28 @@ import 'bloc/tiket_bloc.dart';
 import 'models/tiket_model.dart';
 
 class TiketScreen extends StatelessWidget {
-  const TiketScreen({super.key});
+  final int pesananId;
 
-  static Widget builder(BuildContext context) {
+  const TiketScreen({super.key, required this.pesananId});
+
+   static Widget builder(BuildContext context, int pesananId) {
     return BlocProvider<TiketBloc>(
-      create: (context) => TiketBloc(TiketState(
-        tiketModelObj: const TiketModel(),
-      ))
-        ..add(TiketInitialEvent()),
-      child: const TiketScreen(),
+      create: (context) => TiketBloc()..add(TiketLoadDataEvent(pesananId: pesananId)),
+      child: TiketScreen(pesananId: pesananId),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<TiketBloc, TiketState>(
-      builder: (context, state) {
+ @override
+Widget build(BuildContext context) {
+  return BlocBuilder<TiketBloc, TiketState>(
+    builder: (context, state) {
+      if (state is TiketLoadingState) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is TiketErrorState) {
+        return Center(child: Text(state.message));
+      } else if (state is TiketLoadedState) {
+        final tiket = state.tiketModel;
+        print(tiket.id);
         return SafeArea(
           child: Scaffold(
             body: SizedBox(
@@ -107,7 +113,7 @@ class TiketScreen extends StatelessWidget {
                                               margin:
                                                   EdgeInsets.only(right: 8.h),
                                               child: QrImageView(
-                                                data: 'https://www.google.com',
+                                                 data: 'http://127.0.0.1:8000/api/pesanan/$pesananId', //diganti ke id pesanan
                                                 size: 86.h,
                                               ),
                                             ),
@@ -123,56 +129,41 @@ class TiketScreen extends StatelessWidget {
                                     ),
                                     SizedBox(height: 12.h),
                                     Text(
-                                      "lbl_id_pemesanan".tr,
+                                      "ID Pemesanan",
                                       style: theme.textTheme.bodySmall,
                                     ),
                                     SizedBox(height: 4.h),
-                                    Text(
-                                      "lbl".tr,
-                                      style:
-                                          CustomTextStyles.titleLargeBlack900_1,
-                                    ),
+                                    Text(tiket.id.toString()), // masukan data json id pemesanan
                                     SizedBox(height: 14.h),
                                     Text(
                                       "lbl_nama_ketua".tr,
                                       style: theme.textTheme.bodySmall,
                                     ),
                                     SizedBox(height: 4.h),
-                                    Text(
-                                      "lbl_prastista_sasa".tr,
-                                      style:
-                                          CustomTextStyles.titleLargeBlack900_1,
-                                    ),
+                                    Text('${tiket.pemesanName}'),
                                     SizedBox(height: 14.h),
                                     Text(
                                       "lbl_booking2".tr,
                                       style: theme.textTheme.bodySmall,
                                     ),
                                     SizedBox(height: 4.h),
-                                    Text(
-                                      "msg_gunung_slamet_via".tr,
-                                      style:
-                                          CustomTextStyles.titleSmallBlack900_1,
-                                    ),
+                                    Text('${tiket.gunungName} via ${tiket.jalurName}'),
                                     SizedBox(height: 12.h),
                                     Text(
                                       "lbl_tanggal".tr,
                                       style: theme.textTheme.bodySmall,
                                     ),
                                     SizedBox(height: 4.h),
-                                    Text(
-                                      "msg_senin_27_agustus".tr,
-                                      style:
-                                          CustomTextStyles.titleSmallBlack900_1,
-                                    ),
+                                    Text('${tiket.tanggalNaik}'),
                                     SizedBox(height: 12.h),
                                     Text(
                                       "lbl_anggota".tr,
                                       style: theme.textTheme.bodySmall,
                                     ),
                                     SizedBox(height: 2.h),
+                                    for (var anggota in tiket.anggota)
                                     Text(
-                                      "msg_id793807_budi_a_id794287".tr,
+                                      '- ${anggota.name}'.tr, // memasukan id anggota dan namanya
                                       maxLines: 4,
                                       overflow: TextOverflow.ellipsis,
                                       style: CustomTextStyles
@@ -194,7 +185,7 @@ class TiketScreen extends StatelessWidget {
                                     SizedBox(height: 12.h),
                                     CustomElevatedButton(
                                       height: 50.h,
-                                      text: "msg_download_ticket".tr,
+                                      text: "Download Tiket".tr,
                                       buttonStyle:
                                           CustomButtonStyles.outlineBlueGrayC,
                                       buttonTextStyle: CustomTextStyles
@@ -215,9 +206,14 @@ class TiketScreen extends StatelessWidget {
             ),
           ),
         );
-      },
-    );
-  }
+      } else {
+        // Default fallback return
+        return const SizedBox(); // Return an empty widget as a fallback
+      }
+    },
+  );
+}
+
 
   /// Section Widget
   Widget _buildIconArrowColumn(BuildContext context) {
@@ -267,3 +263,4 @@ class TiketScreen extends StatelessWidget {
     );
   }
 }
+
