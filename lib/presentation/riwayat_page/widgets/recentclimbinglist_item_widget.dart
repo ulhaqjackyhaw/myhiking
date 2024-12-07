@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/custom_elevated_button.dart';
@@ -13,11 +14,14 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
     this.onTapRecentclimbing,
   });
 
-  RecentclimbinglistItemModel recentclimbinglistItemModelObj;
-  VoidCallback? onTapRecentclimbing;
+  final RecentclimbinglistItemModel recentclimbinglistItemModelObj;
+  final VoidCallback? onTapRecentclimbing;
 
   @override
   Widget build(BuildContext context) {
+    // Parsing tanggal dalam build method setelah objek tersedia
+    DateTime tanggal = DateTime.parse(recentclimbinglistItemModelObj.tanggalNaik.toString());
+
     return GestureDetector(
       onTap: () {
         onTapRecentclimbing?.call();
@@ -51,7 +55,8 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        recentclimbinglistItemModelObj.tanggalNaik.toString(),
+                        // Format tanggal dengan nama bulan
+                        DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(tanggal),
                         style: theme.textTheme.titleSmall,
                       ),
                       Text(
@@ -72,7 +77,7 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
 
   Widget _buildStatusButton(BuildContext context) {
     String status = recentclimbinglistItemModelObj.status ?? '';
-    
+
     // Handle the status by displaying the correct button
     switch (status) {
       case 'Booking':
