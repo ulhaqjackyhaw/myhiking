@@ -76,9 +76,9 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
     // Handle the status by displaying the correct button
     switch (status) {
       case 'Booking':
-        return _buildMendakiButton(context);
-      case 'Sedang Mendaki':
         return _buildBookingButton(context);
+      case 'Sedang Mendaki':
+        return _buildMendakiButton(context);
       case 'Selesai':
         return _buildSelesaiButton(context);
       default:
