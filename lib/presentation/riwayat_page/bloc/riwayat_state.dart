@@ -10,7 +10,7 @@ class RiwayatState extends Equatable {
   @override
   List<Object?> get props => [riwayatModelObj];
 
-  RiwayatState copyWith({RiwayatModel? riwayatModelObj}) {
+  RiwayatState copyWith({RiwayatModel? riwayatModelObj, required String errorMessage}) {
     return RiwayatState(
       riwayatModelObj: riwayatModelObj ?? this.riwayatModelObj,
     );

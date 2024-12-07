@@ -35,10 +35,7 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
               color: appTheme.blueGray40019,
               spreadRadius: 2.h,
               blurRadius: 2.h,
-              offset: const Offset(
-                4,
-                4,
-              ),
+              offset: const Offset(4, 4),
             ),
           ],
         ),
@@ -54,11 +51,11 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        recentclimbinglistItemModelObj.rabu27agustus!,
+                        recentclimbinglistItemModelObj.tanggalNaik.toString(),
                         style: theme.textTheme.titleSmall,
                       ),
                       Text(
-                        recentclimbinglistItemModelObj.gunungslamet!,
+                        recentclimbinglistItemModelObj.gunung.toString(),
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -73,39 +70,23 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
     );
   }
 
-  /// Section Widget
-  // Widget _buildMendakiButton(BuildContext context) {
-  //   return CustomElevatedButton(
-  //     height: 26.h,
-  //     width: 98.h,
-  //     text: "lbl_mendaki".tr,
-  //     buttonStyle: CustomButtonStyles.outlineTeal,
-  //     buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
-  //     onPressed: () {
-  //       // Menampilkan popup checkout
-  //       showDialog(
-  //         context: context,
-  //         builder: (_) => AlertDialog(
-  //           content: PopUpCheckoutDialog.builder(
-  //             context,
-  //           ),
-  //           backgroundColor: Colors.transparent,
-  //           contentPadding: EdgeInsets.zero,
-  //           insetPadding: EdgeInsets.zero,
-  //         ),
-  //       );
-  //     },
-      
-  //   );
-  // }
-
   Widget _buildStatusButton(BuildContext context) {
-    if (recentclimbinglistItemModelObj.status == "Mendaki") {
-      return _buildMendakiButton(context);
-    } else {
-      return _buildSelesaiButton(context);
+    String status = recentclimbinglistItemModelObj.status ?? '';
+    
+    // Handle the status by displaying the correct button
+    switch (status) {
+      case 'Booking':
+        return _buildMendakiButton(context);
+      case 'Sedang Mendaki':
+        return _buildBookingButton(context);
+      case 'Selesai':
+        return _buildSelesaiButton(context);
+      default:
+        return SizedBox();  // Return an empty widget if no match
     }
   }
+
+  // Button for "Mendaki" status
   Widget _buildMendakiButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
@@ -114,14 +95,12 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Menampilkan popup checkout
+        // Show checkout popup for "Mendaki"
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            content: PopUpCheckoutDialog.builder(
-              context,
-            ),
-            backgroundColor: Colors.transparent,
+            content: PopUpCheckoutDialog.builder(context),
+            backgroundColor: const Color.fromARGB(0, 0, 255, 8),
             contentPadding: EdgeInsets.zero,
             insetPadding: EdgeInsets.zero,
           ),
@@ -129,6 +108,23 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       },
     );
   }
+
+  // Button for "Booking" status
+  Widget _buildBookingButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 26.h,
+      width: 98.h,
+      text: "Booking".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal1,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Handle the action for "Booking" status
+        // For example, show a booking details dialog or navigate to a new screen.
+      },
+    );
+  }
+
+  // Button for "Selesai" status
   Widget _buildSelesaiButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
@@ -137,8 +133,7 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       buttonStyle: CustomButtonStyles.outlineTeal2,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Navigasi ke tiket screen
-        // NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        // Handle the action for "Selesai" status if needed
       },
     );
   }

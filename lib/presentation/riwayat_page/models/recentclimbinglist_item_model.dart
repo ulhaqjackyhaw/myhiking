@@ -4,37 +4,42 @@ import 'package:equatable/equatable.dart';
 // ignore_for_file: must_be_immutable
 class RecentclimbinglistItemModel extends Equatable {
   RecentclimbinglistItemModel({
-    this.rabu27agustus,
-    this.gunungslamet,
     this.id,
+    this.tanggalNaik,
+    this.gunung,
     this.status,
-    
-  }) {
-    rabu27agustus = rabu27agustus ?? "Rabu, 27 Agustus 2024";
-    gunungslamet = gunungslamet ?? "Gunung Slamet";
-    id = id ?? "";
-    status = status ?? "Mendaki";
-  }
+  });
 
-  String? rabu27agustus;
-  String? gunungslamet;
   String? id;
+  String? tanggalNaik;
+  String? gunung;
   String? status;
 
+  // Constructor untuk menyalin model dengan update nilai tertentu
   RecentclimbinglistItemModel copyWith({
-    String? rabu27agustus,
-    String? gunungslamet,
     String? id,
+    String? tanggalNaik,
+    String? gunung,
     String? status,
   }) {
     return RecentclimbinglistItemModel(
-      rabu27agustus: rabu27agustus ?? this.rabu27agustus,
-      gunungslamet: gunungslamet ?? this.gunungslamet,
       id: id ?? this.id,
+      tanggalNaik: tanggalNaik ?? this.tanggalNaik,
+      gunung: gunung ?? this.gunung,
       status: status ?? this.status,
     );
   }
 
+  // Factory method untuk membuat model dari JSON
+  factory RecentclimbinglistItemModel.fromJson(Map<String, dynamic> json) {
+    return RecentclimbinglistItemModel(
+      id: json['id']?.toString(),
+      tanggalNaik: json['tanggal_naik'],
+      gunung: json['gunung'],
+      status: json['status'],
+    );
+  }
+
   @override
-  List<Object?> get props => [rabu27agustus, gunungslamet, id, status];
+  List<Object?> get props => [id, tanggalNaik, gunung, status];
 }

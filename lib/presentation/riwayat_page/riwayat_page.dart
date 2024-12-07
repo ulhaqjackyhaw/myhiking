@@ -102,7 +102,7 @@ class RiwayatPage extends StatelessWidget {
                       style: CustomTextStyles.titleMediumOnPrimary_2,
                     ),
                     Text(
-                      "lbl_prastita_s".tr,
+                      "Nama User".tr, //ambil nama user yyang sedang login
                       style: theme.textTheme.titleLarge,
                     ),
                   ],
