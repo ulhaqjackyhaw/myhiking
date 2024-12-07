@@ -57,7 +57,7 @@ class AppRoutes {
         resetKirimEmailScreen: ResetKirimEmailScreen.builder,
         kodeVerifikasiScreen: KodeVerifikasiScreen.builder,
         resetPageTwoScreen: ResetPageTwoScreen.builder,
-        bookingScreen: BookingScreen.builder,
+        // bookingScreen: BookingScreen.builder,
         pilihanBankPembayaranScreen: PilihanBankPembayaranScreen.builder,
         rincianPembayaranUploadScreen: RincianPembayaranUploadScreen.builder,
         menungguVerifikasiScreen: MenungguVerifikasiScreen.builder,
