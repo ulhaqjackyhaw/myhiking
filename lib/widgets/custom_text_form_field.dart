@@ -55,6 +55,7 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
+    this.onChanged, // Make the onChanged parameter optional
   });
 
   final Alignment? alignment;
@@ -82,6 +83,7 @@ class CustomTextFormField extends StatelessWidget {
   final Color? fillColor;
   final bool? filled;
   final FormFieldValidator<String>? validator;
+  final Function(String)? onChanged; // Add the onChanged parameter
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +122,7 @@ class CustomTextFormField extends StatelessWidget {
           maxLines: maxLines ?? 1,
           decoration: decoration,
           validator: validator,
+           onChanged: onChanged, // Use the onChanged callback here
         ),
       );
 

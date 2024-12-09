@@ -26,7 +26,7 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
         Uri.parse('http://127.0.0.1:8000/api/gunung/$idGunung/jalur/$jalurId'),
         headers: {'Authorization': 'Bearer your_token'},
       );
-
+      print('Headers: ${response.headers}');
       // Validasi Status HTTP
       if (response.statusCode == 200) {
         // Parsing JSON Response

@@ -9,7 +9,7 @@ String bookingToJson(Booking data) => json.encode(data.toJson());
 class Booking {
   bool success;
   String message;
-  BookingModel data;
+  ModelBooking data;
 
   Booking({
     required this.success,
@@ -20,7 +20,7 @@ class Booking {
   factory Booking.fromJson(Map<String, dynamic> json) => Booking(
         success: json["success"],
         message: json["message"],
-        data: BookingModel.fromJson(
+        data: ModelBooking.fromJson(
             json["pesanan"]), // Adjusted to match 'pesanan'
       );
 
@@ -31,20 +31,20 @@ class Booking {
       };
 }
 
-class BookingModel {
+class ModelBooking {
   final int id;
   final int idGunung;
   final int jalurId;
   final int userId;
   final DateTime tanggalNaik;
   final DateTime tanggalTurun;
-  final List<Price> totalHargaTiket;
+  final int totalHargaTiket;
   final String status;
   final String createdAt;
   final String updatedAt;
-  final List<dynamic> anggota;
+  final List<Anggota>? anggotaIds;
 
-  BookingModel({
+  ModelBooking({
     required this.id,
     required this.idGunung,
     required this.jalurId,
@@ -55,27 +55,41 @@ class BookingModel {
     required this.createdAt,
     required this.updatedAt,
     required this.totalHargaTiket,
-    required this.anggota,
+    this.anggotaIds, // AnggotaIds bersifat opsional
   });
 
-  factory BookingModel.fromJson(Map<String, dynamic> json) {
-    return BookingModel(
+  factory ModelBooking.fromJson(Map<String, dynamic> json) {
+    // var anggotaList = json['anggota_ids'] != null
+    //     ? List<Anggota>.from(
+    //         json['anggota_ids'].map((item) => Anggota.fromJson(item)))
+    //     : null;
+    // print("Anggota IDs: ${json['anggota_ids']}");
+    return ModelBooking(
       id: json['id'],
       idGunung: json['id_gunung'],
       jalurId: json['id_jalur'],
       userId: json['id_user'],
-      tanggalNaik: DateTime.parse(json['tanggal_naik']),
-      tanggalTurun: DateTime.parse(json['tanggal_turun']),
-      status: json['status'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      totalHargaTiket: (json["price"] as List)
-          .map((price) => Price.fromJson(price))
-          .toList(),
-      anggota: List<dynamic>.from(
-          json['anggota'] ?? []), // Assuming empty array if no anggota
+      tanggalNaik: json['tanggal_naik'] != null
+          ? DateTime.parse(json['tanggal_naik'])
+          : DateTime.now(),
+      tanggalTurun: json['tanggal_turun'] != null
+          ? DateTime.parse(json['tanggal_turun'])
+          : DateTime.now(),
+      status: json['status'] ?? '', // Default empty string if null
+      createdAt: json['created_at'] ?? '', // Default empty string if null
+      updatedAt: json['updated_at'] ?? '', // Default empty string if null
+      // totalHargaTiket: (json["price"] as List)
+      //     .map((price) => Price.fromJson(price))
+      //     .toList(),
+      totalHargaTiket: json['total_harga_tiket'],
+      anggotaIds: json['anggota_ids'] != null && json['anggota_ids'] is List
+          ? (json['anggota_ids'] as List)
+              .map((item) => Anggota.fromJson(item))
+              .toList()
+          : [], // Return an empty list if anggota_ids is null or not a list
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -87,34 +101,64 @@ class BookingModel {
       'status': status,
       'created_at': createdAt,
       'updated_at': updatedAt,
-      'total_harga_tiket': totalHargaTiket
-          .map((price) => price.toJson())
-          .toList(), // Convert list of Price to list of maps
-      'anggota': anggota,
+      // 'total_harga_tiket': totalHargaTiket
+      //     .map((price) => price.toJson())
+      //     .toList(), // Convert list of Price to list of maps
+      'total_harga_tiket': totalHargaTiket,
+      'anggota_ids': anggotaIds != null
+          ? anggotaIds!.map((anggota) => anggota.toJson()).toList()
+          : [], // Mengirim anggotaIds sebagai list kosong jika null // Jika anggotaIds null, kirim list kosong
     };
   }
 }
 
-class Price {
-  int jalurId;
-  String priceFrom;
-  String priceTo;
+// class Price {
+//   int jalurId;
+//   String priceFrom;
+//   String priceTo;
 
-  Price({
-    required this.jalurId,
-    required this.priceFrom,
-    required this.priceTo,
+//   Price({
+//     required this.jalurId,
+//     required this.priceFrom,
+//     required this.priceTo,
+//   });
+
+//   factory Price.fromJson(Map<String, dynamic> json) => Price(
+//         jalurId: json["jalur_id"],
+//         priceFrom: Decimal.parse(json["price_from"]).toString(),
+//         priceTo: Decimal.parse(json["price_to"]).toString(),
+//       );
+
+//   Map<String, dynamic> toJson() => {
+//         "jalur_id": jalurId,
+//         "price_from": priceFrom,
+//         "price_to": priceTo,
+//       };
+// }
+
+class Anggota {
+  final int id;
+  final String name;
+  final String email;
+
+  Anggota({
+    required this.id,
+    required this.name,
+    required this.email,
   });
 
-  factory Price.fromJson(Map<String, dynamic> json) => Price(
-        jalurId: json["jalur_id"],
-        priceFrom: Decimal.parse(json["price_from"]).toString(),
-        priceTo: Decimal.parse(json["price_to"]).toString(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "jalur_id": jalurId,
-        "price_from": priceFrom,
-        "price_to": priceTo,
-      };
+  factory Anggota.fromJson(Map<String, dynamic> json) {
+    return Anggota(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+    };
+  }
 }

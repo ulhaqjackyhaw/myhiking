@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:intl/intl.dart';
 import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/jalurmodel.dart';
+import 'package:myhiking/presentation/pilihan_bank_pembayaran_screen/pilihan_bank_pembayaran_screen.dart';
 import '../../core/app_export.dart';
 import '../../core/utils/date_time_utils.dart';
 import '../../core/utils/validation_functions.dart';
@@ -437,6 +441,10 @@ class _BookingScreenState extends State<BookingScreen> {
               horizontal: 16.h,
               vertical: 12.h,
             ),
+            onChanged: (value) {
+              // Mengupdate state dengan ID anggota yang baru
+              context.read<BookingBloc>().add(UpdateMemberIdField(value));
+            },
           );
         },
       ),
@@ -453,22 +461,171 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       buttonStyle: CustomButtonStyles.fillPrimary,
       buttonTextStyle: CustomTextStyles.labelLarge13,
-      onPressed: () {
-        onTapContinueButton(context);
+      onPressed: () async {
+        try {
+          // Pastikan userId sudah terisi
+          if (userId.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    "Data pengguna belum tersedia. Harap tunggu sebentar."),
+              ),
+            );
+            return;
+          }
+
+          // Mengambil state dari BookingBloc
+          final bookingBloc = BlocProvider.of<BookingBloc>(context);
+          final state = bookingBloc.state;
+          print('${state.memberIdFieldController}');
+          // Ambil data dari state
+          final anggotaBooking = state.memberIdFieldController?.text;
+          final bookingDate = state.bookingDateFieldController?.text;
+          final idGunung = state.gunung?.id;
+          final jalurId = state.jalur?.id;
+          final biaya = state.jalur?.biaya;
+          final userIdInt = int.tryParse(userId);
+
+          // Format tanggal sebelum digunakan
+          String formatTanggal(String bookingDate) {
+            try {
+              final DateTime dateTime = DateTime.parse(bookingDate);
+              final DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+              return dateFormat.format(dateTime);
+            } catch (e) {
+              return "Format tanggal tidak valid";
+            }
+          }
+
+          final formattedDate =
+              bookingDate != null ? formatTanggal(bookingDate) : null;
+          final tanggalTurun = formattedDate != null
+              ? DateTime.parse(formattedDate)
+                  .add(Duration(days: 1))
+                  .toString() // Tanggal turun 1 hari setelah tanggal naik
+              : null;
+          print(
+              "Tanggal naik : {$formattedDate, $biaya, $jalurId, $idGunung, $anggotaBooking, $userIdInt, $tanggalTurun}");
+          // Menangani anggotaBooking yang berupa string dan mengonversinya menjadi List<int> jika valid
+          List<int>? anggotaIds;
+
+          if (anggotaBooking != null && anggotaBooking.isNotEmpty) {
+            try {
+              anggotaIds = anggotaBooking
+                  .split(
+                      ',') // Memisahkan ID anggota jika berupa daftar yang dipisahkan koma
+                  .map((id) => int.tryParse(
+                      id.trim())) // Mengubah setiap item menjadi integer
+                  .where(
+                      (id) => id != null) // Menghilangkan ID yang tidak valid
+                  .cast<int>() // Memastikan menjadi List<int>
+                  .toList();
+            } catch (e) {
+              // Jika terjadi kesalahan saat parsing, bisa menampilkan error atau menggunakan list kosong
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Format anggota tidak valid.")),
+              );
+              anggotaIds =
+                  []; // Menetapkan list kosong jika terjadi kesalahan parsing
+            }
+          }
+
+          print("anggota Ids {$anggotaIds}");
+
+// Cek apakah anggotaIds kosong atau tidak valid
+          if (anggotaIds?.isEmpty ?? true) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Harap masukkan anggota yang valid.")),
+            );
+            return;
+          }
+
+          if (formattedDate != null &&
+              idGunung != null &&
+              jalurId != null &&
+              userIdInt != null &&
+              tanggalTurun != null &&
+              biaya != null) {
+            // Memanggil API untuk membuat booking
+            if (anggotaIds!.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Harap masukkan anggota yang valid.")),
+              );
+              return;
+            }
+
+            ModelBooking? booking = await ApiService().createBooking(
+              idGunung,
+              jalurId,
+              userIdInt,
+              formattedDate,
+              tanggalTurun, // Tanggal turunnya
+              biaya.toInt(),
+              anggotaIds: anggotaIds.isEmpty
+                  ? []
+                  : anggotaIds, // Mengirim anggotaIds, pastikan tidak null
+            );
+            if (booking != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Booking berhasil dibuat!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              // Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider(
+                    create: (context) => BookingBloc(apiService: ApiService()),
+                    child: const PilihanBankPembayaranScreen(),
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Gagal membuat booking. Coba lagi.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Harap lengkapi data pemesanan.")),
+            );
+          }
+        } catch (e) {
+          // Tangani kesalahan
+          String errorMessage;
+          if (e is FormatException) {
+            errorMessage = "Format tanggal tidak valid.";
+          } else if (e is SocketException) {
+            errorMessage = "Terjadi masalah dengan koneksi internet.";
+          } else if (e is HttpException) {
+            errorMessage = "Terjadi kesalahan saat menghubungi server.";
+          } else {
+            errorMessage = "Terjadi kesalahan yang tidak terduga.";
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorMessage)),
+          );
+        }
       },
     );
   }
 
   /// Navigates to the routeScreen when the action is triggered.
-  onTapArrowdownone(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.routeScreen,
-    );
-  }
+  // onTapArrowdownone(BuildContext context) {
+  //   NavigatorService.pushNamed(
+  //     AppRoutes.routeScreen,
+  //   );
+  // }
 
   /// Displays a date picker dialog and updates the selected date in the
   /// current [bookingModelObj] object if the user selects a valid date.
   /// This function returns a `Future` that completes with `void`.
+
   void onTapBookingDateInput(BuildContext context) async {
     // Mendapatkan tanggal saat ini
     DateTime currentDate = DateTime.now();
@@ -484,20 +641,75 @@ class _BookingScreenState extends State<BookingScreen> {
     );
 
     if (pickedDate != null && pickedDate != currentDate) {
-      // Jika tanggal dipilih, update controller dengan format yang diinginkan
-      String formattedDate =
-          "${pickedDate.day}-${pickedDate.month}-${pickedDate.year}";
+      // Jika tanggal dipilih, format tanggal sesuai dengan yang diinginkan (yyyy-MM-dd)
+      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
 
-      // Dispatch UpdateBookingDateEvent
+      // Dispatch UpdateBookingDateEvent dengan format tanggal yang baru
       BlocProvider.of<BookingBloc>(context)
           .add(UpdateBookingDateEvent(formattedDate));
     }
   }
 
-  /// Navigates to the pilihanBankPembayaranScreen when the action is triggered.
-  onTapContinueButton(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.pilihanBankPembayaranScreen,
-    );
-  }
+//   /// Navigates to the pilihanBankPembayaranScreen when the action is triggered.
+//   Widget _buildContinueButton(BuildContext context) {
+//   return CustomOutlinedButton(
+//     height: 42.h,
+//     text: "lbl_lanjut2".tr,
+//     margin: EdgeInsets.only(
+//       left: 8.h,
+//       right: 4.h,
+//     ),
+//     buttonStyle: CustomButtonStyles.fillPrimary,
+//     buttonTextStyle: CustomTextStyles.labelLarge13,
+//     onPressed: () {
+//       final bookingBloc = BlocProvider.of<BookingBloc>(context);
+//       final state = bookingBloc.state;
+
+//       // Ambil data dari state
+//       final bookingDate = state.bookingDateFieldController?.text;
+//       final memberId = state.memberIdFieldController?.text;
+
+//       final idGunung = state.gunung?.id;
+//       final jalurId = state.jalur?.id;
+//       final userId = int.tryParse(memberId ?? '');
+//       print("$idGunung, $jalurId and $userId");
+
+//       if (bookingDate != null &&
+//           idGunung != null &&
+//           jalurId != null &&
+//           userId != null) {
+//         // Buat objek ModelBooking
+//         final modelBooking = ModelBooking(
+//           id: 0, // Auto-generate dari backend
+//           idGunung: idGunung,
+//           jalurId: jalurId,
+//           userId: userId,
+//           tanggalNaik: DateTime.parse(bookingDate),
+//           tanggalTurun: DateTime.now().add(const Duration(days: 1)), // Contoh default
+//           totalHargaTiket: [
+//             Price(
+//               jalurId: jalurId,
+//               priceFrom: '50000', // Contoh harga
+//               priceTo: '50000',
+//             )
+//           ],
+//           status: 'pending',
+//           createdAt: DateTime.now().toIso8601String(),
+//           updatedAt: DateTime.now().toIso8601String(),
+//         );
+
+//         // Kirim event CreateBookingEvent
+//         bookingBloc.add(CreateBookingEvent(modelBooking));
+
+//         // Navigasi ke layar pembayaran
+//         NavigatorService.pushNamed(AppRoutes.pilihanBankPembayaranScreen);
+//       } else {
+//         // Tampilkan pesan error
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text("Harap lengkapi data pemesanan.")),
+//         );
+//       }
+//     },
+//   );
+// }
 }

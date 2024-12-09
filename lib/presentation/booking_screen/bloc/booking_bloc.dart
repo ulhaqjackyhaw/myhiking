@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/jalurmodel.dart';
 import '../../../core/app_export.dart';
 import '../models/booking_model.dart';
@@ -17,7 +18,9 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   BookingBloc({required this.apiService}) : super(BookingState()) {
     on<BookingInitialEvent>(_onInitialize);
-    on<UpdateBookingDateEvent>(_onUpdateBookingDate); // Add the handler here
+    on<UpdateBookingDateEvent>(_onUpdateBookingDate);
+    on<CreateBookingEvent>(_onCreateBooking); // Add the handler here
+    on<UpdateMemberIdField>(_onUpdateAnggotaID);
     // on<ChangeDateEvent>(_onChangeDate);
   }
 
@@ -66,6 +69,38 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     }
   }
 
+  Future<void> _onCreateBooking(
+      CreateBookingEvent event, Emitter<BookingState> emit) async {
+    emit(state.copyWith(isLoading: true, error: ''));
+
+    try {
+      final response = await apiService.createBooking(
+        event.modelBooking.idGunung, // Ambil dari model
+        event.modelBooking.jalurId,
+        event.modelBooking.userId,
+        event.modelBooking.tanggalNaik.toIso8601String(),
+        event.modelBooking.tanggalTurun.toIso8601String(),
+        event.modelBooking.totalHargaTiket, // Explicitly convert to double
+        // .map((price) => price.toString())
+        // .join(", "),
+        // event.modelBooking.anggotaIds
+      );
+
+      if (response != null) {
+        emit(state.copyWith(
+          isLoading: false,
+          modelBooking: response,
+          isBookingSuccessful: true,
+        ));
+      } else {
+        emit(state.copyWith(
+            isLoading: false, error: 'Failed to create booking.'));
+      }
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: 'Error occurred: $e'));
+    }
+  }
+
   Future<void> _onInitialize(
       BookingInitialEvent event, Emitter<BookingState> emit) async {
     await fetchRouteCentres(event.idGunung, event.jalurId, emit);
@@ -79,6 +114,14 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           TextEditingController(text: event.formattedDate),
     ));
   }
+
+  Future<void> _onUpdateAnggotaID(
+      UpdateMemberIdField event, Emitter<BookingState> emit) async {
+    emit(state.copyWith(
+        memberIdFieldController:
+            TextEditingController(text: event.anggotaIds)));
+  }
+
   // @override
   // Stream<BookingState> mapEventToState(BookingEvent event) async* {
   //   if (event is UpdateBookingDateEvent) {

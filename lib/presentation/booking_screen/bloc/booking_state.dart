@@ -2,31 +2,33 @@ part of 'booking_bloc.dart';
 
 /// Represents the state of Booking in the application.
 class BookingState extends Equatable {
-  // Constructor to initialize optional parameters with default values if necessary
-
-  // Optional parameters for form field controllers
+  // Field controllers
   final TextEditingController? bookingDateFieldController;
   final TextEditingController? memberIdFieldController;
   final TextEditingController? memberNameFieldController;
+
+  // Data models
   final JalurModel? jalur;
-  final Gunung? gunung; // Detail gunung terkait
-  // Booking data object
-  // final BookingModel? bookingModelObj;
+  final Gunung? gunung;
+  final ModelBooking? modelBooking;
 
-  // Loading indicator flag
+  // Loading & Error state
   final bool isLoading;
-
-  // Error message (if any)
   final String error;
+
+  // Flag to indicate booking success
+  final bool isBookingSuccessful;
+
   BookingState({
     this.bookingDateFieldController,
     this.memberIdFieldController,
     this.memberNameFieldController,
     this.jalur,
     this.gunung,
-    // this.bookingModelObj,
+    this.modelBooking,
     this.isLoading = false,
     this.error = '',
+    this.isBookingSuccessful = false,
   });
 
   @override
@@ -36,21 +38,21 @@ class BookingState extends Equatable {
         memberNameFieldController,
         jalur,
         gunung,
-        // bookingModelObj,
+        modelBooking,
         isLoading,
         error,
+        isBookingSuccessful,
       ];
 
-  // CopyWith method for updating state
   BookingState copyWith({
     TextEditingController? bookingDateFieldController,
     TextEditingController? memberIdFieldController,
-    TextEditingController? memberNameFieldController,
     JalurModel? jalur,
-    Gunung? gunung, // Detail gunung terkait
-    // BookingModel? bookingModelObj,
+    Gunung? gunung,
+    ModelBooking? modelBooking,
     bool? isLoading,
     String? error,
+    bool? isBookingSuccessful,
   }) {
     return BookingState(
       bookingDateFieldController:
@@ -61,21 +63,10 @@ class BookingState extends Equatable {
           memberNameFieldController ?? this.memberNameFieldController,
       jalur: jalur ?? this.jalur,
       gunung: gunung ?? this.gunung,
-      // bookingModelObj: bookingModelObj ?? this.bookingModelObj,
+      modelBooking: modelBooking ?? this.modelBooking,
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
+      isBookingSuccessful: isBookingSuccessful ?? this.isBookingSuccessful,
     );
   }
-
-  // // A method for easy state reset if needed
-  // BookingState reset() {
-  //   return BookingState(
-  //     bookingDateFieldController: null,
-  //     memberIdFieldController: null,
-  //     memberNameFieldController: null,
-  //     bookingModelObj: null,
-  //     isLoading: false,
-  //     error: '',
-  //   );
-  // }
 }

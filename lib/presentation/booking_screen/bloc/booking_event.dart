@@ -55,6 +55,22 @@ class UpdateBookingDateEvent extends BookingEvent {
   List<Object?> get props => [formattedDate];
 }
 
+class CreateBookingEvent extends BookingEvent {
+  final ModelBooking modelBooking;
+
+  CreateBookingEvent(this.modelBooking);
+
+  @override
+  List<Object> get props => [modelBooking];
+}
+
+// Event untuk mengupdate memberIdFieldController
+class UpdateMemberIdField extends BookingEvent {
+  final String anggotaIds;
+
+  UpdateMemberIdField(this.anggotaIds);
+}
+
 /// Event triggered when the user updates their booking details.
 // class UpdateBookingEvent extends BookingEvent {
 //   final int bookingId;
