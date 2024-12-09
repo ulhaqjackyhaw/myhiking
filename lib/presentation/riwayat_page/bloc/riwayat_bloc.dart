@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/recentclimbinglist_item_model.dart';
 import '../models/riwayat_model.dart';
 
+
 part 'riwayat_event.dart';
 part 'riwayat_state.dart';
 
@@ -12,37 +13,75 @@ part 'riwayat_state.dart';
 class RiwayatBloc extends Bloc<RiwayatEvent, RiwayatState> {
   RiwayatBloc(super.initialState) {
     on<RiwayatInitialEvent>(_onInitialize);
+    on<RiwayatUserIdEvent>(_onUserIdReceived);
   }
 
-  // Function to fetch data from the API
-  Future<List<RecentclimbinglistItemModel>> fetchRecentClimbingList() async {
+  // Event handler untuk menerima userId dan memanggil fetchRecentClimbingList
+  _onUserIdReceived(
+    RiwayatUserIdEvent event,
+    Emitter<RiwayatState> emit,
+  ) async {
+    try {
+      // Dapatkan userId dari event
+      String userId = event.userId;
+
+      // Memanggil fetchRecentClimbingList dengan userId
+      List<RecentclimbinglistItemModel> recentClimbingList = await fetchRecentClimbingList(userId);
+
+      // Emit state dengan userId dan data yang diambil
+      emit(
+        state.copyWith(
+          userId: userId,
+          riwayatModelObj: state.riwayatModelObj?.copyWith(
+            recentclimbinglistItemList: recentClimbingList,
+          ),
+          errorMessage: '',
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to process userId or fetch data: $e',
+        ),
+      );
+    }
+  }
+
+  // Function untuk mengambil data dari API dengan userId
+  Future<List<RecentclimbinglistItemModel>> fetchRecentClimbingList(String userId) async {
     final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/pesanan'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body)['data'] as List;
-      return data
+
+      // Filter data berdasarkan userId yang diterima
+      final filteredData = data
+          .where((item) => item['id_user'].toString() == userId)
           .map((item) => RecentclimbinglistItemModel.fromJson(item))
           .toList();
+
+      return filteredData;
     } else {
       throw Exception('Failed to load data');
     }
   }
 
-  // Event handler for initializing data
+  // Event handler untuk menginisialisasi data
   _onInitialize(
     RiwayatInitialEvent event,
     Emitter<RiwayatState> emit,
   ) async {
     try {
-      // Fetching data from the API
-      List<RecentclimbinglistItemModel> recentClimbingList = await fetchRecentClimbingList();
+      // Mengambil data dari API tanpa menggunakan userId (untuk kasus inisialisasi)
+      List<RecentclimbinglistItemModel> recentClimbingList = await fetchRecentClimbingList("");
 
-      // Emit the new state with the fetched data
+      // Emit state dengan data yang diambil
       emit(
         state.copyWith(
           riwayatModelObj: state.riwayatModelObj?.copyWith(
             recentclimbinglistItemList: recentClimbingList,
-          ), errorMessage: '',
+          ),
+          errorMessage: '',
         ),
       );
     } catch (e) {

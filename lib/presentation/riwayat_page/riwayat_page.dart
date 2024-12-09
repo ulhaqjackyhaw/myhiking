@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
 import 'bloc/riwayat_bloc.dart';
@@ -6,10 +7,11 @@ import 'models/recentclimbinglist_item_model.dart';
 import 'models/riwayat_model.dart';
 import 'widgets/recentclimbinglist_item_widget.dart';
 
-// ignore_for_file: must_be_immutable
-class RiwayatPage extends StatelessWidget {
+// Mengubah RiwayatPage menjadi StatefulWidget
+class RiwayatPage extends StatefulWidget {
   const RiwayatPage({super.key});
 
+  // Fungsi builder untuk menyediakan BlocProvider
   static Widget builder(BuildContext context) {
     return BlocProvider<RiwayatBloc>(
       create: (context) => RiwayatBloc(RiwayatState(
@@ -20,6 +22,36 @@ class RiwayatPage extends StatelessWidget {
     );
   }
 
+  @override
+  _RiwayatPageState createState() => _RiwayatPageState();
+}
+class _RiwayatPageState extends State<RiwayatPage> {
+  String userId = '';
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserProfile();
+    }
+
+  Future<void> _getUserProfile() async {
+    final token = await ApiService().getToken();
+    if (token != null) {
+      final response = await ApiService().getUserProfile(token);
+      if (response['success']) {
+        setState(() {
+          userId = response['data']['id'].toString();
+          userName = response['data']['name'];
+        });
+        // Kirim userId ke BLoC
+        context.read<RiwayatBloc>().add(RiwayatUserIdEvent(userId));
+      }
+    }
+    print("Navigating with $userId");
+
+    // print(userName);
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -65,7 +97,7 @@ class RiwayatPage extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+  /// Widget untuk menampilkan bagian peralatan pendakian
   Widget _buildHikingEquipmentSection(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -102,7 +134,7 @@ class RiwayatPage extends StatelessWidget {
                       style: CustomTextStyles.titleMediumOnPrimary_2,
                     ),
                     Text(
-                      "Nama User".tr, //ambil nama user yyang sedang login
+                      '$userName'.tr, // Ambil nama user yang sedang login
                       style: theme.textTheme.titleLarge,
                     ),
                   ],
@@ -115,7 +147,7 @@ class RiwayatPage extends StatelessWidget {
     );
   }
 
-  /// Section Widget
+  /// Widget untuk menampilkan daftar pendakian terbaru
   Widget _buildRecentClimbingList(BuildContext context) {
     return Expanded(
       child: BlocSelector<RiwayatBloc, RiwayatState, RiwayatModel?>(
@@ -131,13 +163,10 @@ class RiwayatPage extends StatelessWidget {
             itemCount: riwayatModelObj?.recentclimbinglistItemList.length ?? 0,
             itemBuilder: (context, index) {
               RecentclimbinglistItemModel model =
-                  riwayatModelObj?.recentclimbinglistItemList[index] ??
-                      RecentclimbinglistItemModel();
+                  riwayatModelObj?.recentclimbinglistItemList[index] ?? 
+                  RecentclimbinglistItemModel();
               return RecentclimbinglistItemWidget(
                 model,
-                // onTapRecentclimbing: () {
-                //   onTapRecentclimbing(context);
-                // },
               );
             },
           );
@@ -146,7 +175,7 @@ class RiwayatPage extends StatelessWidget {
     );
   }
 
-  /// Displays a dialog with the [PopUpCheckoutDialog] content.
+  /// Menampilkan dialog dengan konten [PopUpCheckoutDialog]
   void onTapRecentclimbing(BuildContext context) {
     showDialog(
       context: NavigatorService.navigatorKey.currentContext!,

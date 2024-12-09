@@ -15,6 +15,15 @@ class RiwayatInitialEvent extends RiwayatEvent {
   List<Object?> get props => [];
 }
 
+// Event baru untuk mengirimkan userId
+class RiwayatUserIdEvent extends RiwayatEvent {
+  final String userId;
+
+  RiwayatUserIdEvent(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
 
 class ChangeStatusEvent extends RiwayatEvent {
   

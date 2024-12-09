@@ -3,16 +3,28 @@ part of 'riwayat_bloc.dart';
 /// Represents the state of Riwayat in the application.
 // ignore_for_file: must_be_immutable
 class RiwayatState extends Equatable {
-  RiwayatState({this.riwayatModelObj});
+  final RiwayatModel? riwayatModelObj;
+  final String? userId;
+  final String errorMessage;
 
-  RiwayatModel? riwayatModelObj;
+  RiwayatState({
+    this.riwayatModelObj,
+    this.userId,
+    this.errorMessage = '',
+  });
 
-  @override
-  List<Object?> get props => [riwayatModelObj];
-
-  RiwayatState copyWith({RiwayatModel? riwayatModelObj, required String errorMessage}) {
+  RiwayatState copyWith({
+    RiwayatModel? riwayatModelObj,
+    String? userId,
+    String? errorMessage,
+  }) {
     return RiwayatState(
       riwayatModelObj: riwayatModelObj ?? this.riwayatModelObj,
+      userId: userId ?? this.userId,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  List<Object?> get props => [riwayatModelObj, userId, errorMessage];
 }
