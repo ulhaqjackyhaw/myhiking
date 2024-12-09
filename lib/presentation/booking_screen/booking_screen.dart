@@ -478,6 +478,7 @@ class _BookingScreenState extends State<BookingScreen> {
           final bookingBloc = BlocProvider.of<BookingBloc>(context);
           final state = bookingBloc.state;
           print('${state.memberIdFieldController}');
+
           // Ambil data dari state
           final anggotaBooking = state.memberIdFieldController?.text;
           final bookingDate = state.bookingDateFieldController?.text;
@@ -506,6 +507,7 @@ class _BookingScreenState extends State<BookingScreen> {
               : null;
           print(
               "Tanggal naik : {$formattedDate, $biaya, $jalurId, $idGunung, $anggotaBooking, $userIdInt, $tanggalTurun}");
+
           // Menangani anggotaBooking yang berupa string dan mengonversinya menjadi List<int> jika valid
           List<int>? anggotaIds;
 
@@ -532,14 +534,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
           print("anggota Ids {$anggotaIds}");
 
-// Cek apakah anggotaIds kosong atau tidak valid
-          if (anggotaIds?.isEmpty ?? true) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Harap masukkan anggota yang valid.")),
-            );
-            return;
-          }
-
+          // Jika anggotaIds kosong, biarkan null atau kosongkan list
           if (formattedDate != null &&
               idGunung != null &&
               jalurId != null &&
@@ -547,13 +542,6 @@ class _BookingScreenState extends State<BookingScreen> {
               tanggalTurun != null &&
               biaya != null) {
             // Memanggil API untuk membuat booking
-            if (anggotaIds!.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Harap masukkan anggota yang valid.")),
-              );
-              return;
-            }
-
             ModelBooking? booking = await ApiService().createBooking(
               idGunung,
               jalurId,
@@ -561,9 +549,9 @@ class _BookingScreenState extends State<BookingScreen> {
               formattedDate,
               tanggalTurun, // Tanggal turunnya
               biaya.toInt(),
-              anggotaIds: anggotaIds.isEmpty
-                  ? []
-                  : anggotaIds, // Mengirim anggotaIds, pastikan tidak null
+              anggotaIds: anggotaIds?.isNotEmpty == true
+                  ? anggotaIds
+                  : null, // Safely handle null
             );
             if (booking != null) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -572,7 +560,6 @@ class _BookingScreenState extends State<BookingScreen> {
                   backgroundColor: Colors.green,
                 ),
               );
-              // Navigator.of(context).pop();
               Navigator.push(
                 context,
                 MaterialPageRoute(
