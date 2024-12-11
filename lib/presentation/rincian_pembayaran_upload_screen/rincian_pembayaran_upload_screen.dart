@@ -12,9 +12,9 @@ import 'bloc/rincian_pembayaran_upload_bloc.dart';
 import 'models/rincian_pembayaran_upload_model.dart';
 
 class RincianPembayaranUploadScreen extends StatefulWidget {
-  final int idPesanan;
+  final int pesananId;
 
-  const RincianPembayaranUploadScreen({super.key, required this.idPesanan});
+  const RincianPembayaranUploadScreen({super.key, required this.pesananId});
 
   @override
   _RincianPembayaranUploadScreenState createState() =>
@@ -36,7 +36,7 @@ class _RincianPembayaranUploadScreenState
 
   @override
   Widget build(BuildContext context) {
-    print("id Pesanan : ${widget.idPesanan}");
+    print("id Pesanan : ${widget.pesananId}");
     return BlocBuilder<RincianPembayaranUploadBloc,
         RincianPembayaranUploadState>(
       builder: (context, state) {

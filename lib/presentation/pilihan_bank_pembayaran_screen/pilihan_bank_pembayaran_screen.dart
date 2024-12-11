@@ -16,8 +16,8 @@ import 'models/pilihan_bank_pembayaran_model.dart';
 import 'widgets/paymentmethodslist_item_widget.dart';
 
 class PilihanBankPembayaranScreen extends StatefulWidget {
-  final int idPesanan;
-  const PilihanBankPembayaranScreen({super.key, required this.idPesanan});
+  final int pesananId;
+  const PilihanBankPembayaranScreen({super.key, required this.pesananId});
 
   @override
   _PilihanBankPembayaranScreenState createState() =>
@@ -41,7 +41,7 @@ class _PilihanBankPembayaranScreenState
 
   @override
   Widget build(BuildContext context) {
-    print("id Pesanan : ${widget.idPesanan}");
+    print("id Pesanan : ${widget.pesananId}");
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -222,7 +222,7 @@ class _PilihanBankPembayaranScreenState
           create: (context) =>
               RincianPembayaranUploadBloc(apiService: ApiService()),
           child: RincianPembayaranUploadScreen(
-            idPesanan: widget.idPesanan, // Use widget to access jalurId
+            pesananId: widget.pesananId, // Use widget to access jalurId
             // userId: userId,
           ),
         ),

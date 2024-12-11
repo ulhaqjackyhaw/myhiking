@@ -569,7 +569,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 MaterialPageRoute(
                   builder: (context) => BlocProvider<PilihanBankPembayaranBloc>(
                     create: (context) => PilihanBankPembayaranBloc(),
-                    child: PilihanBankPembayaranScreen(idPesanan: booking.id!),
+                    child: PilihanBankPembayaranScreen(pesananId: booking.id!),
                   ),
                 ),
               ).then((_) {
