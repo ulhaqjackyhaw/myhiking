@@ -7,31 +7,36 @@ import '../models/pilihan_bank_pembayaran_model.dart';
 part 'pilihan_bank_pembayaran_event.dart';
 part 'pilihan_bank_pembayaran_state.dart';
 
-// BLoC untuk PilihanBankPembayaran
 class PilihanBankPembayaranBloc
     extends Bloc<PilihanBankPembayaranEvent, PilihanBankPembayaranState> {
   PilihanBankPembayaranBloc()
       : super(PilihanBankPembayaranState(
-        pilihanBankPembayaranModelObj: PilihanBankPembayaranModel(
-          paymentmethodslistItemList: [
-            PaymentmethodslistItemModel(
-              gopayOne: ImageConstant.imgLogo,
-              debitcard: 'GoPay',
-            ),
-            PaymentmethodslistItemModel(
-              gopayOne: ImageConstant.imgPngwingCom1,
-              debitcard: 'Bank Central Asia',
-            ),
-            PaymentmethodslistItemModel(
-              gopayOne: ImageConstant.imgLogoBankBri,
-              debitcard: 'Bank Rakyat Indonesia',
-            ),
-          ],
-        ),
-      )) {
+          pilihanBankPembayaranModelObj: PilihanBankPembayaranModel(
+            paymentmethodslistItemList: [
+              PaymentmethodslistItemModel(
+                gopayOne: ImageConstant.imgLogo,
+                debitcard: 'GoPay',
+              ),
+              PaymentmethodslistItemModel(
+                gopayOne: ImageConstant.imgPngwingCom1,
+                debitcard: 'Bank Central Asia',
+              ),
+              PaymentmethodslistItemModel(
+                gopayOne: ImageConstant.imgLogoBankBri,
+                debitcard: 'Bank Rakyat Indonesia',
+              ),
+            ],
+          ),
+        )) {
+    // Handler for the initial event
+    on<PilihanBankPembayaranInitialEvent>((event, emit) {
+      // Emit the current state to initialize the BLoC with the initial values
+      emit(state);
+    });
+
+    // Handler for the PaymentmethodslistItemEvent
     on<PaymentmethodslistItemEvent>((event, emit) {
-      // Tangani event di sini
-      // Misalnya, mengupdate state berdasarkan event.index
+      // Update state with the selected payment method index
       final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
         selectedPaymentMethodIndex: event.index,
       );
@@ -41,29 +46,3 @@ class PilihanBankPembayaranBloc
     });
   }
 }
-
-
-//   @override
-//   Stream<PilihanBankPembayaranState> mapEventToState(
-//     PilihanBankPembayaranEvent event,
-//   ) async* {
-//     if (event is PilihanBankPembayaranInitialEvent) {
-//       // Tidak perlu menambahkan data lagi di sini
-//       yield state; // Hanya yield state yang sudah ada
-//     } else if (event is PaymentmethodslistItemEvent) {
-//       yield* _handlePaymentMethodSelection(event);
-//     }
-//   }
-
-//   Stream<PilihanBankPembayaranState> _handlePaymentMethodSelection(
-//       PaymentmethodslistItemEvent event) async* {
-//     // Mengupdate pilihan metode pembayaran
-//     final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
-//       selectedPaymentMethodIndex: event.index,
-//     );
-
-//     yield state.copyWith(
-//       pilihanBankPembayaranModelObj: updatedModel,
-//     );
-//   }
-// }
