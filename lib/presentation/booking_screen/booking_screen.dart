@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/jalurmodel.dart';
+import 'package:myhiking/presentation/pilihan_bank_pembayaran_screen/bloc/pilihan_bank_pembayaran_bloc.dart';
 import 'package:myhiking/presentation/pilihan_bank_pembayaran_screen/pilihan_bank_pembayaran_screen.dart';
 import '../../core/app_export.dart';
 import '../../core/utils/date_time_utils.dart';
@@ -17,6 +18,7 @@ import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/custom_text_form_field.dart';
+import '../pilihan_bank_pembayaran_screen/models/pilihan_bank_pembayaran_model.dart';
 import 'bloc/booking_bloc.dart';
 import 'models/booking_model.dart';
 
@@ -550,25 +552,29 @@ class _BookingScreenState extends State<BookingScreen> {
               tanggalTurun, // Tanggal turunnya
               biaya.toInt(),
               anggotaIds: anggotaIds?.isNotEmpty == true
-                  ? anggotaIds
+                  ? anggotaIds 
                   : null, // Safely handle null
             );
             if (booking != null) {
+              // Menampilkan ID pesanan di SnackBar
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Booking berhasil dibuat!'),
+                  content: Text(
+                      'Booking berhasil dibuat!'),
                   backgroundColor: Colors.green,
                 ),
               );
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => BlocProvider(
-                    create: (context) => BookingBloc(apiService: ApiService()),
-                    child: const PilihanBankPembayaranScreen(),
+                  builder: (context) => BlocProvider<PilihanBankPembayaranBloc>(
+                    create: (context) => PilihanBankPembayaranBloc(),
+                    child: PilihanBankPembayaranScreen(idPesanan: booking.id!),
                   ),
                 ),
-              );
+              ).then((_) {
+                // Jika perlu melakukan sesuatu setelah layar baru dimulai, Anda bisa melakukannya di sini.
+              });
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

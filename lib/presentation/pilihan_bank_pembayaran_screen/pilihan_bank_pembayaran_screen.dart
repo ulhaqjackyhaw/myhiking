@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:myhiking/presentation/rincian_pembayaran_upload_screen/bloc/rincian_pembayaran_upload_bloc.dart';
+import 'package:myhiking/presentation/rincian_pembayaran_upload_screen/rincian_pembayaran_upload_screen.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
@@ -13,18 +16,8 @@ import 'models/pilihan_bank_pembayaran_model.dart';
 import 'widgets/paymentmethodslist_item_widget.dart';
 
 class PilihanBankPembayaranScreen extends StatefulWidget {
-  const PilihanBankPembayaranScreen({super.key});
-
-  static Widget builder(BuildContext context) {
-    return BlocProvider(
-      create: (context) => PilihanBankPembayaranBloc(
-        PilihanBankPembayaranState(
-          pilihanBankPembayaranModelObj: PilihanBankPembayaranModel(),
-        ),
-      )..add(PilihanBankPembayaranInitialEvent()),
-      child: const PilihanBankPembayaranScreen(),
-    );
-  }
+  final int idPesanan;
+  const PilihanBankPembayaranScreen({super.key, required this.idPesanan});
 
   @override
   _PilihanBankPembayaranScreenState createState() =>
@@ -36,7 +29,19 @@ class _PilihanBankPembayaranScreenState
   String? selectedDebitCard; // Menyimpan kartu debit yang dipilih
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Memastikan BLoC siap untuk menangani event
+      context
+          .read<PilihanBankPembayaranBloc>()
+          .add(PilihanBankPembayaranInitialEvent());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("id Pesanan : ${widget.idPesanan}");
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -62,7 +67,7 @@ class _PilihanBankPembayaranScreenState
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -73,7 +78,7 @@ class _PilihanBankPembayaranScreenState
               child: AppbarSubtitleOne(text: "lbl_booking".tr),
             ),
           ),
-          SizedBox(width: 50.h),
+          const SizedBox(width: 50),
         ],
       ),
     );
@@ -89,7 +94,8 @@ class _PilihanBankPembayaranScreenState
             iconHeight: 26,
             iconWidth: 26,
             stepperDirection: Axis.horizontal,
-            activeIndex: 0,
+            activeIndex:
+                0, // You can adjust active index logic as per your need
             barThickness: 4,
             inverted: true,
             stepperList: _buildStepperDataList(),
@@ -166,8 +172,11 @@ class _PilihanBankPembayaranScreenState
                       selectedDebitCard =
                           value; // Simpan kartu debit yang dipilih
                     });
+
+                    // Mengirimkan event ke Bloc
                     context.read<PilihanBankPembayaranBloc>().add(
-                          PaymentmethodslistItemEvent(index: index),
+                          PaymentmethodslistItemEvent(
+                              index: index), // Pastikan event ini ditangani
                         );
                   },
                   isSelected: selectedDebitCard ==
@@ -182,29 +191,42 @@ class _PilihanBankPembayaranScreenState
     );
   }
 
-Widget _buildPaymentButtonSection(BuildContext context) {
-  bool isBankSelected = selectedDebitCard != null;
+  Widget _buildPaymentButtonSection(BuildContext context) {
+    bool isBankSelected = selectedDebitCard != null;
 
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 18.h),
-    child: CustomElevatedButton(
-      height: 48.h,
-      text: "lbl_bayar_sekarang".tr.toUpperCase(),
-      onPressed: isBankSelected ? () {
-        onTapRincian(context);
-      } : null, // Disable button if no bank is selected
-      margin: EdgeInsets.only(bottom: 12.h),
-      buttonStyle: isBankSelected 
-          ? CustomButtonStyles.fillPrimary // Primary color if bank is selected
-          : CustomButtonStyles.fillGray, // Gray color if no bank is selected
-      buttonTextStyle: CustomTextStyles.labelLarge13,
-    ),
-  );
-}
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.h),
+      child: CustomElevatedButton(
+        height: 48.h,
+        text: "lbl_bayar_sekarang".tr.toUpperCase(),
+        onPressed: isBankSelected
+            ? () {
+                onTapRincian(context);
+              }
+            : null, // Disable button if no bank is selected
+        margin: EdgeInsets.only(bottom: 12.h),
+        buttonStyle: isBankSelected
+            ? CustomButtonStyles
+                .fillPrimary // Primary color if bank is selected
+            : CustomButtonStyles.fillGray, // Gray color if no bank is selected
+        buttonTextStyle: CustomTextStyles.labelLarge13,
+      ),
+    );
+  }
 
-
-}
-
-void onTapRincian(BuildContext context) {
-  NavigatorService.pushNamed(AppRoutes.rincianPembayaranUploadScreen);
+  void onTapRincian(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) =>
+              RincianPembayaranUploadBloc(apiService: ApiService()),
+          child: RincianPembayaranUploadScreen(
+            idPesanan: widget.idPesanan, // Use widget to access jalurId
+            // userId: userId,
+          ),
+        ),
+      ),
+    );
+  }
 }

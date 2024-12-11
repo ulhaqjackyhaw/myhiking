@@ -1,27 +1,20 @@
 part of 'pilihan_bank_pembayaran_bloc.dart';
 
-/// Abstract class for all events that can be dispatched from the
-/// PilihanBankPembayaran widget.
-///
-/// Events must be immutable and implement the [Equatable] interface.
+// Abstract class for all events
 abstract class PilihanBankPembayaranEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-/// Event that is dispatched when the PilihanBankPembayaran widget
-/// is first created.
-class PilihanBankPembayaranInitialEvent extends PilihanBankPembayaranEvent {
-  // Constructor tidak perlu properti tambahan
-}
+// Event untuk inisialisasi state pertama kali
+class PilihanBankPembayaranInitialEvent extends PilihanBankPembayaranEvent {}
 
-/// Event that is dispatched when a payment method is selected.
+// Event ketika metode pembayaran dipilih
 class PaymentmethodslistItemEvent extends PilihanBankPembayaranEvent {
-  // Constructor dengan parameter yang required
+  final int index; // Index pilihan metode pembayaran
+
   PaymentmethodslistItemEvent({required this.index});
 
-  final int index; // Index dari metode pembayaran yang dipilih
-
   @override
-  List<Object?> get props => [index]; // Menyertakan index dalam props
+  List<Object?> get props => [index];
 }

@@ -3,24 +3,24 @@ import '../../../core/app_export.dart';
 
 /// Model untuk metode pembayaran yang digunakan di widget [PaymentmethodslistItemWidget].
 class PaymentmethodslistItemModel extends Equatable {
-  // Constructor
+  // Constructor dengan nilai default jika parameter tidak diberikan
   PaymentmethodslistItemModel({
     String? gopayOne,
     String? debitcard,
     String? radioGroup,
     String? id,
-  })  : gopayOne = gopayOne ?? ImageConstant.imgLogo,
-        debitcard = debitcard ?? "Gopay",
-        radioGroup = radioGroup ?? "",
-        id = id ?? "";
+  })  : gopayOne = gopayOne ?? ImageConstant.imgLogo, // Default image
+        debitcard = debitcard ?? "Gopay", // Default debit card name
+        radioGroup = radioGroup ?? "", // Default empty radioGroup
+        id = id ?? ""; // Default empty ID
 
   // Properti dari model
-  final String gopayOne; // URL gambar untuk Gopay
-  final String debitcard; // Nama kartu debit
-  final String radioGroup; // Untuk grup radio
+  final String gopayOne; // URL gambar untuk Gopay atau logo kartu
+  final String debitcard; // Nama kartu debit (misal: "Gopay", "BCA")
+  final String radioGroup; // ID grup radio button
   final String id; // ID unik untuk item
 
-  // Method untuk menyalin model dengan modifikasi
+  // Method untuk menyalin model dengan modifikasi (copyWith)
   PaymentmethodslistItemModel copyWith({
     String? gopayOne,
     String? debitcard,

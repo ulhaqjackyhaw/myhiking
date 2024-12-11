@@ -13,56 +13,57 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
 
   final PaymentmethodslistItemModel paymentmethodslistItemModelObj;
   final bool isSelected;
-  final Function(String)? onTapRadioGroup;
+  final ValueChanged<String>? onTapRadioGroup; // Menggunakan ValueChanged
 
   @override
   Widget build(BuildContext context) {
+    // Menggunakan GestureDetector untuk mendeteksi klik pada elemen
     return GestureDetector(
-        onTap: () {
-          onTapRadioGroup?.call(paymentmethodslistItemModelObj.debitcard!);
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 12.h,
-            vertical: 14.h,
+      onTap: () {
+        // Memanggil onTapRadioGroup ketika item dipilih
+        onTapRadioGroup?.call(paymentmethodslistItemModelObj.debitcard);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 12.h,
+          vertical: 14.h,
+        ),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onPrimary,
+          borderRadius: BorderRadius.circular(20), // Rounded corner
+          border: Border.all(
+            color: theme.colorScheme.primary,
+            width: 0.75.h,
           ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary,
-            borderRadius: BorderRadiusStyle.roundedBorder20,
-            border: Border.all(
-              color: theme.colorScheme.primary,
-              width: 0.75.h,
+          boxShadow: [
+            BoxShadow(
+              color: appTheme.blueGray40019,
+              spreadRadius: 2.h,
+              blurRadius: 1.h,
+              offset: const Offset(4, 4),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: appTheme.blueGray40019,
-                spreadRadius: 2.h,
-                blurRadius: 1.h,
-                offset: const Offset(4, 4),
-              ),
-            ],
-          ),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Gambar metode pembayaran (Gopay/BCA/BRI)
             CustomImageView(
-              imagePath: paymentmethodslistItemModelObj.gopayOne!,
+              imagePath: paymentmethodslistItemModelObj.gopayOne,
               height: 45.h,
               width: 45.h,
-              margin: EdgeInsets.only(left: 6.h),
+              margin: EdgeInsets.only(right: 12.h),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 12.h,
-                  bottom: 6.h,
-                ),
-                child: Text(
-                  paymentmethodslistItemModelObj.debitcard!,
-                  style: CustomTextStyles.titleSmallGray900,
-                ),
+            // Nama metode pembayaran
+            Padding(
+              padding: EdgeInsets.only(bottom: 6.h),
+              child: Text(
+                paymentmethodslistItemModelObj.debitcard,
+                style: CustomTextStyles.titleSmallGray900,
               ),
             ),
             const Spacer(),
+            // CustomRadioButton untuk memilih metode pembayaran
             Stack(
               alignment: Alignment.center,
               children: [
@@ -80,7 +81,7 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
                 ),
                 CustomRadioButton(
                   value: paymentmethodslistItemModelObj
-                      .debitcard!, // Nilai unik sebagai value
+                      .debitcard, // Nilai unik sebagai value
                   groupValue: isSelected
                       ? paymentmethodslistItemModelObj.debitcard
                       : null, // Cocokkan dengan yang dipilih
@@ -92,7 +93,9 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ]),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }

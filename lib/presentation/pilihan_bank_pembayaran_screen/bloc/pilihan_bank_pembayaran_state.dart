@@ -1,11 +1,10 @@
 part of 'pilihan_bank_pembayaran_bloc.dart';
 
-/// Represents the state of PilihanBankPembayaran in the application.
-// ignore_for_file: must_be_immutable
+// Represents the state of PilihanBankPembayaran in the application.
 class PilihanBankPembayaranState extends Equatable {
-  const PilihanBankPembayaranState({this.pilihanBankPembayaranModelObj});
-
   final PilihanBankPembayaranModel? pilihanBankPembayaranModelObj;
+
+  const PilihanBankPembayaranState({this.pilihanBankPembayaranModelObj});
 
   @override
   List<Object?> get props => [pilihanBankPembayaranModelObj];
