@@ -10,15 +10,11 @@ import 'package:myhiking/models/jalurmodel.dart';
 import 'package:myhiking/presentation/pilihan_bank_pembayaran_screen/bloc/pilihan_bank_pembayaran_bloc.dart';
 import 'package:myhiking/presentation/pilihan_bank_pembayaran_screen/pilihan_bank_pembayaran_screen.dart';
 import '../../core/app_export.dart';
-import '../../core/utils/date_time_utils.dart';
-import '../../core/utils/validation_functions.dart';
 import '../../theme/custom_button_style.dart';
-import '../../widgets/app_bar/appbar_image.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_outlined_button.dart';
 import '../../widgets/custom_text_form_field.dart';
-import '../pilihan_bank_pembayaran_screen/models/pilihan_bank_pembayaran_model.dart';
 import 'bloc/booking_bloc.dart';
 import 'models/booking_model.dart';
 
@@ -30,15 +26,6 @@ class BookingScreen extends StatefulWidget {
 
   @override
   State<BookingScreen> createState() => _BookingScreenState();
-  // static Widget builder(BuildContext context) {
-  //   return BlocProvider<BookingBloc>(
-  //     create: (context) => BookingBloc(BookingState(
-  //       bookingModelObj: BookingModel(),
-  //     ))
-  //       ..add(BookingInitialEvent()),
-  //     child: const BookingScreen(),
-  //   );
-  // }
 }
 
 class _BookingScreenState extends State<BookingScreen> {
@@ -68,43 +55,22 @@ class _BookingScreenState extends State<BookingScreen> {
       if (response['success']) {
         setState(() {
           userId = response['data']['id'].toString();
-          // userName = response['data']['name'];
         });
       }
     }
     print("Navigating with $userId");
-
-    // print(userName);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Perform null check for jalurId and idGunung before passing them to the Bloc
-    // final jalurId = widget.jalurId;
-    // final idGunung = widget.idGunung;
-
-    // if (jalurId == null || idGunung == null) {
-    //   return Scaffold(
-    //     body: Center(
-    //       child: Text('Missing required parameters (jalurId or idGunung).'),
-    //     ),
-    //   );
-    // }
-
     return BlocProvider(
       create: (context) => BookingBloc(apiService: ApiService())
         ..add(BookingInitialEvent(
           idGunung: widget.idGunung!,
           jalurId: widget.jalurId!,
         )),
-      // child: SafeArea(
-      //   child: Scaffold(
-      //     backgroundColor: appTheme.gray5001,
-      //     appBar: _buildAppbar(context),
       child: BlocBuilder<BookingBloc, BookingState>(
         builder: (context, state) {
-          // final jalur = state.jalur;
-          // final gunung = state.gunung;
           if (state.isLoading) {
             return Center(child: CircularProgressIndicator());
           }
@@ -113,21 +79,11 @@ class _BookingScreenState extends State<BookingScreen> {
                 child: Text('Data jalur atau gunung tidak tersedia.'));
           }
 
-          // Log untuk memeriksa nilai jalur dan gunung
-          // print('jalur: $jalur');
-          // print('gunung: $gunung');
-
-          // if (jalur == null || gunung == null) {
-          //   return Center(
-          //       child: Text('Data jalur atau gunung tidak tersedia.'));
-          // }
-
           final resDetailRouteCentres = ResJalurModel(
             status: true,
             message: "Success",
             //error disini
             jalur: state.jalur!,
-            // gunung: state.gunung!,
           );
 
           final jalurModel =
@@ -552,15 +508,14 @@ class _BookingScreenState extends State<BookingScreen> {
               tanggalTurun, // Tanggal turunnya
               biaya.toInt(),
               anggotaIds: anggotaIds?.isNotEmpty == true
-                  ? anggotaIds 
+                  ? anggotaIds
                   : null, // Safely handle null
             );
             if (booking != null) {
               // Menampilkan ID pesanan di SnackBar
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text(
-                      'Booking berhasil dibuat!'),
+                  content: Text('Booking berhasil dibuat!'),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -608,17 +563,6 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  /// Navigates to the routeScreen when the action is triggered.
-  // onTapArrowdownone(BuildContext context) {
-  //   NavigatorService.pushNamed(
-  //     AppRoutes.routeScreen,
-  //   );
-  // }
-
-  /// Displays a date picker dialog and updates the selected date in the
-  /// current [bookingModelObj] object if the user selects a valid date.
-  /// This function returns a `Future` that completes with `void`.
-
   void onTapBookingDateInput(BuildContext context) async {
     // Mendapatkan tanggal saat ini
     DateTime currentDate = DateTime.now();
@@ -642,67 +586,4 @@ class _BookingScreenState extends State<BookingScreen> {
           .add(UpdateBookingDateEvent(formattedDate));
     }
   }
-
-//   /// Navigates to the pilihanBankPembayaranScreen when the action is triggered.
-//   Widget _buildContinueButton(BuildContext context) {
-//   return CustomOutlinedButton(
-//     height: 42.h,
-//     text: "lbl_lanjut2".tr,
-//     margin: EdgeInsets.only(
-//       left: 8.h,
-//       right: 4.h,
-//     ),
-//     buttonStyle: CustomButtonStyles.fillPrimary,
-//     buttonTextStyle: CustomTextStyles.labelLarge13,
-//     onPressed: () {
-//       final bookingBloc = BlocProvider.of<BookingBloc>(context);
-//       final state = bookingBloc.state;
-
-//       // Ambil data dari state
-//       final bookingDate = state.bookingDateFieldController?.text;
-//       final memberId = state.memberIdFieldController?.text;
-
-//       final idGunung = state.gunung?.id;
-//       final jalurId = state.jalur?.id;
-//       final userId = int.tryParse(memberId ?? '');
-//       print("$idGunung, $jalurId and $userId");
-
-//       if (bookingDate != null &&
-//           idGunung != null &&
-//           jalurId != null &&
-//           userId != null) {
-//         // Buat objek ModelBooking
-//         final modelBooking = ModelBooking(
-//           id: 0, // Auto-generate dari backend
-//           idGunung: idGunung,
-//           jalurId: jalurId,
-//           userId: userId,
-//           tanggalNaik: DateTime.parse(bookingDate),
-//           tanggalTurun: DateTime.now().add(const Duration(days: 1)), // Contoh default
-//           totalHargaTiket: [
-//             Price(
-//               jalurId: jalurId,
-//               priceFrom: '50000', // Contoh harga
-//               priceTo: '50000',
-//             )
-//           ],
-//           status: 'pending',
-//           createdAt: DateTime.now().toIso8601String(),
-//           updatedAt: DateTime.now().toIso8601String(),
-//         );
-
-//         // Kirim event CreateBookingEvent
-//         bookingBloc.add(CreateBookingEvent(modelBooking));
-
-//         // Navigasi ke layar pembayaran
-//         NavigatorService.pushNamed(AppRoutes.pilihanBankPembayaranScreen);
-//       } else {
-//         // Tampilkan pesan error
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text("Harap lengkapi data pemesanan.")),
-//         );
-//       }
-//     },
-//   );
-// }
 }
