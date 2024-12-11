@@ -11,22 +11,32 @@ import '../../widgets/custom_outlined_button.dart';
 import 'bloc/rincian_pembayaran_upload_bloc.dart';
 import 'models/rincian_pembayaran_upload_model.dart';
 
-class RincianPembayaranUploadScreen extends StatelessWidget {
-  const RincianPembayaranUploadScreen({Key? key}) : super(key: key);
+class RincianPembayaranUploadScreen extends StatefulWidget {
+  final int idPesanan;
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<RincianPembayaranUploadBloc>(
-      create: (context) => RincianPembayaranUploadBloc(
-        RincianPembayaranUploadState(
-          rincianPembayaranUploadModelObj: RincianPembayaranUploadModel(),
-        ),
-      )..add(RincianPembayaranUploadInitialEvent()),
-      child: const RincianPembayaranUploadScreen(),
-    );
+  const RincianPembayaranUploadScreen({super.key, required this.idPesanan});
+
+  @override
+  _RincianPembayaranUploadScreenState createState() =>
+      _RincianPembayaranUploadScreenState();
+}
+
+class _RincianPembayaranUploadScreenState
+    extends State<RincianPembayaranUploadScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Menambahkan event setelah widget pertama kali dibangun
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
+          .read<RincianPembayaranUploadBloc>()
+          .add(RincianPembayaranUploadInitialEvent());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    print("id Pesanan : ${widget.idPesanan}");
     return BlocBuilder<RincianPembayaranUploadBloc,
         RincianPembayaranUploadState>(
       builder: (context, state) {
@@ -307,7 +317,7 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                               alignment: Alignment.center,
                               children: [
                                 CustomImageView(
-                                  imagePath: ImageConstant.imgLogoBankBri,
+                                  imagePath: ImageConstant.imgLogo,
                                   height: 36.h,
                                   width: 38.h,
                                   radius: BorderRadius.circular(
@@ -321,12 +331,12 @@ class RincianPembayaranUploadScreen extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  "msg_bank_rakyat_indonesia".tr,
+                                  "Gopay".tr,
                                   style:
                                       CustomTextStyles.labelLargeBluegray40002,
                                 ),
                                 Text(
-                                  "msg_0166_01_020870_53_8".tr,
+                                  "0887_4553_6753".tr,
                                   style: CustomTextStyles.titleSmallLightblue900
                                       .copyWith(
                                     decoration: TextDecoration.underline,

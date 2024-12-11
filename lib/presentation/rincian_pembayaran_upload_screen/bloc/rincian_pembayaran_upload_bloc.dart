@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../api/api_service.dart';
 import '../../../core/app_export.dart';
 import '../models/rincian_pembayaran_upload_model.dart';
 
@@ -9,7 +10,13 @@ part 'rincian_pembayaran_upload_state.dart';
 /// the event that is dispatched to it.
 class RincianPembayaranUploadBloc
     extends Bloc<RincianPembayaranUploadEvent, RincianPembayaranUploadState> {
-  RincianPembayaranUploadBloc(super.initialState) {
+  final ApiService apiService;
+
+  // Konstruktor dengan apiService sebagai parameter.
+  RincianPembayaranUploadBloc({required this.apiService})
+      : super(RincianPembayaranUploadState(
+          rincianPembayaranUploadModelObj: RincianPembayaranUploadModel(),
+        )) {
     on<RincianPembayaranUploadInitialEvent>(_onInitialize);
   }
 

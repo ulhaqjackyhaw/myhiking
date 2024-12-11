@@ -104,7 +104,7 @@ class ApiService {
       }
       print("Anggota Ids: {$anggotaIds}");
       final response = await http.post(
-        Uri.parse("http://localhost:8000/api/pesanan/buatpesanan"),
+        Uri.parse("http://localhost:8000/api/pesanan"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
