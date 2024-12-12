@@ -58,42 +58,45 @@ class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
   }
 
   Future<List<TransactionlistItemModel>> fetchTransactions() async {
-    final response = await http.get(Uri.parse('$baseUrl/transaksi'));
-
-    if (response.statusCode == 200) {
-      List<dynamic> jsonData = json.decode(response.body);
-      // print(jsonData); // Menampilkan data JSON yang diterima
-
-      return jsonData
-          .map((data) => TransactionlistItemModel.fromJson(data))
-          .toList();
+  final response = await http.get(Uri.parse('$baseUrl/transaksi'));
+  print(response);
+  if (response.statusCode == 200) {
+    final jsonData = json.decode(response.body);
+    if (jsonData['data'] is List) {
+      return List<TransactionlistItemModel>.from(
+        jsonData['data'].map((data) => TransactionlistItemModel.fromJson(data)),
+      );
     } else {
-      throw Exception('Failed to fetch transactions');
+      return [];
     }
+  } else {
+    throw Exception('Failed to fetch transactions');
   }
+}
+
 
   List<TransactionlistItemModel> fillTransactionlistItemList() {
     return [
       TransactionlistItemModel(
-        senintwentyseve: "Senin, 27 Agustus 2024",
-        gunungslamet: "Gunung Slamet",
+        waktuPembayaran: "Senin, 27 Agustus 2024",
+        gunung: "Gunung Slamet",
         id: "1", // ID unik
       ),
       TransactionlistItemModel(
-        senintwentyseve: "Rabu, 27 Januari 2024",
-        gunungslamet: "Gunung Merbabu",
+        waktuPembayaran: "Rabu, 27 Januari 2024",
+        gunung: "Gunung Merbabu",
         id: "2", // ID unik
         status: "Selesai",
       ),
       TransactionlistItemModel(
-        senintwentyseve: "Sabtu, 22 Oktober 2023",
-        gunungslamet: "Gunung Andong",
+        waktuPembayaran: "Sabtu, 22 Oktober 2023",
+        gunung: "Gunung Andong",
         id: "3", // ID unik
         status: "Selesai",
       ),
       TransactionlistItemModel(
-        senintwentyseve: "Senin, 2 Maret 2023",
-        gunungslamet: "Gunung Sindoro",
+        waktuPembayaran: "Senin, 2 Maret 2023",
+        gunung: "Gunung Sindoro",
         id: "4", // ID unik
         status: "Selesai",
       ),

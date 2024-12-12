@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
@@ -23,7 +24,7 @@ class TransactionlistItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Jika status adalah "Selesai", navigasi ke tiket
-        if (transactionlistItemModelObj.status == "Selesai") {
+        if (transactionlistItemModelObj.status == "verified") {
           NavigatorService.pushNamed(AppRoutes.tiketScreen);
         }
         // Panggil callback jika ada
@@ -61,11 +62,13 @@ class TransactionlistItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        transactionlistItemModelObj.senintwentyseve!,
+                        DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
+                          DateTime.tryParse(transactionlistItemModelObj.waktuPembayaran ?? '2020-01-01') ?? DateTime.now()
+                        ),
                         style: theme.textTheme.titleSmall,
                       ),
                       Text(
-                        transactionlistItemModelObj.gunungslamet!,
+                        transactionlistItemModelObj.gunung.toString(),
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
@@ -83,7 +86,7 @@ class TransactionlistItemWidget extends StatelessWidget {
   /// Menampilkan tombol sesuai status transaksi
   /// Menampilkan tombol sesuai status transaksi
   Widget _buildStatusButton(BuildContext context) {
-    if (transactionlistItemModelObj.status == "Proses") {
+    if (transactionlistItemModelObj.status == "unverified") {
       return CustomElevatedButton(
         height: 26.h,
         width: 98.h,
@@ -94,9 +97,8 @@ class TransactionlistItemWidget extends StatelessWidget {
           onChangeStatus?.call(); // Panggil callback saat tombol ditekan
         },
       );
-    } else if (transactionlistItemModelObj.status == "Berhasil") {
-      return _buildBerhasilButton(context);
-    } else {
+    } 
+    else {
       return _buildSelesaiButton(context);
     }
   }
@@ -111,7 +113,7 @@ class TransactionlistItemWidget extends StatelessWidget {
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
         // Logika untuk mengubah status menjadi "Berhasil"
-        transactionlistItemModelObj.status = "Berhasil";
+        transactionlistItemModelObj.status = "unverified";
         // Panggil untuk navigasi
         NavigatorService.pushNamed(AppRoutes.suksesScreen);
       },
@@ -137,7 +139,7 @@ class TransactionlistItemWidget extends StatelessWidget {
       height: 26.h,
       width: 98.h,
       text: "lbl_selesai".tr,
-      buttonStyle: CustomButtonStyles.outlineTeal2,
+      buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
         // Navigasi ke tiket screen

@@ -3,41 +3,76 @@ import 'package:equatable/equatable.dart';
 /// This class is used in the [transactionlist_item_widget] screen.
 // ignore_for_file: must_be_immutable
 class TransactionlistItemModel extends Equatable {
-  TransactionlistItemModel(
-      {this.senintwentyseve, this.gunungslamet, this.id, this.status}) {
-    senintwentyseve = senintwentyseve ?? "Senin, 27 Agustus 2024";
-    gunungslamet = gunungslamet ?? "Gunung Slamet";
-    id = id ?? "";
-    status = status ?? "Proses";
-  }
+  TransactionlistItemModel({
+    this.id,
+    this.idPesanan,
+    this.metodePembayaran,
+    this.totalBayar,
+    this.status,
+    this.waktuPembayaran,
+    this.bukti,
+    this.gunung,
+    this.jalur,
+  });
 
   factory TransactionlistItemModel.fromJson(Map<String, dynamic> json) {
     return TransactionlistItemModel(
       id: json['id'],
-      senintwentyseve: json['senintwentyseve'],
-      gunungslamet: json['gunungslamet'],
+      idPesanan: json['id_pesanan'],
+      metodePembayaran: json['metode_pembayaran'],
+      totalBayar: json['total_bayar'],
       status: json['status'],
+      waktuPembayaran: json['waktu_pembayaran'],
+      bukti: json['bukti'],
+      gunung: json['gunung'],
+      jalur: json['jalur'],
     );
   }
 
-  String? senintwentyseve;
-  String? gunungslamet;
   String? id;
+  int? idPesanan;
+  String? metodePembayaran;
+  int? totalBayar;
   String? status;
+  String? waktuPembayaran;
+  String? bukti;
+  String? gunung;
+  String? jalur;
 
-  TransactionlistItemModel copyWith(
-      {String? senintwentyseve,
-      String? gunungslamet,
-      String? id,
-      String? status}) {
+  TransactionlistItemModel copyWith({
+    String? id,
+    int? idPesanan,
+    String? metodePembayaran,
+    int? totalBayar,
+    String? status,
+    String? waktuPembayaran,
+    String? bukti,
+    String? gunung,
+    String? jalur,
+  }) {
     return TransactionlistItemModel(
-      senintwentyseve: senintwentyseve ?? this.senintwentyseve,
-      gunungslamet: gunungslamet ?? this.gunungslamet,
       id: id ?? this.id,
+      idPesanan: idPesanan ?? this.idPesanan,
+      metodePembayaran: metodePembayaran ?? this.metodePembayaran,
+      totalBayar: totalBayar ?? this.totalBayar,
       status: status ?? this.status,
+      waktuPembayaran: waktuPembayaran ?? this.waktuPembayaran,
+      bukti: bukti ?? this.bukti,
+      gunung: gunung ?? this.gunung,
+      jalur: jalur ?? this.jalur,
     );
   }
 
   @override
-  List<Object?> get props => [senintwentyseve, gunungslamet, id, status];
+  List<Object?> get props => [
+        id,
+        idPesanan,
+        metodePembayaran,
+        totalBayar,
+        status,
+        waktuPembayaran,
+        bukti,
+        gunung,
+        jalur,
+      ];
 }
