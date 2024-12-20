@@ -5,16 +5,18 @@ import 'bloc/pop_up_checkout_bloc.dart';
 import 'models/pop_up_checkout_model.dart'; // ignore_for_file: must_be_immutable
 
 class PopUpCheckoutDialog extends StatelessWidget {
-  const PopUpCheckoutDialog({super.key});
+  final int pesananId;
 
-  static Widget builder(BuildContext context) {
+  const PopUpCheckoutDialog({super.key, required this.pesananId});
+
+  static Widget builder(BuildContext context, int pesananId) {
     return BlocProvider<PopUpCheckoutBloc>(
       create: (context) => PopUpCheckoutBloc(
         PopUpCheckoutState(
           popUpCheckoutModelobj: const PopUpCheckoutModel(),
         ),
       )..add(PopUpCheckoutInitialEvent()),
-      child: const PopUpCheckoutDialog(),
+      child: PopUpCheckoutDialog(pesananId: pesananId),
     );
   }
 
@@ -81,7 +83,7 @@ class PopUpCheckoutDialog extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 14.h),
-                  buildBarcodeButtonsRow(context),
+                  buildBarcodeButtonsRow(context, pesananId),
                   SizedBox(height: 6.h),
                 ],
               ),
@@ -92,7 +94,7 @@ class PopUpCheckoutDialog extends StatelessWidget {
     );
   }
 
-  Widget buildBarcodeButtonsRow(BuildContext context) {
+  Widget buildBarcodeButtonsRow(BuildContext context, int pesananId) {
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.only(left: 4.h),
@@ -104,7 +106,7 @@ class PopUpCheckoutDialog extends StatelessWidget {
               text: "lbl_barcode".tr,
               buttonTextStyle: CustomTextStyles.titleSmallOnPrimary,
               onPressed: () {
-                onTapBarcode(context);
+                onTapBarcode(context, pesananId);
               },
             ),
           ),
@@ -118,7 +120,7 @@ class PopUpCheckoutDialog extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   AppRoutes.tiketScreen,
-                  arguments: 3, // Ganti 3 dengan ID pesanan yang benar
+                  arguments: pesananId,
                 );
               },
             ),
@@ -128,12 +130,11 @@ class PopUpCheckoutDialog extends StatelessWidget {
     );
   }
 
-  onTapBarcode(BuildContext context) {
+  onTapBarcode(BuildContext context, int pesananId) {
     Navigator.pushNamed(
-  context,
-  AppRoutes.tiketScreen,
-  arguments: 3, // Ganti 3 dengan nilai ID pesanan yang sesuai
-);
-
+      context,
+      AppRoutes.tiketScreen,
+      arguments: pesananId,
+    );
   }
 }

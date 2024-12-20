@@ -103,9 +103,13 @@ class SuksesScreen extends StatelessWidget {
                               text: "lbl_lihat_tiket".tr.toUpperCase(),
                               buttonStyle: CustomButtonStyles.fillPrimary,
                               buttonTextStyle: theme.textTheme.labelLarge!,
-                              onPressed: () {
-                                onTapLihattiket(context);
-                              },
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.tiketScreen,
+                                    arguments: 3, // Ganti 3 dengan ID pesanan yang benar
+                                  );
+                                },
                             ),
                             SizedBox(height: 16.h),
                             CustomOutlinedButton(
@@ -256,12 +260,14 @@ void onTapArrowdownone(BuildContext context) {
 
 /// Navigates to the tiketScreen when the action is triggered.
 void onTapLihattiket(BuildContext context) {
-  NavigatorService.pushNamed(
+    Navigator.pushNamed(
+    context,
     AppRoutes.tiketScreen,
+    arguments: 3, // Ganti 3 dengan nilai ID pesanan yang sesuai
   );
 }
 
-/// Navigates to the berandaScreen when the action is triggered.
+/// Navigatesa to the berandaScreen when the action is triggered.
 void onTapKembalikehome(BuildContext context) {
   NavigatorService.pushNamed(
     AppRoutes.berandaScreen,

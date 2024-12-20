@@ -222,12 +222,12 @@ class AppNavigationScreen extends StatelessWidget {
                               onTapScreenTitle: () => onTapDialogTitle(context,
                                   PopUpDataDiriLengkapDialog.builder(context)),
                             ),
-                            _buildScreenTitle(
-                              context,
-                              screenTitle: "pop up checkout - Dialog",
-                              onTapScreenTitle: () => onTapDialogTitle(context,
-                                  PopUpCheckoutDialog.builder(context)),
-                            ),
+                            // _buildScreenTitle(
+                            //   context,
+                            //   screenTitle: "pop up checkout - Dialog",
+                            //   onTapScreenTitle: () => onTapDialogTitle(context,
+                            //       PopUpCheckoutDialog.builder(context)),
+                            // ),
                             _buildScreenTitle(
                               context,
                               screenTitle: "transaksi page",
