@@ -117,9 +117,21 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   Future<void> _onUpdateAnggotaID(
       UpdateMemberIdField event, Emitter<BookingState> emit) async {
-    emit(state.copyWith(
-        memberIdFieldController:
-            TextEditingController(text: event.anggotaIds)));
+    // Periksa apakah controller sudah ada
+    final controller = state.memberIdFieldController;
+
+    if (controller != null) {
+      // Perbarui teks di controller yang ada
+      controller.text = event.anggotaIds;
+
+      // Emit state tanpa mengganti controller yang sudah ada
+      emit(state.copyWith(memberIdFieldController: controller));
+    } else {
+      // Jika controller belum ada, buat baru
+      emit(state.copyWith(
+        memberIdFieldController: TextEditingController(text: event.anggotaIds),
+      ));
+    }
   }
 
   // @override

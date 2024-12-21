@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:intl/intl.dart';
 import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
@@ -106,7 +107,6 @@ class _RincianPembayaranUploadScreenState
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<RincianPembayaranUploadBloc,
         RincianPembayaranUploadState>(
       builder: (context, state) {
@@ -429,9 +429,10 @@ class _RincianPembayaranUploadScreenState
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      "lbl_rp_25_000".tr,
+                      "Rp ${widget.transaksi.totalBayar}",
                       style: theme.textTheme.headlineSmall,
                     ),
+
                     SizedBox(height: 18.h),
                     Container(
                       width: double.maxFinite,
