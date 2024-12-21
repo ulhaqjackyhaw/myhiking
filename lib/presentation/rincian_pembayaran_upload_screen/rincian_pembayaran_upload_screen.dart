@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
@@ -34,6 +36,9 @@ class _RincianPembayaranUploadScreenState
   String? _fileName;
   String? _filePath;
   RincianPembayaranUploadModel? rincianPembayaran;
+  late Timer _timer;
+  Duration _remainingTime = Duration(hours: 1); // 1 jam mundur
+  String _formattedTime = '';
 
   @override
   void initState() {
@@ -44,6 +49,7 @@ class _RincianPembayaranUploadScreenState
           .read<RincianPembayaranUploadBloc>()
           .add(RincianPembayaranUploadEvent());
     });
+    _updateTime();
   }
 
   Future<void> _pickFile() async {
@@ -68,10 +74,39 @@ class _RincianPembayaranUploadScreenState
     }
   }
 
+  void _updateTime() {
+    _formattedTime = _formatDuration(_remainingTime);
+
+    // Start a timer to update the remaining time every second
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_remainingTime.inSeconds > 0) {
+          _remainingTime = _remainingTime - Duration(seconds: 1);
+        } else {
+          _timer.cancel(); // Stop the timer when it reaches 0
+        }
+        _formattedTime = _formatDuration(_remainingTime);
+      });
+    });
+  }
+
+  String _formatDuration(Duration duration) {
+    // Format the duration to the desired string, like "00:59:58"
+    final hours = duration.inHours.toString().padLeft(2, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('id Transaksi : ${widget.transaksi.id}');
-    print("id Pesanan : ${widget.pesananId}");
+
     return BlocBuilder<RincianPembayaranUploadBloc,
         RincianPembayaranUploadState>(
       builder: (context, state) {
@@ -317,7 +352,7 @@ class _RincianPembayaranUploadScreenState
                     style: theme.textTheme.labelSmall,
                   ),
                   Text(
-                    "lbl_00_59_58".tr,
+                    _formattedTime,
                     style: CustomTextStyles.labelMediumPrimary,
                   ),
                 ],
