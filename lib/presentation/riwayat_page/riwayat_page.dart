@@ -184,17 +184,17 @@ class _RiwayatPageState extends State<RiwayatPage> {
     // Konversi pesananId ke int jika belum
     int parsedPesananId = int.tryParse(pesananId.toString()) ?? 0;
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        content: PopUpCheckoutDialog.builder(
-          context, 
-          parsedPesananId
-        ),
-        backgroundColor: Colors.transparent,
-        contentPadding: EdgeInsets.zero,
-        insetPadding: EdgeInsets.zero,
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (_) => AlertDialog(
+    //     content: PopUpCheckoutDialog.builder(
+    //       context, 
+    //       parsedPesananId
+    //     ),
+    //     backgroundColor: Colors.transparent,
+    //     contentPadding: EdgeInsets.zero,
+    //     insetPadding: EdgeInsets.zero,
+    //   ),
+    // );
   }
 }

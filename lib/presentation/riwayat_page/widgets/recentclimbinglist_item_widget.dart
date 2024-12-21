@@ -102,7 +102,7 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       onPressed: () {
         // Handle the action for "Booking" status
         // Optionally show checkout dialog or navigate to booking details
-        _showCheckoutDialog(context);
+        // _showCheckoutDialog(context);
       },
     );
   }
@@ -112,8 +112,8 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
     return CustomElevatedButton(
       height: 26.h,
       width: 98.h,
-      text: "Selesai".tr,
-      buttonStyle: CustomButtonStyles.outlineTeal2,
+      text: "Mendaki".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
         // Handle the action for "Selesai" status if needed
