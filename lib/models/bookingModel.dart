@@ -17,17 +17,19 @@ class Booking {
     required this.data,
   });
 
-  factory Booking.fromJson(Map<String, dynamic> json) => Booking(
-        success: json["success"],
-        message: json["message"],
-        data: ModelBooking.fromJson(
-            json["pesanan"]), // Adjusted to match 'pesanan'
-      );
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      success: json["success"],
+      message: json["message"],
+      data:
+          ModelBooking.fromJson(json["pesanan"]), // Directly passing 'pesanan'
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
-        "pesanan": data.toJson(), // Adjusted to match 'pesanan'
+        "pesanan": data.toJson(),
       };
 }
 
@@ -43,6 +45,8 @@ class ModelBooking {
   final String createdAt;
   final String updatedAt;
   final List<Anggota>? anggotaIds;
+  // final GunungBooking? gunung; // Made nullable
+  // final JalurBooking? jalur; // Made nullable
 
   ModelBooking({
     required this.id,
@@ -55,38 +59,34 @@ class ModelBooking {
     required this.createdAt,
     required this.updatedAt,
     required this.totalHargaTiket,
-    this.anggotaIds, // AnggotaIds bersifat opsional
+    this.anggotaIds,
+    // this.gunung, // Nullable field
+    // this.jalur, // Nullable field
   });
 
   factory ModelBooking.fromJson(Map<String, dynamic> json) {
-    // var anggotaList = json['anggota_ids'] != null
-    //     ? List<Anggota>.from(
-    //         json['anggota_ids'].map((item) => Anggota.fromJson(item)))
-    //     : null;
-    // print("Anggota IDs: ${json['anggota_ids']}");
     return ModelBooking(
       id: json['id'],
       idGunung: json['id_gunung'],
       jalurId: json['id_jalur'],
       userId: json['id_user'],
-      tanggalNaik: json['tanggal_naik'] != null
-          ? DateTime.parse(json['tanggal_naik'])
-          : DateTime.now(),
-      tanggalTurun: json['tanggal_turun'] != null
-          ? DateTime.parse(json['tanggal_turun'])
-          : DateTime.now(),
-      status: json['status'] ?? '', // Default empty string if null
-      createdAt: json['created_at'] ?? '', // Default empty string if null
-      updatedAt: json['updated_at'] ?? '', // Default empty string if null
-      // totalHargaTiket: (json["price"] as List)
-      //     .map((price) => Price.fromJson(price))
-      //     .toList(),
+      tanggalNaik: DateTime.parse(json['tanggal_naik']),
+      tanggalTurun: DateTime.parse(json['tanggal_turun']),
+      status: json['status'] ?? '',
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
       totalHargaTiket: json['total_harga_tiket'],
-      anggotaIds: json['anggota_ids'] != null && json['anggota_ids'] is List
+      anggotaIds: json['anggota_ids'] != null
           ? (json['anggota_ids'] as List)
               .map((item) => Anggota.fromJson(item))
               .toList()
-          : [], // Return an empty list if anggota_ids is null or not a list
+          : [],
+      // gunung: json['gunung'] != null
+      //     ? GunungBooking.fromJson(json['gunung'])
+      //     : null, // Null check
+      // jalur: json['jalur'] != null
+      //     ? JalurBooking.fromJson(json['jalur'])
+      //     : null, // Null check
     );
   }
 
@@ -101,40 +101,15 @@ class ModelBooking {
       'status': status,
       'created_at': createdAt,
       'updated_at': updatedAt,
-      // 'total_harga_tiket': totalHargaTiket
-      //     .map((price) => price.toJson())
-      //     .toList(), // Convert list of Price to list of maps
       'total_harga_tiket': totalHargaTiket,
       'anggota_ids': anggotaIds != null
           ? anggotaIds!.map((anggota) => anggota.toJson()).toList()
-          : [], // Mengirim anggotaIds sebagai list kosong jika null // Jika anggotaIds null, kirim list kosong
+          : [],
+      // 'gunung': gunung?.toJson(), // Safe null check before calling toJson
+      // 'jalur': jalur?.toJson(), // Safe null check before calling toJson
     };
   }
 }
-
-// class Price {
-//   int jalurId;
-//   String priceFrom;
-//   String priceTo;
-
-//   Price({
-//     required this.jalurId,
-//     required this.priceFrom,
-//     required this.priceTo,
-//   });
-
-//   factory Price.fromJson(Map<String, dynamic> json) => Price(
-//         jalurId: json["jalur_id"],
-//         priceFrom: Decimal.parse(json["price_from"]).toString(),
-//         priceTo: Decimal.parse(json["price_to"]).toString(),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "jalur_id": jalurId,
-//         "price_from": priceFrom,
-//         "price_to": priceTo,
-//       };
-// }
 
 class Anggota {
   final int id;
@@ -154,6 +129,7 @@ class Anggota {
       email: json['email'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -162,3 +138,83 @@ class Anggota {
     };
   }
 }
+
+// class JalurBooking {
+//   final int id;
+//   final String nama;
+//   final String village;
+//   final String district;
+//   final String regency;
+//   final String province;
+//   final String gambar;
+//   final double biaya;
+//   final GunungBooking gunung;
+
+//   JalurBooking({
+//     required this.id,
+//     required this.nama,
+//     required this.village,
+//     required this.district,
+//     required this.regency,
+//     required this.province,
+//     required this.gambar,
+//     required this.biaya,
+//     required this.gunung,
+//   });
+
+//   factory JalurBooking.fromJson(Map<String, dynamic> json) {
+//     return JalurBooking(
+//       id: json['id'],
+//       nama: json['nama'],
+//       village: json['village'],
+//       district: json['district'],
+//       regency: json['regency'],
+//       province: json['province'],
+//       gambar: json['gambar'],
+//       biaya: json['biaya'].toDouble(),
+//       gunung: GunungBooking.fromJson(json['gunung']),
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "nama": nama,
+//         "village": village,
+//         "district": district,
+//         "regency": regency,
+//         "province": province,
+//         "gambar": gambar,
+//         "biaya": biaya,
+//         "gunung": gunung.toJson(),
+//       };
+// }
+
+// class GunungBooking {
+//   final int id;
+//   final String nama;
+//   final double ketinggian;
+//   final String province;
+
+//   GunungBooking({
+//     required this.id,
+//     required this.nama,
+//     required this.ketinggian,
+//     required this.province,
+//   });
+
+//   factory GunungBooking.fromJson(Map<String, dynamic> json) {
+//     return GunungBooking(
+//       id: json['id'],
+//       nama: json['nama'],
+//       ketinggian: json['ketinggian'].toDouble(),
+//       province: json['province'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "nama": nama,
+//         "ketinggian": ketinggian,
+//         "province": province,
+//       };
+// }

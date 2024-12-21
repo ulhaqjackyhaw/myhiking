@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
@@ -8,13 +9,20 @@ import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_outlined_button.dart';
+import '../pilihan_bank_pembayaran_screen/models/transaksimodel.dart';
 import 'bloc/rincian_pembayaran_upload_bloc.dart';
 import 'models/rincian_pembayaran_upload_model.dart';
+import 'package:file_picker/file_picker.dart'; // Import file_picker
 
 class RincianPembayaranUploadScreen extends StatefulWidget {
   final int pesananId;
+  final TransactionModel transaksi;
 
-  const RincianPembayaranUploadScreen({super.key, required this.pesananId});
+  const RincianPembayaranUploadScreen({
+    super.key,
+    required this.pesananId,
+    required this.transaksi,
+  });
 
   @override
   _RincianPembayaranUploadScreenState createState() =>
@@ -23,6 +31,10 @@ class RincianPembayaranUploadScreen extends StatefulWidget {
 
 class _RincianPembayaranUploadScreenState
     extends State<RincianPembayaranUploadScreen> {
+  String? _fileName;
+  String? _filePath;
+  RincianPembayaranUploadModel? rincianPembayaran;
+
   @override
   void initState() {
     super.initState();
@@ -30,12 +42,35 @@ class _RincianPembayaranUploadScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context
           .read<RincianPembayaranUploadBloc>()
-          .add(RincianPembayaranUploadInitialEvent());
+          .add(RincianPembayaranUploadEvent());
     });
+  }
+
+  Future<void> _pickFile() async {
+    try {
+      // Gunakan FilePicker untuk memilih file
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png'], // Hanya file gambar
+      );
+
+      if (result != null) {
+        setState(() {
+          _filePath = result.files.single.path; // Simpan path lengkap file
+          _fileName = result.files.single.name; // Simpan nama file tanpa path
+        });
+        print("File dipilih: $_filePath");
+      } else {
+        print("Pemilihan file dibatalkan oleh pengguna.");
+      }
+    } catch (e) {
+      print("Error saat memilih file: $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    print('id Transaksi : ${widget.transaksi.id}');
     print("id Pesanan : ${widget.pesananId}");
     return BlocBuilder<RincianPembayaranUploadBloc,
         RincianPembayaranUploadState>(
@@ -43,44 +78,100 @@ class _RincianPembayaranUploadScreenState
         return SafeArea(
           child: Scaffold(
             appBar: _buildAppBar(context),
-            body: SizedBox(
-              width: double.maxFinite,
-              child: SingleChildScrollView(
-                child: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.only(
-                    left: 14.h,
-                    top: 2.h,
-                    right: 14.h,
-                  ),
-                  child: Column(
-                    children: [
-                      _buildStepperSection(context),
-                      SizedBox(height: 22.h),
-                      _buildTimerRow(context),
-                      SizedBox(height: 26.h),
-                      _buildPaymentDetailsStack(context),
-                      SizedBox(height: 16.h),
-                      _buildUploadProofRow(context),
-                      SizedBox(height: 54.h),
-                      CustomElevatedButton(
-                        height: 48.h,
-                        text: "lbl_kirim2".tr.toUpperCase(),
-                        margin: EdgeInsets.symmetric(horizontal: 4.h),
-                        buttonStyle: CustomButtonStyles.fillPrimary,
-                        buttonTextStyle: theme.textTheme.labelLarge!,
-                        onPressed: () {
-                          onTapKirim(context);
-                        },
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildStepperSection(context),
+                  SizedBox(height: 12.h), // Kurangi jarak
+                  _buildTimerRow(context),
+                  SizedBox(height: 18.h), // Kurangi jarak
+                  _buildPaymentDetailsStack(context),
+                  SizedBox(height: 4.h), // Jarak antar elemen
+                  GestureDetector(
+                    onTap: _pickFile, // Ketika di-tap, pilih file
+                    child: Container(
+                      width: double
+                          .maxFinite, // Lebar penuh sesuai dengan tombol lainnya
+                      height: 48
+                          .h, // Tinggi disamakan dengan tombol Kirim dan Kembali ke Home
+                      margin: EdgeInsets.symmetric(
+                          horizontal: 18.h), // Margin horizontal sama
+                      decoration: BoxDecoration(
+                        color:
+                            theme.colorScheme.onPrimary, // Warna latar belakang
+                        borderRadius:
+                            BorderRadius.circular(14.h), // Sudut membulat
+                        border: Border.all(
+                          color: appTheme.gray50004, // Warna border
+                          width: 1.h, // Ketebalan border
+                        ),
                       ),
-                      SizedBox(height: 30.h),
-                      // _buildReturnHomeColumn(context),
-                    ],
-                  ),
-                ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomImageView(
+                            imagePath: ImageConstant.imgProfile,
+                            height: 24.h,
+                            width: 24.h,
+                          ),
+                          SizedBox(
+                              width: 12
+                                  .h), // Sedikit kurangi jarak agar lebih rapih
+                          Text(
+                            _fileName == null
+                                ? "msg_upload_bukti_pembayaran".tr
+                                : _fileName!,
+                            style: theme.textTheme.labelLarge!.copyWith(
+                              color: appTheme.gray50004, // Warna teks
+                              fontWeight: FontWeight
+                                  .w600, // Tebal agar selaras dengan tombol lain
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ), // Memberikan jarak setelah tombol upload// Memberikan ruang kosong sebelum tombol Kirim dan Kembali ke Home // Memberikan jarak setelah tombol upload
+                  Spacer(), // Memberikan ruang kosong sebelum tombol Kirim dan Kembali ke Home
+                ],
               ),
             ),
-            bottomNavigationBar: _buildReturnHomeColumn(context),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(
+                  bottom: 16.h,
+                  left: 12.h,
+                  right: 12.h), // Penurunan padding bottom
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomElevatedButton(
+                    height: 48.h, // Tinggi tombol disamakan
+                    text: "lbl_kirim2".tr.toUpperCase(),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: 18.h), // Konsisten dengan padding
+                    buttonStyle: CustomButtonStyles.fillPrimary, // Tombol hijau
+                    buttonTextStyle: theme.textTheme.labelLarge!, // Teks putih
+                    onPressed: () {
+                      _uploadBuktiPembayaran();
+                    },
+                  ),
+                  SizedBox(height: 6.h), // Jarak antar tombol
+                  Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(horizontal: 18.h),
+                    child: CustomOutlinedButton(
+                      text: "lbl_kembali_ke_home".tr.toUpperCase(),
+                      onPressed: () {
+                        NavigatorService.pushNamed(
+                          AppRoutes.berandaScreen,
+                        );
+                      },
+                    ),
+                  ), // Jarak setelah tombol kembali ke home
+                ],
+              ),
+            ),
           ),
         );
       },
@@ -289,8 +380,14 @@ class _RincianPembayaranUploadScreenState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      "msg_id_pesanan_xxxxxxxxxxxxx".tr,
+                      "ID_PESANAN".tr,
                       maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: CustomTextStyles.labelMediumGray50004,
+                    ),
+                    Text(
+                      widget.pesananId.toString(),
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: CustomTextStyles.labelMediumGray50004,
@@ -349,10 +446,10 @@ class _RincianPembayaranUploadScreenState
                       ),
                     ),
                     SizedBox(height: 6.h),
-                    Text(
-                      "msg_atas_nama_gn_slamet".tr,
-                      style: CustomTextStyles.labelMediumPrimary10,
-                    ),
+                    // Text(
+                    //   "${rincianPembayaran?.namaGunung ?? 'Gunung Tidak Diketahui'} - ${rincianPembayaran?.namaJalur ?? 'Jalur Tidak Diketahui'}",
+                    //   style: CustomTextStyles.labelMediumPrimary10,
+                    // ),
                   ],
                 ),
               ),
@@ -425,6 +522,49 @@ class _RincianPembayaranUploadScreenState
     NavigatorService.pushNamed(
       AppRoutes.pilihanBankPembayaranScreen,
     );
+  }
+
+  final ApiService apiService = ApiService();
+
+  void _uploadBuktiPembayaran() async {
+    if (_fileName != null) {
+      try {
+        // Show loading state
+        context.read<RincianPembayaranUploadBloc>().add(
+              FetchRincianPembayaranUploadEvent(
+                idTransaksi: widget.transaksi.id.toString(),
+                filePath: _filePath!,
+                isLoading: true,
+              ),
+            );
+
+        // Call the API service to upload bukti pembayaran
+        await apiService.uploadBuktiPembayaran(
+          widget.transaksi.id.toString(),
+          _filePath!,
+        );
+
+        // Hide loading state and navigate to the next screen
+        context.read<RincianPembayaranUploadBloc>().add(
+              FetchRincianPembayaranUploadEvent(
+                idTransaksi: widget.transaksi.toString(),
+                filePath: _filePath!,
+                isLoading: false,
+              ),
+            );
+        NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
+      } catch (e) {
+        // Hide loading state and show error message
+        context.read<RincianPembayaranUploadBloc>().add(
+              FetchRincianPembayaranUploadEvent(
+                idTransaksi: widget.transaksi.id.toString(),
+                filePath: _filePath!,
+                isLoading: false,
+                error: e.toString(),
+              ),
+            );
+      }
+    }
   }
 
   /// Navigates to the menungguVerifikasiScreen when the action is triggered.

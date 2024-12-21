@@ -22,16 +22,7 @@ class ResJalurModel {
     );
   }
 }
-//   // Method untuk mengonversi objek menjadi JSON
-//   Map<String, dynamic> toJson() {
-//     return {
-//       "success": success,
-//       "message": message,
-//       "jalur": jalur.toJson(),
-//       "gunung": gunung.toJson(),
-//     };
-//   }
-// }
+
 
 class JalurModel {
   final int id;
