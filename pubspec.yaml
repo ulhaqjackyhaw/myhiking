@@ -44,12 +44,12 @@ dependencies:
   another_stepper: ^1.2.2
   flutter_svg_provider: ^1.0.7
   qr_flutter: ^4.1.0
+  file_picker: ^5.2.0 # Versi terbaru saat ini
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   http: ^1.2.2
-
 
 dev_dependencies:
   flutter_test:
