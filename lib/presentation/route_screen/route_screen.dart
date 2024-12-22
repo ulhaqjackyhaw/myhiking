@@ -4,6 +4,7 @@ import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/booking_screen/bloc/booking_bloc.dart';
 import 'package:myhiking/presentation/booking_screen/booking_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -26,6 +27,8 @@ class _RouteScreenState extends State<RouteScreen> {
   String userName = '';
   int userId = 0;
   bool isLoading = true;
+  RouteModel? routeModel;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +37,55 @@ class _RouteScreenState extends State<RouteScreen> {
     //     .read<DetailMountainBloc>()
     //     .add(DetailMountainInitialEvent(widget.idGunung));
     _getUser();
+  }
+
+  // Fungsi untuk membuka URL
+  void _launchURL(RouteModel model) async {
+    print('Attempting to launch URL:');
+    print('mapBasecamp: ${model.mapBasecamp}');
+
+    if (model.mapBasecamp.isNotEmpty) {
+      try {
+        // Untuk Windows, kita perlu memastikan URL dibuka di browser
+        final Uri url = Uri.parse(model.mapBasecamp);
+        print('Parsed URL: $url');
+
+        if (!await launchUrl(
+          url,
+          mode: LaunchMode
+              .platformDefault, // Gunakan platform default untuk Windows
+        )) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tidak dapat membuka maps'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        print('Error launching URL: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Gagal membuka maps: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } else {
+      print('URL is empty');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('URL maps tidak tersedia'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _getUser() async {
@@ -94,6 +146,7 @@ class _RouteScreenState extends State<RouteScreen> {
         builder: (context, state) {
           // print('jalur: $state.jalur');
           // print('gunung: $state.gunung');
+
           // Handle loading state
           if (state.isLoading) {
             return Scaffold(
@@ -359,16 +412,20 @@ class _RouteScreenState extends State<RouteScreen> {
                 ),
               ),
               onPressed: () {
-                // Action to open map
+                _launchURL(routeModel);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.map, color: theme.colorScheme.primary, size: 35),
+                  Icon(Icons.map,
+                      color: Theme.of(context).colorScheme.primary, size: 35),
                   SizedBox(width: 8),
-                  Text("Open\nMaps", // Teks tombol
-                      style: CustomTextStyles.labelMediumPrimary10
-                          .copyWith(fontSize: 17)),
+                  Text(
+                    "Open\nMaps",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
                 ],
               ),
             ),
