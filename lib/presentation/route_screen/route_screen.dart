@@ -409,7 +409,7 @@ class _RouteScreenState extends State<RouteScreen> {
   Widget _buildTataTertibButton(BuildContext context) {
     return CustomElevatedButton(
       height: 56.h,
-      text: "Tata Tertib dan",
+      text: "Tata Tertib dan Peraturan",
       margin: EdgeInsets.only(right: 2.h),
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimary,
@@ -439,30 +439,4 @@ class _RouteScreenState extends State<RouteScreen> {
       },
     );
   }
-
-  // // **Pesan Sekarang Button**
-  // Widget _buildPesanSekarangButton(BuildContext context) {
-  //   return CustomElevatedButton(
-  //     height: 56.h,
-  //     text: "Pesan Sekarang",
-  //     buttonStyle: CustomButtonStyles.outlineBlackTL14,
-  //     buttonTextStyle: CustomTextStyles.titleLarge_1,
-  //     onPressed: () {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => BlocProvider(
-  //             create: (context) => BookingBloc(apiService: ApiService()),
-  //             child: BookingScreen(
-  //               jalurId: jalurId,
-  //               idGunung: idGunung,
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //       print(
-  //           "Navigating to RouteScreen with idGunung: ${idGunung}, jalurId: ${jalurId}, ${userId.toString()}");
-  //     },
-  //   );
-  // }
 }

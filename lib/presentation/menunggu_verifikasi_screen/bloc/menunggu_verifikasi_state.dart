@@ -1,21 +1,29 @@
 part of 'menunggu_verifikasi_bloc.dart';
 
-/// Represents the state of MenungguVerifikasi in the application.
-// ignore_for_file: must_be_immutable
 class MenungguVerifikasiState extends Equatable {
-  MenungguVerifikasiState({this.menungguVerifikasiModelObj});
+  final MenungguVerifikasiModel? menungguVerifikasiModelObj;
+  final bool isLoading;
+  final String? error;
 
-  MenungguVerifikasiModel? menungguVerifikasiModelObj;
-
-  @override
-  List<Object?> get props => [menungguVerifikasiModelObj];
+  const MenungguVerifikasiState({
+    this.menungguVerifikasiModelObj,
+    this.isLoading = false,
+    this.error,
+  });
 
   MenungguVerifikasiState copyWith({
     MenungguVerifikasiModel? menungguVerifikasiModelObj,
+    bool? isLoading,
+    String? error,
   }) {
     return MenungguVerifikasiState(
       menungguVerifikasiModelObj:
           menungguVerifikasiModelObj ?? this.menungguVerifikasiModelObj,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [menungguVerifikasiModelObj, isLoading, error];
 }

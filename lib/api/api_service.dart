@@ -4,8 +4,6 @@ import 'package:myhiking/models/model.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../presentation/pilihan_bank_pembayaran_screen/models/transaksimodel.dart';
-
 const String baseUrl = 'http://localhost:8000/api';
 
 class ApiService {

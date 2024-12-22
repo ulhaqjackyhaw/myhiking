@@ -60,8 +60,6 @@ class ModelBooking {
     required this.updatedAt,
     required this.totalHargaTiket,
     this.anggotaIds,
-    // this.gunung, // Nullable field
-    // this.jalur, // Nullable field
   });
 
   factory ModelBooking.fromJson(Map<String, dynamic> json) {
@@ -81,12 +79,6 @@ class ModelBooking {
               .map((item) => Anggota.fromJson(item))
               .toList()
           : [],
-      // gunung: json['gunung'] != null
-      //     ? GunungBooking.fromJson(json['gunung'])
-      //     : null, // Null check
-      // jalur: json['jalur'] != null
-      //     ? JalurBooking.fromJson(json['jalur'])
-      //     : null, // Null check
     );
   }
 
@@ -105,8 +97,6 @@ class ModelBooking {
       'anggota_ids': anggotaIds != null
           ? anggotaIds!.map((anggota) => anggota.toJson()).toList()
           : [],
-      // 'gunung': gunung?.toJson(), // Safe null check before calling toJson
-      // 'jalur': jalur?.toJson(), // Safe null check before calling toJson
     };
   }
 }
@@ -139,82 +129,88 @@ class Anggota {
   }
 }
 
-// class JalurBooking {
-//   final int id;
-//   final String nama;
-//   final String village;
-//   final String district;
-//   final String regency;
-//   final String province;
-//   final String gambar;
-//   final double biaya;
-//   final GunungBooking gunung;
+class TransactionResponseModel {
+  final String message;
+  final TransactionModel transaction;
 
-//   JalurBooking({
-//     required this.id,
-//     required this.nama,
-//     required this.village,
-//     required this.district,
-//     required this.regency,
-//     required this.province,
-//     required this.gambar,
-//     required this.biaya,
-//     required this.gunung,
-//   });
+  TransactionResponseModel({
+    required this.message,
+    required this.transaction,
+  });
 
-//   factory JalurBooking.fromJson(Map<String, dynamic> json) {
-//     return JalurBooking(
-//       id: json['id'],
-//       nama: json['nama'],
-//       village: json['village'],
-//       district: json['district'],
-//       regency: json['regency'],
-//       province: json['province'],
-//       gambar: json['gambar'],
-//       biaya: json['biaya'].toDouble(),
-//       gunung: GunungBooking.fromJson(json['gunung']),
-//     );
-//   }
+  factory TransactionResponseModel.fromJson(Map<String, dynamic> json) {
+    return TransactionResponseModel(
+      message: json['message'],
+      transaction: TransactionModel.fromJson(json['transaksi']),
+    );
+  }
+}
 
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "nama": nama,
-//         "village": village,
-//         "district": district,
-//         "regency": regency,
-//         "province": province,
-//         "gambar": gambar,
-//         "biaya": biaya,
-//         "gunung": gunung.toJson(),
-//       };
-// }
+class TransactionModel {
+  final int id;
+  final int idPesanan;
+  final String metodePembayaran;
+  final int totalBayar;
+  final String statusPesanan;
+  final String? waktuPembayaran;
+  final String? bukti;
 
-// class GunungBooking {
-//   final int id;
-//   final String nama;
-//   final double ketinggian;
-//   final String province;
+  TransactionModel({
+    required this.id,
+    required this.idPesanan,
+    required this.metodePembayaran,
+    required this.totalBayar,
+    required this.statusPesanan,
+    this.waktuPembayaran,
+    this.bukti,
+  });
 
-//   GunungBooking({
-//     required this.id,
-//     required this.nama,
-//     required this.ketinggian,
-//     required this.province,
-//   });
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
+    return TransactionModel(
+      id: json['id'],
+      idPesanan: json['id_pesanan'],
+      metodePembayaran: json['metode_pembayaran'],
+      totalBayar: json['total_bayar'],
+      statusPesanan: json['status_pesanan'],
+      waktuPembayaran: json['waktu_pembayaran'],
+      bukti: json['bukti'],
+    );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'id_pesanan': idPesanan,
+      'metode_pembayaran': metodePembayaran,
+      'total_bayar': totalBayar,
+      'status_pesanan': statusPesanan,
+      'waktu_pembayaran': waktuPembayaran,
+      'bukti': bukti,
+    };
+  }
+}
 
-//   factory GunungBooking.fromJson(Map<String, dynamic> json) {
-//     return GunungBooking(
-//       id: json['id'],
-//       nama: json['nama'],
-//       ketinggian: json['ketinggian'].toDouble(),
-//       province: json['province'],
-//     );
-//   }
+class BookingWithTransaction {
+  final ModelBooking booking;
+  final TransactionModel transaksi;
 
-//   Map<String, dynamic> toJson() => {
-//         "id": id,
-//         "nama": nama,
-//         "ketinggian": ketinggian,
-//         "province": province,
-//       };
-// }
+  BookingWithTransaction({
+    required this.booking,
+    required this.transaksi,
+  });
+
+  // Factory method untuk membuat objek dari JSON
+  factory BookingWithTransaction.fromJson(Map<String, dynamic> json) {
+    return BookingWithTransaction(
+      booking: ModelBooking.fromJson(json['booking']),
+      transaksi: TransactionModel.fromJson(json['transaksi']),
+    );
+  }
+
+  // Method untuk mengubah objek ke JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'booking': booking.toJson(),
+      'transaksi': transaksi.toJson(),
+    };
+  }
+}

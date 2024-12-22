@@ -3,16 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
-import 'package:intl/intl.dart';
+import 'package:myhiking/models/bookingModel.dart';
+import 'package:myhiking/presentation/menunggu_verifikasi_screen/bloc/menunggu_verifikasi_bloc.dart';
+import 'package:myhiking/presentation/menunggu_verifikasi_screen/menunggu_verifikasi_screen.dart';
 import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
-import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_outlined_button.dart';
-import '../pilihan_bank_pembayaran_screen/models/transaksimodel.dart';
 import 'bloc/rincian_pembayaran_upload_bloc.dart';
 import 'models/rincian_pembayaran_upload_model.dart';
 import 'package:file_picker/file_picker.dart'; // Import file_picker
@@ -563,43 +563,61 @@ class _RincianPembayaranUploadScreenState
   final ApiService apiService = ApiService();
 
   void _uploadBuktiPembayaran() async {
-    if (_fileName != null) {
-      try {
-        // Show loading state
-        context.read<RincianPembayaranUploadBloc>().add(
-              FetchRincianPembayaranUploadEvent(
-                idTransaksi: widget.transaksi.id.toString(),
-                filePath: _filePath!,
-                isLoading: true,
-              ),
-            );
+    if (_fileName == null || _filePath == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Pilih file terlebih dahulu')),
+      );
+      return;
+    }
 
-        // Call the API service to upload bukti pembayaran
-        await apiService.uploadBuktiPembayaran(
-          widget.transaksi.id.toString(),
-          _filePath!,
-        );
+    final bloc = context.read<RincianPembayaranUploadBloc>();
 
-        // Hide loading state and navigate to the next screen
-        context.read<RincianPembayaranUploadBloc>().add(
-              FetchRincianPembayaranUploadEvent(
-                idTransaksi: widget.transaksi.toString(),
-                filePath: _filePath!,
-                isLoading: false,
-              ),
-            );
-        NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
-      } catch (e) {
-        // Hide loading state and show error message
-        context.read<RincianPembayaranUploadBloc>().add(
-              FetchRincianPembayaranUploadEvent(
-                idTransaksi: widget.transaksi.id.toString(),
-                filePath: _filePath!,
-                isLoading: false,
-                error: e.toString(),
-              ),
-            );
-      }
+    try {
+      // Tampilkan loading state
+      bloc.add(FetchRincianPembayaranUploadEvent(
+        idTransaksi: widget.transaksi.id.toString(),
+        filePath: _filePath!,
+        isLoading: true,
+      ));
+
+      // Panggil API service untuk upload bukti pembayaran
+      await apiService.uploadBuktiPembayaran(
+        widget.transaksi.id.toString(),
+        _filePath!,
+      );
+
+      // Sembunyikan loading state
+      bloc.add(FetchRincianPembayaranUploadEvent(
+        idTransaksi: widget.transaksi.id.toString(),
+        filePath: _filePath!,
+        isLoading: false,
+      ));
+
+      // Navigasi ke layar berikutnya
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                MenungguVerifikasiBloc(apiService: ApiService()),
+            child: MenungguVerifikasiScreen(pesananId: widget.pesananId),
+          ),
+        ),
+      );
+    } catch (e) {
+      // Sembunyikan loading state dan tampilkan pesan error
+      bloc.add(FetchRincianPembayaranUploadEvent(
+        idTransaksi: widget.transaksi.id.toString(),
+        filePath: _filePath!,
+        isLoading: false,
+        error: e.toString(),
+      ));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content:
+                Text('Gagal mengunggah bukti pembayaran: ${e.toString()}')),
+      );
     }
   }
 

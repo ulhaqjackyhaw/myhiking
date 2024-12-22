@@ -60,7 +60,7 @@ class AppRoutes {
         // bookingScreen: BookingScreen.builder,
         // pilihanBankPembayaranScreen: PilihanBankPembayaranScreen.builder,
         // rincianPembayaranUploadScreen: RincianPembayaranUploadScreen.builder,
-        menungguVerifikasiScreen: MenungguVerifikasiScreen.builder,
+        // menungguVerifikasiScreen: MenungguVerifikasiScreen.builder,
         suksesScreen: SuksesScreen.builder,
         pesananDibatalkanScreen: PesananDibatalkanScreen.builder,
         berandaScreen: BerandaScreen.builder,
