@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
+import 'package:http/http.dart' as http;
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:myhiking/presentation/pesanan_dibatalkan_screen/bloc/pesanan_dibatalkan_bloc.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -23,12 +27,62 @@ class MenungguVerifikasiScreen extends StatefulWidget {
 }
 
 class _MenungguVerifikasiScreenState extends State<MenungguVerifikasiScreen> {
+  int userId = 0;
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
     context
         .read<MenungguVerifikasiBloc>()
         .add(FetchMenungguVerifikasiData(widget.pesananId));
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -148,7 +202,9 @@ class _MenungguVerifikasiScreenState extends State<MenungguVerifikasiScreen> {
             buttonStyle: CustomButtonStyles.fillRed2,
             buttonTextStyle: theme.textTheme.labelLarge!,
             onPressed: () {
-              onTapBatal(context);
+              final int pesananId =
+                  widget.pesananId; // Ambil ID pesanan dari widget
+              onTapBatal(context, pesananId);
             },
           ),
           SizedBox(height: 10.h),
@@ -326,29 +382,66 @@ class _MenungguVerifikasiScreenState extends State<MenungguVerifikasiScreen> {
     );
   }
 
-  void onTapBatal(BuildContext context) {
+  void onTapBatal(BuildContext context, int pesananId) async {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Apakah Anda yakin ingin membatalkan pesanan ini?",
             style: TextStyle(fontSize: 16, color: Colors.black),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Tutup pop-up tanpa keluar
+                Navigator.of(dialogContext).pop(); // Tutup dialog
               },
-              child: Text("TIDAK"),
+              child: const Text("TIDAK"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Menutup pop-up
-                Navigator.of(context)
-                    .pushNamed(AppRoutes.pesananDibatalkanScreen);
+              onPressed: () async {
+                Navigator.of(dialogContext).pop(); // Tutup dialog
+
+                try {
+                  final response = await http.delete(
+                    Uri.parse('$baseUrl/pesanan/$pesananId'),
+                    headers: {
+                      'Authorization': 'Bearer YOUR_TOKEN_HERE',
+                    },
+                  );
+
+                  if (response.statusCode == 200) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Pesanan berhasil dibatalkan")),
+                      );
+                      try {
+                        Navigator.of(context, rootNavigator: true)
+                            .pushReplacementNamed(
+                                AppRoutes.pesananDibatalkanScreen);
+                      } catch (e) {
+                        print("Navigation error: $e");
+                        // Tampilkan error ke user jika perlu
+                      }
+                    }
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                                "Gagal membatalkan pesanan: ${response.body}")),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Terjadi kesalahan: $e")),
+                    );
+                  }
+                }
               },
-              child: Text(
+              child: const Text(
                 "YA",
                 style: TextStyle(color: Colors.red),
               ),
