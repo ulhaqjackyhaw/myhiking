@@ -4,6 +4,8 @@ import 'package:myhiking/models/model.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../presentation/tata_tertib_screen/models/tata_tertib_model.dart';
+
 const String baseUrl = 'http://localhost:8000/api';
 
 class ApiService {
@@ -268,4 +270,41 @@ class ApiService {
       print("Exception: $e");
     }
   }
+
+  // Future<List<TataTertibModel>> getTataTertibByJalur(int jalurId) async {
+  //   try {
+  //     final url = Uri.parse('$baseUrl/tata-tertib/jalur/$jalurId');
+  //     print('Requesting URL: $url');
+
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     print('Response Status Code: ${response.statusCode}');
+  //     print('Response Headers: ${response.headers}');
+  //     print('Response Body: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseMap = json.decode(response.body);
+
+  //       if (responseMap['status'] == 'success' && responseMap['data'] != null) {
+  //         final List<dynamic> dataList = responseMap['data'];
+  //         return dataList
+  //             .map((json) => TataTertibModel.fromJson(json))
+  //             .toList();
+  //       } else {
+  //         throw Exception('Invalid response format: ${response.body}');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load tata tertib: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error in getTataTertibByJalur: $e');
+  //     throw Exception('Failed to load tata tertib: $e');
+  //   }
+  // }
 }

@@ -3,60 +3,90 @@ import '../../core/app_export.dart';
 import 'bloc/tata_tertib_bloc.dart';
 import 'models/tata_tertib_model.dart';
 
-class TataTertibScreen extends StatelessWidget {
-  const TataTertibScreen({super.key});
+class TataTertibScreen extends StatefulWidget {
+  final int? jalurId;
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<TataTertibBloc>(
-      create: (context) => TataTertibBloc(TataTertibState(
-        tataTertibModelObj: const TataTertibModel(),
-      ))
-        ..add(TataTertibInitialEvent()),
-      child: const TataTertibScreen(),
-    );
+  const TataTertibScreen({super.key, this.jalurId});
+  @override
+  State<TataTertibScreen> createState() => _TataTertibState();
+}
+
+class _TataTertibState extends State<TataTertibScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Dispatch event untuk load data
+    context.read<TataTertibBloc>().add(TataTertibInitialEvent(widget.jalurId));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TataTertibBloc, TataTertibState>(
       builder: (context, state) {
+        // Print state untuk debugging
+        print('Current TataTertib State:');
+        print('Loading: ${state.isLoading}');
+        print('Error: ${state.errorMessage}');
+        print('Number of Tata Tertib: ${state.tataTertibs.length}');
+        state.tataTertibs.forEach((tataTertib) {
+          print('Tata Tertib Description: ${tataTertib.description}');
+        });
+
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(
               leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.of(context).pop(); // Kembali ke layar sebelumnya
-                },
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
               ),
-              backgroundColor: Colors.white, // Sesuaikan dengan tema Anda
-              elevation: 0, // Hilangkan shadow jika diinginkan
+              title: Text(
+                "Tata Tertib",
+                style: CustomTextStyles.titleSmallBlack90015,
+              ),
+              backgroundColor: Colors.white,
+              elevation: 0,
             ),
             body: Container(
               width: double.maxFinite,
-              padding: EdgeInsets.only(
-                left: 32.h,
-                top: 16.h,
-                right: 32.h,
+              padding: EdgeInsets.symmetric(
+                horizontal: 32.h,
+                vertical: 16.h,
               ),
               child: Column(
                 children: [
-                  // Title moved from AppBar to here
-                  Text(
-                    "lbl_tata_tertib".tr,
-                    style: CustomTextStyles.titleSmallBlack90015,
-                  ),
-                  SizedBox(height: 18.h),
-                  Text(
-                    "msg_pelayanan_dan_pelaksanaan".tr,
-                    maxLines: 30,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.justify,
-                    style: CustomTextStyles.bodySmallBlack90011.copyWith(
-                      height: 1.40,
+                  if (state.isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (state.errorMessage != null)
+                    Center(
+                      child: Text(
+                        state.errorMessage!,
+                        style: CustomTextStyles.bodySmallBlack90011,
+                      ),
+                    )
+                  else if (state.tataTertibs.isEmpty)
+                    const Center(
+                      child: Text('Tidak ada tata tertib'),
+                    )
+                  else
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: state.tataTertibs.length,
+                        itemBuilder: (context, index) {
+                          final tataTertib = state.tataTertibs[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: 16.h),
+                            child: Text(
+                              tataTertib.description,
+                              style:
+                                  CustomTextStyles.bodySmallBlack90011.copyWith(
+                                height: 1.40,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 18.h),
                 ],
               ),
             ),

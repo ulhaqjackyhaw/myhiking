@@ -97,7 +97,7 @@ class AppRoutes {
           return DetailMountainScreen(idGunung: idGunung);
         },
         // routeScreen: RouteScreen.builder,
-        tataTertibScreen: TataTertibScreen.builder,
+        // tataTertibScreen: TataTertibScreen.builder,
         profileScreen: ProfileScreen.builder,
         dataProfileScreen: DataProfileScreen.builder,
         tiketScreen: (context) {

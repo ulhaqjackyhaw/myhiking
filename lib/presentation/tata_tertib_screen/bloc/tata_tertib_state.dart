@@ -1,18 +1,28 @@
 part of 'tata_tertib_bloc.dart';
 
-/// Represents the state of TataTertib in the application.
-// ignore_for_file: must_be_immutable
 class TataTertibState extends Equatable {
-  TataTertibState({this.tataTertibModelObj});
+  final List<TataTertibModel> tataTertibs;
+  final bool isLoading;
+  final String? errorMessage;
 
-  TataTertibModel? tataTertibModelObj;
+  const TataTertibState({
+    this.tataTertibs = const [],
+    this.isLoading = false,
+    this.errorMessage,
+  });
 
   @override
-  List<Object?> get props => [tataTertibModelObj];
+  List<Object?> get props => [tataTertibs, isLoading, errorMessage];
 
-  TataTertibState copyWith({TataTertibModel? tataTertibModelObj}) {
+  TataTertibState copyWith({
+    List<TataTertibModel>? tataTertibs,
+    bool? isLoading,
+    String? errorMessage,
+  }) {
     return TataTertibState(
-      tataTertibModelObj: tataTertibModelObj ?? this.tataTertibModelObj,
+      tataTertibs: tataTertibs ?? this.tataTertibs,
+      isLoading: isLoading ?? this.isLoading,
+      errorMessage: errorMessage,
     );
   }
 }

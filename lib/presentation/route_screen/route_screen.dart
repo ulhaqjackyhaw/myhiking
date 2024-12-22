@@ -4,11 +4,13 @@ import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/booking_screen/bloc/booking_bloc.dart';
 import 'package:myhiking/presentation/booking_screen/booking_screen.dart';
+import 'package:myhiking/presentation/tata_tertib_screen/bloc/tata_tertib_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
+import '../tata_tertib_screen/tata_tertib_screen.dart';
 import 'bloc/route_bloc.dart';
 import 'models/route_model.dart';
 
@@ -465,35 +467,47 @@ class _RouteScreenState extends State<RouteScreen> {
   // **Tata Tertib Button**
   Widget _buildTataTertibButton(BuildContext context) {
     return CustomElevatedButton(
-      height: 56.h,
-      text: "Tata Tertib dan Peraturan",
-      margin: EdgeInsets.only(right: 2.h),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.onPrimary,
-        borderRadius: BorderRadiusStyle.roundedBorder14,
-        boxShadow: [
-          BoxShadow(
-            color: appTheme.black900.withOpacity(0.08),
-            spreadRadius: 1.h,
-            blurRadius: 2.h,
-            offset: const Offset(2, 2),
-          ),
-        ],
-      ),
-      leftIcon: Container(
-        margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgVideocamera,
-          height: 24.h,
-          width: 24.h,
-          fit: BoxFit.contain,
+        height: 56.h,
+        text: "Tata Tertib dan Peraturan",
+        margin: EdgeInsets.only(right: 2.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onPrimary,
+          borderRadius: BorderRadiusStyle.roundedBorder14,
+          boxShadow: [
+            BoxShadow(
+              color: appTheme.black900.withOpacity(0.08),
+              spreadRadius: 1.h,
+              blurRadius: 2.h,
+              offset: const Offset(2, 2),
+            ),
+          ],
         ),
-      ),
-      buttonStyle: CustomButtonStyles.outlineBlack,
-      buttonTextStyle: CustomTextStyles.labelLargePrimarySemiBold,
-      onPressed: () {
-        NavigatorService.pushNamed(AppRoutes.tataTertibScreen);
-      },
-    );
+        leftIcon: Container(
+          margin: EdgeInsets.only(right: 16.h),
+          child: CustomImageView(
+            imagePath: ImageConstant.imgVideocamera,
+            height: 24.h,
+            width: 24.h,
+            fit: BoxFit.contain,
+          ),
+        ),
+        buttonStyle: CustomButtonStyles.outlineBlack,
+        buttonTextStyle: CustomTextStyles.labelLargePrimarySemiBold,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => TataTertibBloc(
+                  apiService:
+                      ApiService(), // Pastikan ApiService terinisialisasi dengan benar
+                ), // Memulai event Bloc
+                child: TataTertibScreen(
+                    jalurId: widget
+                        .jalurId), // Memastikan jalurId dikirim ke TataTertibScreen
+              ),
+            ),
+          );
+        });
   }
 }
