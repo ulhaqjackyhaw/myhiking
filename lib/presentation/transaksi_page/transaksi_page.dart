@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import 'bloc/transaksi_bloc.dart';
 import 'models/transactionlist_item_model.dart';
 import 'models/transaksi_model.dart';
 import 'widgets/transactionlist_item_widget.dart';
 
-// ignore_for_file: must_be_immutable
-class TransaksiPage extends StatelessWidget {
+class TransaksiPage extends StatefulWidget {
   const TransaksiPage({super.key});
 
   static Widget builder(BuildContext context) {
@@ -20,6 +20,37 @@ class TransaksiPage extends StatelessWidget {
   }
 
   @override
+  _TransaksiPageState createState() => _TransaksiPageState();
+}
+
+class _TransaksiPageState extends State<TransaksiPage> {
+  String userId = '';
+  String userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserProfile();
+  }
+
+  Future<void> _getUserProfile() async {
+    final token = await ApiService().getToken();
+    if (token != null) {
+      final response = await ApiService().getUserProfile(token);
+      print('User Profile berhasil diterima, userId: $userId');
+
+      if (response['success']) {
+        setState(() {
+          userId = response['data']['id'].toString();
+          userName = response['data']['name'];
+        });
+        // Send userId to BLoC
+        context.read<TransaksiBloc>().add(TransaksiUserIdEvent(userId));
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -27,10 +58,10 @@ class TransaksiPage extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context); // Navigate back to the previous screen
+              Navigator.pop(context);
             },
           ),
-          title: Container(), // Set title to an empty Container to remove it
+          title: Container(),
         ),
         backgroundColor: appTheme.gray50,
         body: Container(
@@ -41,6 +72,7 @@ class TransaksiPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
+              SizedBox(height: 20.h),
               _buildWomanReceiveSection(context),
               Expanded(
                 child: SizedBox(
@@ -54,7 +86,7 @@ class TransaksiPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "lbl_transaksi".tr, // This instance remains
+                            "lbl_transaksi".tr,
                             style: CustomTextStyles.titleMediumBlack900,
                           ),
                           SizedBox(height: 10.h),
@@ -64,7 +96,7 @@ class TransaksiPage extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -72,7 +104,6 @@ class TransaksiPage extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildWomanReceiveSection(BuildContext context) {
     return Container(
       width: double.maxFinite,
@@ -105,7 +136,7 @@ class TransaksiPage extends StatelessWidget {
                     style: CustomTextStyles.titleMediumOnPrimary_2,
                   ),
                   Text(
-                    "lbl_prastita_s".tr,
+                    '$userName'.tr,
                     style: theme.textTheme.titleLarge,
                   ),
                 ],
@@ -117,7 +148,6 @@ class TransaksiPage extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildTransactionList(BuildContext context) {
     return Expanded(
       child: BlocSelector<TransaksiBloc, TransaksiState, TransaksiModel?>(
@@ -128,9 +158,7 @@ class TransaksiPage extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             separatorBuilder: (context, index) {
-              return SizedBox(
-                height: 18.h,
-              );
+              return SizedBox(height: 18.h);
             },
             itemCount: transaksiModelObj?.transactionlistItemList.length ?? 0,
             itemBuilder: (context, index) {
@@ -140,14 +168,8 @@ class TransaksiPage extends StatelessWidget {
               return TransactionlistItemWidget(
                 model,
                 onTapRecentclimbing: () {
-                  _handleTapRecentClimbing(context, model.status,
-                      model.id); // Pass model.id sebagai parameter
-                },
-                onChangeStatus: () {
-                  if (model.id != null) {
-                    context.read<TransaksiBloc>().add(ChangeStatusEvent(model
-                        .id!)); // Gunakan '!' untuk mengekstrak nilai non-null
-                  }
+                  _handleTapRecentClimbing(context, model.status, model.id);
+                
                 },
               );
             },
@@ -156,21 +178,18 @@ class TransaksiPage extends StatelessWidget {
       ),
     );
   }
+  
 
-  /// Navigates to the tiketScreen when the action is triggered.
-  void _handleTapRecentClimbing(
-      BuildContext context, String? status, String? id) {
-    if (status == "Selesai") {
+void _handleTapRecentClimbing(BuildContext context, String? status, String? id) {
+  switch (status) {
+    case "verified":
       NavigatorService.pushNamed(AppRoutes.tiketScreen);
-    } else if (status == "Proses") {
+      break;
+    case "unverified":
       NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
-      // Mengubah status
-      // if (id != null) {
-      //   context
-      //       .read<TransaksiBloc>()
-      //       .add(ChangeStatusEvent(id)); // Mengubah status
-      // }
-    }
-    // else if (status == "Proses") {}
+      break;
+    default:
+      print('Status transaksi tidak dikenali: $status');
   }
+}
 }
