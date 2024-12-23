@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myhiking/presentation/transaksi_page/transaksi_page.dart';
 import '../../core/app_export.dart';
 import '../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
 import '../pop_up_data_diri_lengkap_dialog/pop_up_data_diri_lengkap_dialog.dart';

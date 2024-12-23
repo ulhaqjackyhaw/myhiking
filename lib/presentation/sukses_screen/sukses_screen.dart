@@ -12,15 +12,15 @@ import 'bloc/sukses_bloc.dart';
 import 'models/sukses_model.dart';
 
 class SuksesScreen extends StatelessWidget {
-  const SuksesScreen({Key? key}) : super(key: key);
+  const SuksesScreen({super.key});
 
   static Widget builder(BuildContext context) {
     return BlocProvider<SuksesBloc>(
       create: (context) => SuksesBloc(SuksesState(
-        suksesModelObj: SuksesModel(),
+        suksesModelObj: const SuksesModel(),
       ))
         ..add(SuksesInitialEvent()),
-      child: SuksesScreen(),
+      child: const SuksesScreen(),
     );
   }
 
@@ -61,7 +61,7 @@ class SuksesScreen extends StatelessWidget {
                               color: appTheme.black900.withOpacity(0.04),
                               spreadRadius: 2.h,
                               blurRadius: 2.h,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             ),
                           ],
                         ),

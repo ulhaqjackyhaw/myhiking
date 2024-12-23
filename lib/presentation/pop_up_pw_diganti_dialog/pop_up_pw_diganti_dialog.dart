@@ -63,7 +63,8 @@ class PopUpPwDigantiDialog extends StatelessWidget {
               ),
               buttonTextStyle: CustomTextStyles.labelMediumOnPrimarySemiBold,
               onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.loginScreen); // Close the dialog
+                Navigator.pushNamed(
+                    context, AppRoutes.loginScreen); // Close the dialog
               },
             ),
           ],

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/model.dart';
+import 'package:myhiking/presentation/data_profile_screen/models/res_user.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -229,6 +232,65 @@ class ApiService {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to load pesanan');
+    }
+  }
+
+  Future<ResUser> updateUserProfile({
+    required int userId,
+    required String name,
+    required String email,
+    String? password,
+    String? address,
+    String? nik,
+    String? phone,
+    String? emergencyPhone,
+    String? dateOfBirth,
+    File? profilePicture,
+    String? level,
+  }) async {
+    final String url = '$baseUrl/users/$userId'; // Ganti dengan URL API Anda
+    final request = http.MultipartRequest('POST', Uri.parse(url));
+
+    // Tambahkan field data
+    request.fields['name'] = name;
+    request.fields['email'] = email;
+    if (password != null) request.fields['password'] = password;
+    if (address != null) request.fields['address'] = address;
+    if (nik != null) request.fields['nik'] = nik;
+    if (phone != null) request.fields['phone'] = phone;
+    if (emergencyPhone != null)
+      request.fields['emergency_phone'] = emergencyPhone;
+    if (dateOfBirth != null) request.fields['date_of_birth'] = dateOfBirth;
+    if (level != null) request.fields['level'] = level;
+
+    // Tambahkan file jika ada profile_picture
+    if (profilePicture != null) {
+      final profilePictureStream = http.ByteStream(profilePicture.openRead());
+      final profilePictureLength = await profilePicture.length();
+
+      final multipartFile = http.MultipartFile(
+        'profile_picture',
+        profilePictureStream,
+        profilePictureLength,
+        filename: profilePicture.path.split('/').last,
+      );
+
+      request.files.add(multipartFile);
+    }
+
+    try {
+      // Kirim request
+      final response = await http.Response.fromStream(await request.send());
+
+      // Periksa status response
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return ResUser.fromJson(responseData);
+      } else {
+        throw Exception('Failed to update profile: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
     }
   }
 }

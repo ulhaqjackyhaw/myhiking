@@ -235,5 +235,5 @@ class LightCodeColors {
   Color get teal900 => const Color(0XFF064E3A);
 
   // Orange
-  Color get orange => const Color(0xFFFFA8949);
+  Color get orange => const Color(0xffffa8949);
 }

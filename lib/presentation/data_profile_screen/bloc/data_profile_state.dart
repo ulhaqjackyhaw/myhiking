@@ -4,33 +4,24 @@ part of 'data_profile_bloc.dart';
 //
 /// ignore_for_file: must_be_immutable
 class DataProfileState extends Equatable {
-  DataProfileState(
-      {this.fullNameInputController,
-      this.nikInputController,
-      this.phoneNumberInputController,
-      this.emergencyContactInputController,
-      this.addressInputController,
-      this.emailInputController,
-      this.dataProfileModelObj});
+  final TextEditingController? fullNameInputController;
+  final TextEditingController? nikInputController;
+  final TextEditingController? phoneNumberInputController;
+  final TextEditingController? emergencyContactInputController;
+  final TextEditingController? addressInputController;
+  final TextEditingController? emailInputController;
+  final String? statusMessage;
 
-  TextEditingController? fullNameInputController;
-  TextEditingController? nikInputController;
-  TextEditingController? phoneNumberInputController;
-  TextEditingController? emergencyContactInputController;
-  TextEditingController? addressInputController;
-  TextEditingController? emailInputController;
-  DataProfileModel? dataProfileModelObj;
+  DataProfileState({
+    this.fullNameInputController,
+    this.nikInputController,
+    this.phoneNumberInputController,
+    this.emergencyContactInputController,
+    this.addressInputController,
+    this.emailInputController,
+    this.statusMessage,
+  });
 
-  @override
-  List<Object?> get props => [
-        fullNameInputController,
-        nikInputController,
-        phoneNumberInputController,
-        emergencyContactInputController,
-        addressInputController,
-        emailInputController,
-        dataProfileModelObj
-      ];
   DataProfileState copyWith({
     TextEditingController? fullNameInputController,
     TextEditingController? nikInputController,
@@ -38,7 +29,7 @@ class DataProfileState extends Equatable {
     TextEditingController? emergencyContactInputController,
     TextEditingController? addressInputController,
     TextEditingController? emailInputController,
-    DataProfileModel? dataProfileModelObj,
+    String? statusMessage,
   }) {
     return DataProfileState(
       fullNameInputController:
@@ -51,7 +42,18 @@ class DataProfileState extends Equatable {
       addressInputController:
           addressInputController ?? this.addressInputController,
       emailInputController: emailInputController ?? this.emailInputController,
-      dataProfileModelObj: dataProfileModelObj ?? this.dataProfileModelObj,
+      statusMessage: statusMessage ?? this.statusMessage,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        fullNameInputController,
+        nikInputController,
+        phoneNumberInputController,
+        emergencyContactInputController,
+        addressInputController,
+        emailInputController,
+        statusMessage,
+      ];
 }

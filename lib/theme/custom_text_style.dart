@@ -25,6 +25,8 @@ extension on TextStyle {
 /// categorized by different font families and weights.
 /// Additionally, this class includes extensions on [TextStyle] to easily apply specific font families to text.
 class CustomTextStyles {
+  static var bodyMediumBlack900Light;
+
   // Body text style
   static TextStyle get bodyMediumBluegray900 =>
       theme.textTheme.bodyMedium!.copyWith(

@@ -9,6 +9,7 @@ import 'bloc/data_profile_bloc.dart';
 import 'models/data_profile_model.dart';
 import 'package:myhiking/widgets/custom_elevated_button.dart';
 import '../../theme/custom_button_style.dart';
+import 'package:file_picker/file_picker.dart';
 
 // ignore_for_file: must_be_immutable
 class DataProfileScreen extends StatelessWidget {
@@ -18,10 +19,7 @@ class DataProfileScreen extends StatelessWidget {
 
   static Widget builder(BuildContext context) {
     return BlocProvider<DataProfileBloc>(
-      create: (context) => DataProfileBloc(DataProfileState(
-        dataProfileModelObj: const DataProfileModel(),
-      ))
-        ..add(DataProfileInitialEvent()),
+      create: (context) => DataProfileBloc(DataProfileState()),
       child: DataProfileScreen(),
     );
   }
@@ -52,6 +50,7 @@ class DataProfileScreen extends StatelessWidget {
                           EdgeInsets.only(left: 26.h, right: 14.h, top: 10.h),
                       child: Column(
                         children: [
+                          
                           SizedBox(
                             // height: 35.h,
                             width: 334.h,
@@ -59,6 +58,7 @@ class DataProfileScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
+                                  
                                   "lbl_nama_lengkap".tr,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -127,7 +127,7 @@ class DataProfileScreen extends StatelessWidget {
                                     height: 1.40,
                                   ),
                                 ),
-                            SizedBox(height: 10.h),
+                                SizedBox(height: 10.h),
                                 _buildEmailInput(context),
                                 SizedBox(height: 4.h),
                                 _buildIdentityUploadSection(context),
@@ -141,6 +141,11 @@ class DataProfileScreen extends StatelessWidget {
                                   alignment: Alignment.centerRight,
                                   onPressed: () {
                                     // Tampilkan dialog popup notifikasi berhasil disimpan
+
+                                    print("Button Simpan ditekan!");
+                                    final bloc =
+                                        context.read<DataProfileBloc>();
+                                    bloc.add(SaveDataEvent());
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
@@ -157,7 +162,7 @@ class DataProfileScreen extends StatelessWidget {
                                               Icon(
                                                 Icons.check_circle,
                                                 color: Colors.green,
-                                                size: 60, // Ukuran ikon
+                                                size: 60,
                                               ),
                                               SizedBox(height: 16),
                                               Text(
@@ -172,11 +177,12 @@ class DataProfileScreen extends StatelessWidget {
                                               SizedBox(height: 20),
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // Tutup popup
+                                                  Navigator.of(context).pop();
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  backgroundColor: const Color.fromARGB(255, 33, 117, 84),
+                                                  backgroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 33, 117, 84),
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -211,7 +217,8 @@ class DataProfileScreen extends StatelessWidget {
                                     child: Text(
                                       "Ubah Password",
                                       style: TextStyle(
-                                        color: const Color.fromARGB(255, 4, 57, 101),
+                                        color: const Color.fromARGB(
+                                            255, 4, 57, 101),
                                         fontSize: 15.fSize,
                                         fontWeight: FontWeight.w700,
                                         decoration: TextDecoration.underline,
@@ -334,99 +341,271 @@ class DataProfileScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildFullNameInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.fullNameInputController,
-      builder: (context, fullNameInputController) {
-        return CustomTextFormField(
-          controller: fullNameInputController,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
-        );
-      },
-    );
-  }
+  return BlocBuilder<DataProfileBloc, DataProfileState>(
+    builder: (context, state) {
+      return SizedBox(
+        width: 334.h, // Menyesuaikan dengan ukuran referensi
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Text(
+            //   "lbl_nama_lengkap".tr, // Menggunakan localization
+            //   maxLines: 1,
+            //   overflow: TextOverflow.ellipsis,
+            //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+            //     height: 1.40,
+            //   ),
+            // ),
+            SizedBox(height: 8.h),
+            TextField(
+              controller: state.fullNameInputController,
+              decoration: InputDecoration(
+                hintText: 'Masukkan Nama Lengkap',
+                hintStyle: CustomTextStyles.bodySmallGray50003Light, // Sesuai referensi gaya teks
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.h),
+                  borderSide: BorderSide(
+                    color: appTheme.gray400, // Warna border dari referensi
+                    width: 1.h,
+                  ),
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 14.h,
+                  horizontal: 12.h,
+                ),
+              ),
+              style: CustomTextStyles.bodyMediumBluegray900, // Gaya teks input
+              keyboardType: TextInputType.name, // Keyboard untuk nama
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 
   /// Section Widget
   Widget _buildNikInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.nikInputController,
-      builder: (context, nikInputController) {
-        return CustomTextFormField(
-          controller: nikInputController,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
+    return BlocBuilder<DataProfileBloc, DataProfileState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: 334.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "lbl_nik".tr,
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+              //     height: 1.40,
+              //   ),
+              // ),
+              SizedBox(height: 8.h),
+              TextField(
+                controller: state.nikInputController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan NIK',
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.h),
+                    borderSide: BorderSide(
+                      color: appTheme.gray400,
+                      width: 1.h,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 12.h,
+                  ),
+                ),
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  /// Section Widget
   Widget _buildPhoneNumberInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.phoneNumberInputController,
-      builder: (context, phoneNumberInputController) {
-        return CustomTextFormField(
-          controller: phoneNumberInputController,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
+    return BlocBuilder<DataProfileBloc, DataProfileState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: 334.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "lbl_nomor_telepon".tr,
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+              //     height: 1.40,
+              //   ),
+              // ),
+              SizedBox(height: 8.h),
+              TextField(
+                controller: state.phoneNumberInputController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Nomor Telepon',
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.h),
+                    borderSide: BorderSide(
+                      color: appTheme.gray400,
+                      width: 1.h,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 12.h,
+                  ),
+                ),
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  /// Section Widget
   Widget _buildEmergencyContactInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.emergencyContactInputController,
-      builder: (context, emergencyContactInputController) {
-        return CustomTextFormField(
-          controller: emergencyContactInputController,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
+    return BlocBuilder<DataProfileBloc, DataProfileState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: 334.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "lbl_kontak_darurat".tr,
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+              //     height: 1.40,
+              //   ),
+              // ),
+              SizedBox(height: 8.h),
+              TextField(
+                controller: state.emergencyContactInputController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Nomor Kontak Darurat',
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.h),
+                    borderSide: BorderSide(
+                      color: appTheme.gray400,
+                      width: 1.h,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 12.h,
+                  ),
+                ),
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.phone,
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
   Widget _buildAddressInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.addressInputController,
-      builder: (context, addressInputController) {
-        return CustomTextFormField(
-          controller: addressInputController,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
+    return BlocBuilder<DataProfileBloc, DataProfileState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: 334.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "lbl_alamat".tr,
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+              //     height: 1.40,
+              //   ),
+              // ),
+              SizedBox(height: 8.h),
+              TextField(
+                controller: state.addressInputController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Alamat',
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.h),
+                    borderSide: BorderSide(
+                      color: appTheme.gray400,
+                      width: 1.h,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 12.h,
+                  ),
+                ),
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.streetAddress,
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-  /// Section Widget
   Widget _buildEmailInput(BuildContext context) {
-    return BlocSelector<DataProfileBloc, DataProfileState,
-        TextEditingController?>(
-      selector: (state) => state.emailInputController,
-      builder: (context, emailInputController) {
-        return CustomTextFormField(
-          controller: emailInputController,
-          textInputAction: TextInputAction.done,
-          contentPadding: EdgeInsets.all(12.h),
-          borderDecoration: TextFormFieldStyleHelper.outlineGrayTL5,
-          filled: false,
+    return BlocBuilder<DataProfileBloc, DataProfileState>(
+      builder: (context, state) {
+        return SizedBox(
+          width: 334.h,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   "lbl_email".tr,
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
+              //     height: 1.40,
+              //   ),
+              // ),
+              SizedBox(height: 8.h),
+              TextField(
+                controller: state.emailInputController,
+                decoration: InputDecoration(
+                  hintText: 'Masukkan Email',
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.h),
+                    borderSide: BorderSide(
+                      color: appTheme.gray400,
+                      width: 1.h,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 14.h,
+                    horizontal: 12.h,
+                  ),
+                ),
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.emailAddress,
+              ),
+            ],
+          ),
         );
       },
     );
   }
+
 
   /// Section Widget
   Widget _buildIdentityUploadSection(BuildContext context) {
@@ -472,7 +651,25 @@ class DataProfileScreen extends StatelessWidget {
                           style: CustomTextStyles.bodySmallGray50003Light,
                         ),
                       ),
-                      Container(
+                      GestureDetector(
+                      onTap: () async {
+                        // Implementasi File Picker
+                        FilePickerResult? result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['jpg', 'jpeg', 'png'], // Hanya file gambar
+                        );
+
+                        if (result != null) {
+                          // Mendapatkan file yang dipilih
+                          PlatformFile file = result.files.first;
+                          print('File terpilih: ${file.name}');
+                          // Lakukan sesuatu dengan file, misalnya unggah atau simpan
+                        } else {
+                          // Pengguna membatalkan pemilihan file
+                          print('Pemilihan file dibatalkan');
+                        }
+                      },
+                      child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 8.h),
                         decoration: BoxDecoration(
                           color: appTheme.blueGray10001,
@@ -483,15 +680,18 @@ class DataProfileScreen extends StatelessWidget {
                           ),
                         ),
                         child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "lbl_pilih_file".tr,
-                                style: CustomTextStyles.bodySmallBlack900Light,
-                              )
-                            ]),
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "lbl_pilih_file".tr,
+                              style: CustomTextStyles.bodySmallBlack900Light,
+                            ),
+                          ],
+                        ),
                       ),
+                    ),
+
                     ],
                   ),
                 )
@@ -503,7 +703,7 @@ class DataProfileScreen extends StatelessWidget {
     );
   }
 
- Widget _buildBottomNavigation(BuildContext context) {
+  Widget _buildBottomNavigation(BuildContext context) {
     return const SizedBox(
       width: double.maxFinite,
       // child: CustomBottomBar(
@@ -514,31 +714,4 @@ class DataProfileScreen extends StatelessWidget {
       // ),
     );
   }
-
-  /// Section Widget
-  // Widget _buildBottomNavigation(BuildContext context) {
-  //   return SizedBox(
-  //     width: double.maxFinite,
-  //     child: CustomBottomBar(
-  //       onChanged: (BottomBarEnum type) {
-  //         Navigator.pushNamed(
-  //             navigatorKey.currentContext!, getCurrentRoute(type));
-  //       },
-  //     ),
-  //   );
-  // }
-
-  ///Handling route based on bottom click actions
-//   String getCurrentRoute(BottomBarEnum type) {
-//     switch (type) {
-//       case BottomBarEnum.Favorite:
-//         return AppRoutes.berandaInitialPage;
-//       case BottomBarEnum.Iconmap:
-//         return AppRoutes.riwayatPage;
-//       case BottomBarEnum.Iconprofile:
-//         return AppRoutes.profileScreen;
-//       // default:
-//       //   return "/";
-//     }
-//   }
 }
