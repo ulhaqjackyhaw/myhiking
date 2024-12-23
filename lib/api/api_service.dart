@@ -7,6 +7,8 @@ import 'package:myhiking/presentation/data_profile_screen/models/res_user.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../presentation/tata_tertib_screen/models/tata_tertib_model.dart';
+
 const String baseUrl = 'http://localhost:8000/api';
 
 class ApiService {
@@ -178,31 +180,6 @@ class ApiService {
     }
   }
 
-  // Future<Map<String, dynamic>> fetchJalur(int idGunung) async {
-  //   final url = Uri.parse('$baseUrl/gunung/$idGunung');
-  //   final response = await http.get(url);
-
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body);
-  //   } else {
-  //     throw Exception('Failed to fetch jalur');
-  //   }
-  // }
-
-  // ApiService.dart
-  // Future<Map<String, dynamic>> fetchRouteDetails(
-  //     int? idGunung, int? jalurid) async {
-  //   if (idGunung == null || jalurid == null) {
-  //     throw Exception('ID Gunung atau ID Jalur tidak valid');
-  //   }
-
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body);
-  //   } else {
-  //     throw Exception('Failed to fetch jalur');
-  //   }
-  // }
-
   Future<Map<String, dynamic>> fetchTransactions() async {
     final response = await http.get(Uri.parse('$baseUrl/transactions'));
 
@@ -212,15 +189,6 @@ class ApiService {
       throw Exception('Failed to fetch transactions');
     }
   }
-  //   final url = Uri.parse('$baseUrl/gunung/$idGunung/jalur/$jalurid');
-  //   final response = await http.get(url);
-
-  //   if (response.statusCode == 200) {
-  //     return jsonDecode(response.body);
-  //   } else {
-  //     throw Exception('Failed to fetch jalur');
-  //   }
-  // }
 
   // Fungsi untuk mengambil data Pesanan berdasarkan ID
   Future<Map<String, dynamic>> fetchPesanan(int pesananId) async {
@@ -293,4 +261,112 @@ class ApiService {
       throw Exception('Failed to connect to the server: $e');
     }
   }
+
+  Future<TransactionResponseModel> createTransaction(
+      int pesananId, String metodePembayaran) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/transaksi/store'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'id_pesanan': pesananId, // Kirim sebagai int, tidak perlu toString()
+        'metode_pembayaran': metodePembayaran, // Tetap sebagai String
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return TransactionResponseModel.fromJson(json.decode(response.body));
+    } else {
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+      throw Exception('Failed to create transaction');
+    }
+  }
+
+  Future<void> uploadBuktiPembayaran(
+      String idTransaksi, String filePath) async {
+    try {
+      // Endpoint API
+      final url = Uri.parse(
+          'http://127.0.0.1:8000/api/transaksi/update-pembayaran/$idTransaksi');
+
+      // Buat request multipart
+      final request = http.MultipartRequest('POST', url);
+
+      // Tambahkan headers
+      request.headers.addAll({
+        'Accept': 'application/json',
+      });
+
+      // Tambahkan waktu_pembayaran ke dalam request fields
+      request.fields['waktu_pembayaran'] = DateTime.now().toIso8601String();
+
+      // Tambahkan file ke dalam request
+      final file = await http.MultipartFile.fromPath('bukti', filePath);
+      request.files.add(file);
+
+      // Kirim request dan tunggu respon
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      // Periksa status kode HTTP
+      if (response.statusCode == 200) {
+        // Parse respon body
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['message'] != null) {
+          print(responseData['message']); // Cetak pesan sukses
+          final transaksi = responseData['transaksi']; // Ambil data transaksi
+          print("Detail Transaksi: $transaksi");
+
+          // Tampilkan data yang relevan ke user
+          print("Bukti: ${transaksi['bukti']}");
+        } else {
+          print("Respon tidak valid: ${response.body}");
+        }
+      } else {
+        print("Error: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Exception: $e");
+    }
+  }
+
+  // Future<List<TataTertibModel>> getTataTertibByJalur(int jalurId) async {
+  //   try {
+  //     final url = Uri.parse('$baseUrl/tata-tertib/jalur/$jalurId');
+  //     print('Requesting URL: $url');
+
+  //     final response = await http.get(
+  //       url,
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //     );
+
+  //     print('Response Status Code: ${response.statusCode}');
+  //     print('Response Headers: ${response.headers}');
+  //     print('Response Body: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final Map<String, dynamic> responseMap = json.decode(response.body);
+
+  //       if (responseMap['status'] == 'success' && responseMap['data'] != null) {
+  //         final List<dynamic> dataList = responseMap['data'];
+  //         return dataList
+  //             .map((json) => TataTertibModel.fromJson(json))
+  //             .toList();
+  //       } else {
+  //         throw Exception('Invalid response format: ${response.body}');
+  //       }
+  //     } else {
+  //       throw Exception('Failed to load tata tertib: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print('Error in getTataTertibByJalur: $e');
+  //     throw Exception('Failed to load tata tertib: $e');
+  //   }
+  // }
 }

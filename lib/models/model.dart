@@ -112,7 +112,7 @@ class Jalur {
   final int id;
   final String nama;
   final String? deskripsi;
-  final String? mapBasecamp;
+  final String mapBasecamp;
   final String? village;
   final String? district;
   final String? regency;
@@ -125,7 +125,7 @@ class Jalur {
     required this.id,
     required this.nama,
     this.deskripsi,
-    this.mapBasecamp,
+    required this.mapBasecamp,
     this.village,
     this.district,
     this.regency,

@@ -91,7 +91,23 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
     }
   }
 
-  // Button for "Mendaki" status
+   // Button for "Booking" status
+  Widget _buildBookingButton(BuildContext context) {
+    return CustomElevatedButton(
+      height: 26.h,
+      width: 98.h,
+      text: "Booking".tr,
+      buttonStyle: CustomButtonStyles.outlineTeal1,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+      onPressed: () {
+        // Handle the action for "Booking" status
+        // Optionally show checkout dialog or navigate to booking details
+        // _showCheckoutDialog(context);
+      },
+    );
+  }
+
+  // Button for "Selesai" status
   Widget _buildMendakiButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
@@ -100,19 +116,32 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Show checkout popup for "Mendaki"
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            content: PopUpCheckoutDialog.builder(context),
-            backgroundColor: const Color.fromARGB(0, 0, 255, 8),
-            contentPadding: EdgeInsets.zero,
-            insetPadding: EdgeInsets.zero,
-          ),
-        );
+        // Handle the action for "Selesai" status if needed
+        // Optionally show details or navigate to history
+        _showCheckoutDialog(context);
       },
     );
   }
+
+  // Method to show checkout dialog with pesananId
+  void _showCheckoutDialog(BuildContext context) {
+    // Ensure pesananId is converted to int if it's not already
+    int pesananId = int.tryParse(recentclimbinglistItemModelObj.id.toString()) ?? 0;
+    
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        content: PopUpCheckoutDialog.builder(
+          context, 
+          pesananId
+        ),
+        backgroundColor: const Color.fromARGB(0, 0, 255, 8),
+        contentPadding: EdgeInsets.zero,
+        insetPadding: EdgeInsets.zero,
+      ),
+    );
+  }
+}
 
   // Button for "Booking" status
   Widget _buildBookingButton(BuildContext context) {
@@ -142,4 +171,4 @@ class RecentclimbinglistItemWidget extends StatelessWidget {
       },
     );
   }
-}
+

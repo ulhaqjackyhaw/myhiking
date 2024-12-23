@@ -15,6 +15,16 @@ class TransaksiInitialEvent extends TransaksiEvent {
   List<Object?> get props => [];
 }
 
+/// Event that is dispatched when the user ID is received
+class TransaksiUserIdEvent extends TransaksiEvent {
+  final String userId;
+
+  TransaksiUserIdEvent(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class ChangeStatusEvent extends TransaksiEvent {
   final String transactionId; // ID transaksi yang ingin diubah
 

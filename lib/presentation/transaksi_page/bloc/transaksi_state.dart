@@ -1,18 +1,32 @@
 part of 'transaksi_bloc.dart';
 
-/// Represents the state of Transaksi in the application.
-// ignore_for_file: must_be_immutable
 class TransaksiState extends Equatable {
-  TransaksiState({this.transaksiModelObj});
+  final TransaksiModel? transaksiModelObj;
+  final String? userId;
+  final bool isLoading;
+  final String? error;
 
-  TransaksiModel? transaksiModelObj;
+  const TransaksiState({
+    this.transaksiModelObj,
+    this.userId,
+    this.isLoading = false,
+    this.error,
+  });
 
-  @override
-  List<Object?> get props => [transaksiModelObj];
-
-  TransaksiState copyWith({TransaksiModel? transaksiModelObj}) {
+  TransaksiState copyWith({
+    TransaksiModel? transaksiModelObj,
+    String? userId,
+    bool? isLoading,
+    String? error,
+  }) {
     return TransaksiState(
       transaksiModelObj: transaksiModelObj ?? this.transaksiModelObj,
+      userId: userId ?? this.userId,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [transaksiModelObj, userId, isLoading, error];
 }

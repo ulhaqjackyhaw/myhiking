@@ -60,7 +60,24 @@ class AppRoutes {
         // bookingScreen: BookingScreen.builder,
         // pilihanBankPembayaranScreen: PilihanBankPembayaranScreen.builder,
         // rincianPembayaranUploadScreen: RincianPembayaranUploadScreen.builder,
-        menungguVerifikasiScreen: MenungguVerifikasiScreen.builder,
+      menungguVerifikasiScreen: (context) {
+  final pesananId = ModalRoute.of(context)?.settings.arguments as int?;
+  
+  if (pesananId == null) {
+    return Scaffold(
+      body: Center(child: Text("Pesanan ID is required")),
+    );
+  }
+  
+  return Builder(
+    builder: (BuildContext context) {
+      return MenungguVerifikasiScreen(
+        // If MenungguVerifikasiScreen is a widget, pass required parameters
+        pesananId: pesananId,
+      );
+    },
+  );
+},
         suksesScreen: SuksesScreen.builder,
         pesananDibatalkanScreen: PesananDibatalkanScreen.builder,
         berandaScreen: BerandaScreen.builder,
@@ -80,7 +97,7 @@ class AppRoutes {
           return DetailMountainScreen(idGunung: idGunung);
         },
         // routeScreen: RouteScreen.builder,
-        tataTertibScreen: TataTertibScreen.builder,
+        // tataTertibScreen: TataTertibScreen.builder,
         profileScreen: ProfileScreen.builder,
         dataProfileScreen: DataProfileScreen.builder,
         tiketScreen: (context) {

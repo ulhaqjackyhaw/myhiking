@@ -6,6 +6,7 @@ class RouteModel {
   final String location; // Lokasi detail (gabungan alamat)
   final String gambar;
   final int distance; // Jarak
+  final String mapBasecamp;
   final Gunung gunung; // Informasi gunung
 
   RouteModel({
@@ -13,6 +14,7 @@ class RouteModel {
     required this.description,
     required this.location,
     required this.distance,
+    required this.mapBasecamp,
     required this.gunung,
     required this.gambar,
   });
@@ -26,7 +28,9 @@ class RouteModel {
           "${data.jalur.village}, ${data.jalur.district}, ${data.jalur.regency}, ${data.jalur.province}",
       distance: data.jalur.jarak,
       gunung: data.gunung,
+      mapBasecamp: data.jalur.mapBasecamp,
       gambar: data.jalur.gambar ?? "gambar tidak ada",
     );
   }
+  String get maps => mapBasecamp;
 }

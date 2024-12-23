@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
+import 'package:http/http.dart' as http;
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:myhiking/presentation/pesanan_dibatalkan_screen/bloc/pesanan_dibatalkan_bloc.dart';
+import '../../api/api_service.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -9,151 +13,210 @@ import '../../widgets/custom_outlined_button.dart';
 import 'bloc/menunggu_verifikasi_bloc.dart';
 import 'models/menunggu_verifikasi_model.dart';
 
-class MenungguVerifikasiScreen extends StatelessWidget {
-  const MenungguVerifikasiScreen({Key? key}) : super(key: key);
+class MenungguVerifikasiScreen extends StatefulWidget {
+  final int pesananId;
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<MenungguVerifikasiBloc>(
-      create: (context) => MenungguVerifikasiBloc(MenungguVerifikasiState(
-        menungguVerifikasiModelObj: MenungguVerifikasiModel(),
-      ))
-        ..add(MenungguVerifikasiInitialEvent()),
-      child: MenungguVerifikasiScreen(),
-    );
+  const MenungguVerifikasiScreen({
+    super.key,
+    required this.pesananId,
+  });
+
+  @override
+  State<MenungguVerifikasiScreen> createState() =>
+      _MenungguVerifikasiScreenState();
+}
+
+class _MenungguVerifikasiScreenState extends State<MenungguVerifikasiScreen> {
+  int userId = 0;
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    context
+        .read<MenungguVerifikasiBloc>()
+        .add(FetchMenungguVerifikasiData(widget.pesananId));
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MenungguVerifikasiBloc, MenungguVerifikasiState>(
       builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        if (state.error != null) {
+          return Center(
+            child: Text("Terjadi kesalahan: ${state.error}"),
+          );
+        }
+
+        final model = state.menungguVerifikasiModelObj;
+        if (model == null) {
+          return const Center(
+            child: Text("Data tidak tersedia."),
+          );
+        }
+
         return SafeArea(
           child: Scaffold(
             backgroundColor: appTheme.gray5001,
-            body: Container(
-              width: double.maxFinite,
-              padding: EdgeInsets.symmetric(
-                horizontal: 12.h,
-                vertical: 20.h, // Added vertical padding for more space at the top
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _buildVerificationHeader(context),
-                  SizedBox(height: 18.h),
-                  _buildBookingDetailsSection(context),
-                  SizedBox(height: 8.h),
-                  Container(
-                    width: double.maxFinite,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.h,
-                      vertical: 14.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.onPrimary,
-                      borderRadius: BorderRadiusStyle.roundedBorder14,
-                      boxShadow: [
-                        BoxShadow(
-                          color: appTheme.black900.withOpacity(0.04),
-                          spreadRadius: 2.h,
-                          blurRadius: 2.h,
-                          offset: Offset(0, 2),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "msg_menunggu_verifikasi".tr,
-                          style: CustomTextStyles.titleLargeBlack900,
-                        ),
-                        SizedBox(height: 20.h),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgVectorPrimary,
-                          height: 138.h,
-                          width: 138.h,
-                        ),
-                        SizedBox(height: 38.h),
-                        Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 14.h),
-                          child: _buildOrderDateRow(
-                            context,
-                            tanggalpesanan: "lbl_no_pesanan".tr,
-                            date: "lbl_12312312323".tr,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 14.h),
-                          child: _buildOrderDateRow(
-                            context,
-                            tanggalpesanan: "msg_tanggal_pesanan".tr,
-                            date: "lbl_20_10_2024".tr,
-                          ),
-                        ),
-                        Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 14.h),
-                          child: _buildOrderDateRow(
-                            context,
-                            tanggalpesanan: "lbl_nama_pemesan".tr,
-                            date: "lbl_pratista_s".tr,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 14.h),
-                          child: _buildOrderDateRow(
-                            context,
-                            tanggalpesanan: "lbl_total_anggota".tr,
-                            date: "lbl_5".tr,
-                          ),
-                        ),
-                        Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.symmetric(horizontal: 14.h),
-                          child: _buildOrderDateRow(
-                            context,
-                            tanggalpesanan: "lbl_total_harga".tr,
-                            date: "lbl_25_000".tr,
-                          ),
-                        ),
-                        SizedBox(height: 28.h), // Adjusted height to fit within screen
-                        Text(
-                          "msg_pesanan_akan_diverifikasi".tr,
-                          style: CustomTextStyles.labelMediumGray50002,
-                        ),
-                        SizedBox(height: 10.h),
-                        CustomElevatedButton(
-                          height: 48.h,
-                          text: "msg_batalkan_pesanan".tr.toUpperCase(),
-                          buttonStyle: CustomButtonStyles.fillRed2,
-                          buttonTextStyle: theme.textTheme.labelLarge!,
-                          onPressed: () {
-                            onTapBatal(context);
-                          },
-                        ),
-                        SizedBox(height: 16.h),
-                        CustomOutlinedButton(
-                          text: "lbl_kembali_ke_home".tr.toUpperCase(),
-                          onPressed: () {
-                            onTapKembalikehome(context);
-                          },
-                        ),
-                        SizedBox(height: 6.h),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                ],
+            body: SingleChildScrollView(
+              // Membungkus dengan SingleChildScrollView
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 12.h, vertical: 20.h),
+                child: Column(
+                  children: [
+                    _buildVerificationHeader(context),
+                    SizedBox(height: 18.h),
+                    _buildBookingDetailsSection(context),
+                    SizedBox(height: 8.h),
+                    _buildDetailPesananCard(context, model),
+                    SizedBox(height: 12.h),
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildDetailPesananCard(
+      BuildContext context, MenungguVerifikasiModel model) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 6.h, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onPrimary,
+        borderRadius: BorderRadiusStyle.roundedBorder14,
+        boxShadow: [
+          BoxShadow(
+            color: appTheme.black900.withOpacity(0.04),
+            spreadRadius: 2.h,
+            blurRadius: 2.h,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "msg_menunggu_verifikasi".tr,
+            style: CustomTextStyles.titleLargeBlack900,
+          ),
+          SizedBox(height: 20.h),
+          CustomImageView(
+            imagePath: ImageConstant.imgVectorPrimary,
+            height: 138.h,
+            width: 138.h,
+          ),
+          SizedBox(height: 38.h),
+          _buildOrderDateRow(
+            context,
+            namaBaris: "lbl_no_pesanan".tr,
+            isiBaris: model.idPesanan.toString(),
+          ),
+          _buildOrderDateRow(
+            context,
+            namaBaris: "msg_tanggal_pesanan".tr,
+            isiBaris: model.tanggalPesanan.toString(),
+          ),
+          _buildOrderDateRow(
+            context,
+            namaBaris: "lbl_nama_pemesan".tr,
+            isiBaris: model.namaPemesan.toString(),
+          ),
+          _buildOrderDateRow(
+            context,
+            namaBaris: "lbl_total_anggota".tr,
+            isiBaris: model.totalAnggota.toString(),
+          ),
+          _buildOrderDateRow(
+            context,
+            namaBaris: "lbl_total_harga".tr,
+            isiBaris: model.totalHarga.toString(),
+          ),
+          SizedBox(height: 28.h),
+          Text(
+            "msg_pesanan_akan_diverifikasi".tr,
+            style: CustomTextStyles.labelMediumGray50002,
+          ),
+          SizedBox(height: 10.h),
+          CustomElevatedButton(
+            height: 48.h,
+            text: "msg_batalkan_pesanan".tr.toUpperCase(),
+            buttonStyle: CustomButtonStyles.fillRed2,
+            buttonTextStyle: theme.textTheme.labelLarge!,
+            onPressed: () {
+              final int pesananId =
+                  widget.pesananId; // Ambil ID pesanan dari widget
+              onTapBatal(context, pesananId);
+            },
+          ),
+          SizedBox(height: 10.h),
+          CustomOutlinedButton(
+            text: "lbl_kembali_ke_home".tr.toUpperCase(),
+            onPressed: () {
+              onTapKembalikehome(context);
+            },
+          ),
+          SizedBox(height: 6.h),
+        ],
+      ),
     );
   }
 
@@ -181,7 +244,8 @@ class MenungguVerifikasiScreen extends StatelessWidget {
           Expanded(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.only(right: 24.0), // Adjust padding if needed
+                padding:
+                    EdgeInsets.only(right: 24.0), // Adjust padding if needed
                 child: Text(
                   "lbl_verifikasi".tr,
                   style: CustomTextStyles.titleMediumGray900,
@@ -282,20 +346,20 @@ class MenungguVerifikasiScreen extends StatelessWidget {
   /// Common widget
   Widget _buildOrderDateRow(
     BuildContext context, {
-    required String tanggalpesanan,
-    required String date,
+    required String namaBaris,
+    required String isiBaris,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          tanggalpesanan,
+          namaBaris,
           style: CustomTextStyles.titleMediumGray50003.copyWith(
             color: appTheme.gray50003,
           ),
         ),
         Text(
-          date,
+          isiBaris,
           style: CustomTextStyles.titleMediumGray50003.copyWith(
             color: appTheme.gray50003,
           ),
@@ -318,28 +382,66 @@ class MenungguVerifikasiScreen extends StatelessWidget {
     );
   }
 
-  void onTapBatal(BuildContext context) {
+  void onTapBatal(BuildContext context, int pesananId) async {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(
+          title: const Text(
             "Apakah Anda yakin ingin membatalkan pesanan ini?",
             style: TextStyle(fontSize: 16, color: Colors.black),
           ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Tutup pop-up tanpa keluar
+                Navigator.of(dialogContext).pop(); // Tutup dialog
               },
-              child: Text("TIDAK"),
+              child: const Text("TIDAK"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Menutup pop-up
-                Navigator.of(context).pushNamed(AppRoutes.pesananDibatalkanScreen);
-                },
-              child: Text(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop(); // Tutup dialog
+
+                try {
+                  final response = await http.delete(
+                    Uri.parse('$baseUrl/pesanan/$pesananId'),
+                    headers: {
+                      'Authorization': 'Bearer YOUR_TOKEN_HERE',
+                    },
+                  );
+
+                  if (response.statusCode == 200) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Pesanan berhasil dibatalkan")),
+                      );
+                      try {
+                        Navigator.of(context, rootNavigator: true)
+                            .pushReplacementNamed(
+                                AppRoutes.pesananDibatalkanScreen);
+                      } catch (e) {
+                        print("Navigation error: $e");
+                        // Tampilkan error ke user jika perlu
+                      }
+                    }
+                  } else {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text(
+                                "Gagal membatalkan pesanan: ${response.body}")),
+                      );
+                    }
+                  }
+                } catch (e) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Terjadi kesalahan: $e")),
+                    );
+                  }
+                }
+              },
+              child: const Text(
                 "YA",
                 style: TextStyle(color: Colors.red),
               ),

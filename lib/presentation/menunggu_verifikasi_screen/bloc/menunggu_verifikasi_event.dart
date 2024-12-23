@@ -3,14 +3,18 @@ part of 'menunggu_verifikasi_bloc.dart';
 /// Abstract class for all events that can be dispatched from the
 /// MenungguVerifikasi widget.
 ///
-/// Events must be immutable and implement the [Equatable] interface.
 class MenungguVerifikasiEvent extends Equatable {
+  const MenungguVerifikasiEvent();
+
   @override
   List<Object?> get props => [];
 }
 
-/// Event that is dispatched when the MenungguVerifikasi widget is first created.
-class MenungguVerifikasiInitialEvent extends MenungguVerifikasiEvent {
+class FetchMenungguVerifikasiData extends MenungguVerifikasiEvent {
+  final int pesananId;
+
+  const FetchMenungguVerifikasiData(this.pesananId);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [pesananId];
 }

@@ -5,74 +5,62 @@ import 'package:equatable/equatable.dart';
 class TransactionlistItemModel extends Equatable {
   TransactionlistItemModel({
     this.id,
-    this.idPesanan,
-    this.metodePembayaran,
-    this.totalBayar,
+    this.pesananId,
     this.status,
     this.waktuPembayaran,
-    this.bukti,
     this.gunung,
     this.jalur,
+    this.userId,
   });
 
   factory TransactionlistItemModel.fromJson(Map<String, dynamic> json) {
     return TransactionlistItemModel(
       id: json['id'],
-      idPesanan: json['id_pesanan'],
-      metodePembayaran: json['metode_pembayaran'],
-      totalBayar: json['total_bayar'],
+      pesananId: json['id_pesanan'],
       status: json['status'],
       waktuPembayaran: json['waktu_pembayaran'],
-      bukti: json['bukti'],
       gunung: json['gunung'],
       jalur: json['jalur'],
+      userId: json['pemesan'].toString() //id pemesan
     );
   }
 
   String? id;
-  int? idPesanan;
-  String? metodePembayaran;
-  int? totalBayar;
+  int? pesananId;
   String? status;
   String? waktuPembayaran;
-  String? bukti;
   String? gunung;
   String? jalur;
+  String? userId;
 
   TransactionlistItemModel copyWith({
     String? id,
-    int? idPesanan,
-    String? metodePembayaran,
-    int? totalBayar,
+    int? pesananId,
     String? status,
     String? waktuPembayaran,
-    String? bukti,
     String? gunung,
     String? jalur,
+    String? userId,
   }) {
     return TransactionlistItemModel(
       id: id ?? this.id,
-      idPesanan: idPesanan ?? this.idPesanan,
-      metodePembayaran: metodePembayaran ?? this.metodePembayaran,
-      totalBayar: totalBayar ?? this.totalBayar,
+      pesananId: pesananId ?? this.pesananId,
       status: status ?? this.status,
       waktuPembayaran: waktuPembayaran ?? this.waktuPembayaran,
-      bukti: bukti ?? this.bukti,
       gunung: gunung ?? this.gunung,
       jalur: jalur ?? this.jalur,
+      userId: userId?? this.userId,
     );
   }
 
   @override
   List<Object?> get props => [
         id,
-        idPesanan,
-        metodePembayaran,
-        totalBayar,
+        pesananId,
         status,
         waktuPembayaran,
-        bukti,
         gunung,
         jalur,
+        userId,
       ];
 }

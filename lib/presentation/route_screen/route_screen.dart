@@ -4,10 +4,13 @@ import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/booking_screen/bloc/booking_bloc.dart';
 import 'package:myhiking/presentation/booking_screen/booking_screen.dart';
+import 'package:myhiking/presentation/tata_tertib_screen/bloc/tata_tertib_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
+import '../tata_tertib_screen/tata_tertib_screen.dart';
 import 'bloc/route_bloc.dart';
 import 'models/route_model.dart';
 
@@ -26,6 +29,8 @@ class _RouteScreenState extends State<RouteScreen> {
   String userName = '';
   int userId = 0;
   bool isLoading = true;
+  RouteModel? routeModel;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +39,55 @@ class _RouteScreenState extends State<RouteScreen> {
     //     .read<DetailMountainBloc>()
     //     .add(DetailMountainInitialEvent(widget.idGunung));
     _getUser();
+  }
+
+  // Fungsi untuk membuka URL
+  void _launchURL(RouteModel model) async {
+    print('Attempting to launch URL:');
+    print('mapBasecamp: ${model.mapBasecamp}');
+
+    if (model.mapBasecamp.isNotEmpty) {
+      try {
+        // Untuk Windows, kita perlu memastikan URL dibuka di browser
+        final Uri url = Uri.parse(model.mapBasecamp);
+        print('Parsed URL: $url');
+
+        if (!await launchUrl(
+          url,
+          mode: LaunchMode
+              .platformDefault, // Gunakan platform default untuk Windows
+        )) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tidak dapat membuka maps'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        print('Error launching URL: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Gagal membuka maps: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } else {
+      print('URL is empty');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('URL maps tidak tersedia'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _getUser() async {
@@ -94,6 +148,7 @@ class _RouteScreenState extends State<RouteScreen> {
         builder: (context, state) {
           // print('jalur: $state.jalur');
           // print('gunung: $state.gunung');
+
           // Handle loading state
           if (state.isLoading) {
             return Scaffold(
@@ -359,16 +414,20 @@ class _RouteScreenState extends State<RouteScreen> {
                 ),
               ),
               onPressed: () {
-                // Action to open map
+                _launchURL(routeModel);
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.map, color: theme.colorScheme.primary, size: 35),
+                  Icon(Icons.map,
+                      color: Theme.of(context).colorScheme.primary, size: 35),
                   SizedBox(width: 8),
-                  Text("Open\nMaps", // Teks tombol
-                      style: CustomTextStyles.labelMediumPrimary10
-                          .copyWith(fontSize: 17)),
+                  Text(
+                    "Open\nMaps",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
                 ],
               ),
             ),
@@ -408,61 +467,47 @@ class _RouteScreenState extends State<RouteScreen> {
   // **Tata Tertib Button**
   Widget _buildTataTertibButton(BuildContext context) {
     return CustomElevatedButton(
-      height: 56.h,
-      text: "Tata Tertib dan",
-      margin: EdgeInsets.only(right: 2.h),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.onPrimary,
-        borderRadius: BorderRadiusStyle.roundedBorder14,
-        boxShadow: [
-          BoxShadow(
-            color: appTheme.black900.withOpacity(0.08),
-            spreadRadius: 1.h,
-            blurRadius: 2.h,
-            offset: const Offset(2, 2),
-          ),
-        ],
-      ),
-      leftIcon: Container(
-        margin: EdgeInsets.only(right: 16.h),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgVideocamera,
-          height: 24.h,
-          width: 24.h,
-          fit: BoxFit.contain,
+        height: 56.h,
+        text: "Tata Tertib dan Peraturan",
+        margin: EdgeInsets.only(right: 2.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onPrimary,
+          borderRadius: BorderRadiusStyle.roundedBorder14,
+          boxShadow: [
+            BoxShadow(
+              color: appTheme.black900.withOpacity(0.08),
+              spreadRadius: 1.h,
+              blurRadius: 2.h,
+              offset: const Offset(2, 2),
+            ),
+          ],
         ),
-      ),
-      buttonStyle: CustomButtonStyles.outlineBlack,
-      buttonTextStyle: CustomTextStyles.labelLargePrimarySemiBold,
-      onPressed: () {
-        NavigatorService.pushNamed(AppRoutes.tataTertibScreen);
-      },
-    );
+        leftIcon: Container(
+          margin: EdgeInsets.only(right: 16.h),
+          child: CustomImageView(
+            imagePath: ImageConstant.imgVideocamera,
+            height: 24.h,
+            width: 24.h,
+            fit: BoxFit.contain,
+          ),
+        ),
+        buttonStyle: CustomButtonStyles.outlineBlack,
+        buttonTextStyle: CustomTextStyles.labelLargePrimarySemiBold,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BlocProvider(
+                create: (context) => TataTertibBloc(
+                  apiService:
+                      ApiService(), // Pastikan ApiService terinisialisasi dengan benar
+                ), // Memulai event Bloc
+                child: TataTertibScreen(
+                    jalurId: widget
+                        .jalurId), // Memastikan jalurId dikirim ke TataTertibScreen
+              ),
+            ),
+          );
+        });
   }
-
-  // // **Pesan Sekarang Button**
-  // Widget _buildPesanSekarangButton(BuildContext context) {
-  //   return CustomElevatedButton(
-  //     height: 56.h,
-  //     text: "Pesan Sekarang",
-  //     buttonStyle: CustomButtonStyles.outlineBlackTL14,
-  //     buttonTextStyle: CustomTextStyles.titleLarge_1,
-  //     onPressed: () {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => BlocProvider(
-  //             create: (context) => BookingBloc(apiService: ApiService()),
-  //             child: BookingScreen(
-  //               jalurId: jalurId,
-  //               idGunung: idGunung,
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //       print(
-  //           "Navigating to RouteScreen with idGunung: ${idGunung}, jalurId: ${jalurId}, ${userId.toString()}");
-  //     },
-  //   );
-  // }
 }

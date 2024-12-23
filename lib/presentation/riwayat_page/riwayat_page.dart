@@ -167,6 +167,10 @@ class _RiwayatPageState extends State<RiwayatPage> {
                   RecentclimbinglistItemModel();
               return RecentclimbinglistItemWidget(
                 model,
+                onTapRecentclimbing: () {
+                  // Panggil metode untuk menampilkan dialog checkout dengan pesananId
+                  _showCheckoutDialogWithPesananId(context, model.id);
+                },
               );
             },
           );
@@ -175,18 +179,10 @@ class _RiwayatPageState extends State<RiwayatPage> {
     );
   }
 
-  /// Menampilkan dialog dengan konten [PopUpCheckoutDialog]
-  void onTapRecentclimbing(BuildContext context) {
-    showDialog(
-      context: NavigatorService.navigatorKey.currentContext!,
-      builder: (_) => AlertDialog(
-        content: PopUpCheckoutDialog.builder(
-          NavigatorService.navigatorKey.currentContext!,
-        ),
-        backgroundColor: Colors.transparent,
-        contentPadding: EdgeInsets.zero,
-        insetPadding: EdgeInsets.zero,
-      ),
-    );
+  /// Metode untuk menampilkan dialog checkout dengan pesananId
+  void _showCheckoutDialogWithPesananId(BuildContext context, dynamic pesananId) {
+    // Konversi pesananId ke int jika belum
+    int parsedPesananId = int.tryParse(pesananId.toString()) ?? 0;
+
   }
 }

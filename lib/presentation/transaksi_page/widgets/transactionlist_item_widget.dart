@@ -1,33 +1,41 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:myhiking/presentation/menunggu_verifikasi_screen/bloc/menunggu_verifikasi_bloc.dart';
+import 'package:myhiking/presentation/menunggu_verifikasi_screen/menunggu_verifikasi_screen.dart';
+import '../../../api/api_service.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../models/transactionlist_item_model.dart';
+import '../../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
 
-// ignore_for_file: must_be_immutable
 class TransactionlistItemWidget extends StatelessWidget {
-  final VoidCallback? onChangeStatus;
-
   TransactionlistItemWidget(
     this.transactionlistItemModelObj, {
     super.key,
     this.onTapRecentclimbing,
-    this.onChangeStatus, // Inisialisasi callback ini
   });
 
-  TransactionlistItemModel transactionlistItemModelObj;
-  VoidCallback? onTapRecentclimbing;
+  final TransactionlistItemModel transactionlistItemModelObj;
+  final VoidCallback? onTapRecentclimbing;
 
   @override
   Widget build(BuildContext context) {
+    // Parsing tanggal setelah objek tersedia
+    DateTime? tanggal;
+    try {
+      tanggal =
+          DateTime.parse(transactionlistItemModelObj.waktuPembayaran ?? '');
+    } catch (_) {
+      tanggal = null;
+    }
+
+    // Debug log untuk memastikan data diterima
+    print(
+        'Membangun TransactionlistItemWidget untuk ID: ${transactionlistItemModelObj.id}');
+
     return GestureDetector(
       onTap: () {
-        // Jika status adalah "Selesai", navigasi ke tiket
-        if (transactionlistItemModelObj.status == "verified") {
-          NavigatorService.pushNamed(AppRoutes.tiketScreen);
-        }
-        // Panggil callback jika ada
         onTapRecentclimbing?.call();
       },
       child: Container(
@@ -36,44 +44,39 @@ class TransactionlistItemWidget extends StatelessWidget {
           vertical: 14.h,
         ),
         decoration: BoxDecoration(
-          color: theme.colorScheme.onPrimary,
+          color: theme.colorScheme.onPrimary ?? Colors.white,
           borderRadius: BorderRadiusStyle.roundedBorder6,
           boxShadow: [
             BoxShadow(
-              color: appTheme.blueGray40019,
+              color: appTheme.blueGray40019 ?? Colors.grey.withOpacity(0.2),
               spreadRadius: 2.h,
               blurRadius: 2.h,
-              offset: const Offset(
-                4,
-                4,
-              ),
+              offset: const Offset(4, 4),
             ),
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(top: 2.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        DateFormat('EEEE, dd MMMM yyyy', 'id_ID').format(
-                          DateTime.tryParse(transactionlistItemModelObj.waktuPembayaran ?? '2020-01-01') ?? DateTime.now()
-                        ),
-                        style: theme.textTheme.titleSmall,
-                      ),
-                      Text(
-                        transactionlistItemModelObj.gunung.toString(),
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                    ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    // Format tanggal jika tersedia
+                    tanggal != null
+                        ? DateFormat('EEEE, dd MMMM yyyy', 'id_ID')
+                            .format(tanggal)
+                        : 'Tanggal tidak valid',
+                    style: theme.textTheme.titleSmall,
                   ),
-                ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    transactionlistItemModelObj.gunung ??
+                        'Gunung tidak diketahui',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
               ),
             ),
             _buildStatusButton(context),
@@ -83,27 +86,21 @@ class TransactionlistItemWidget extends StatelessWidget {
     );
   }
 
-  /// Menampilkan tombol sesuai status transaksi
-  /// Menampilkan tombol sesuai status transaksi
   Widget _buildStatusButton(BuildContext context) {
-    if (transactionlistItemModelObj.status == "unverified") {
-      return CustomElevatedButton(
-        height: 26.h,
-        width: 98.h,
-        text: "Proses".tr,
-        buttonStyle: CustomButtonStyles.outlineTeal1,
-        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
-        onPressed: () {
-          onChangeStatus?.call(); // Panggil callback saat tombol ditekan
-        },
-      );
-    } 
-    else {
-      return _buildSelesaiButton(context);
+    String status = transactionlistItemModelObj.status?.toLowerCase() ?? '';
+
+    // Handle the status by displaying the correct button
+    switch (status) {
+      case 'unverified':
+        return _buildProsesButton(context);
+      case 'verified':
+        return _buildSelesaiButton(context);
+      default:
+        return Text('Status tidak dikenal',
+            style: TextStyle(color: Colors.red));
     }
   }
 
-  /// Section Widget
   Widget _buildProsesButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
@@ -112,39 +109,68 @@ class TransactionlistItemWidget extends StatelessWidget {
       buttonStyle: CustomButtonStyles.outlineTeal1,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Logika untuk mengubah status menjadi "Berhasil"
-        transactionlistItemModelObj.status = "unverified";
-        // Panggil untuk navigasi
-        NavigatorService.pushNamed(AppRoutes.suksesScreen);
+        final pesananId =
+            transactionlistItemModelObj.pesananId; // Ambil id_pesanan
+        if (pesananId == null) {
+          print('Pesanan ID tidak valid');
+          return;
+        }
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  MenungguVerifikasiBloc(apiService: ApiService()),
+              child: MenungguVerifikasiScreen(pesananId: pesananId),
+            ),
+          ),
+        );
+        print(
+            'Navigasi ke Menunggu Verifikasi Screen dengan Pesanan ID: $pesananId');
       },
     );
   }
 
-  Widget _buildBerhasilButton(BuildContext context) {
-    return CustomElevatedButton(
-      height: 26.h,
-      width: 98.h,
-      text: "lbl_berhasil".tr,
-      buttonStyle: CustomButtonStyles.outlineTeal,
-      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
-      onPressed: () {
-        // Navigasi ke sukses screen
-        NavigatorService.pushNamed(AppRoutes.suksesScreen);
-      },
-    );
-  }
+// Widget _buildProsesButton(BuildContext context) {
+//   return CustomElevatedButton(
+//     height: 26.h,
+//     width: 98.h,
+//     text: "Proses".tr,
+//     buttonStyle: CustomButtonStyles.outlineTeal1,
+//     buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+//     onPressed: () {
+//       NavigatorService.pushNamed(
+//         AppRoutes.menungguVerifikasiScreen,
+//       );
+//       print('Navigasi ke Menunggu Verifikasi Screen tanpa argumen');
+//     },
+//   );
+// }
 
   Widget _buildSelesaiButton(BuildContext context) {
     return CustomElevatedButton(
       height: 26.h,
       width: 98.h,
-      text: "lbl_selesai".tr,
+      text: "Check In".tr,
       buttonStyle: CustomButtonStyles.outlineTeal,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
       onPressed: () {
-        // Navigasi ke tiket screen
-        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        final pesananId =
+            transactionlistItemModelObj.pesananId; // Ambil id_pesanan
+        if (pesananId == null) {
+          print('Pesanan ID tidak valid');
+          return;
+        }
+
+        NavigatorService.pushNamed(
+          AppRoutes.tiketScreen,
+          arguments: pesananId,
+        );
+        print('Navigasi ke Tiket Screen dengan Pesanan ID: $pesananId');
       },
     );
   }
+
+  // Method to show checkout dialog
 }

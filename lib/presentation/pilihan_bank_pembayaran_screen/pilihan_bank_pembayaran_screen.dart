@@ -214,19 +214,31 @@ class _PilihanBankPembayaranScreenState
     );
   }
 
-  void onTapRincian(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) =>
-              RincianPembayaranUploadBloc(apiService: ApiService()),
-          child: RincianPembayaranUploadScreen(
-            pesananId: widget.pesananId, // Use widget to access jalurId
-            // userId: userId,
+  void onTapRincian(BuildContext context) async {
+    try {
+      final transactionResponse = await ApiService().createTransaction(
+        widget.pesananId,
+        "GoPay", // Gunakan nilai static "GoPay"
+      );
+
+      // Navigasi ke RincianPembayaranUploadScreen dengan data transaksi
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                RincianPembayaranUploadBloc(apiService: ApiService()),
+            child: RincianPembayaranUploadScreen(
+              pesananId: widget.pesananId,
+              transaksi: transactionResponse.transaction,
+            ),
           ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      // Tangani error jika gagal membuat transaksi
+      print('Error creating transaction: $e');
+      // Tampilkan pesan error ke pengguna
+    }
   }
 }
