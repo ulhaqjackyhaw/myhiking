@@ -15,6 +15,15 @@ class DataProfileInitialEvent extends DataProfileEvent {
   List<Object?> get props => [];
 }
 
+class FetchUserDataEvent extends DataProfileEvent {
+  final int? userId;
+
+  FetchUserDataEvent({this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class SaveDataEvent extends DataProfileEvent {}
 
 class DisposeEvent extends DataProfileEvent {}

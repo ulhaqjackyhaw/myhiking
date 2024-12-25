@@ -11,8 +11,13 @@ class DataProfileState extends Equatable {
   final TextEditingController? addressInputController;
   final TextEditingController? emailInputController;
   TextEditingController? dateOfBirthController;
+  final TextEditingController? oldPasswordController;
+  final TextEditingController? newPasswordController;
+  final TextEditingController? confirmPasswordController;
   final bool isEmailValid;
   final String? statusMessage;
+  final bool isLoading;
+  final String error;
 
   DataProfileState({
     this.fullNameInputController,
@@ -22,8 +27,13 @@ class DataProfileState extends Equatable {
     this.addressInputController,
     this.emailInputController,
     this.dateOfBirthController,
+    this.oldPasswordController,
+    this.newPasswordController,
+    this.confirmPasswordController,
     this.isEmailValid = true,
     this.statusMessage,
+    this.isLoading = false,
+    this.error = '',
   });
 
   DataProfileState copyWith({
@@ -34,8 +44,13 @@ class DataProfileState extends Equatable {
     TextEditingController? addressInputController,
     TextEditingController? emailInputController,
     TextEditingController? dateOfBirthController,
+    TextEditingController? oldPasswordController,
+    TextEditingController? newPasswordController,
+    TextEditingController? confirmPasswordController,
     bool? isEmailValid,
     String? statusMessage,
+    bool? isLoading,
+    String? error,
   }) {
     return DataProfileState(
       fullNameInputController:
@@ -50,8 +65,16 @@ class DataProfileState extends Equatable {
       emailInputController: emailInputController ?? this.emailInputController,
       dateOfBirthController:
           dateOfBirthController ?? this.dateOfBirthController,
+      oldPasswordController:
+          oldPasswordController ?? this.oldPasswordController,
+      newPasswordController:
+          newPasswordController ?? this.newPasswordController,
+      confirmPasswordController:
+          confirmPasswordController ?? this.confirmPasswordController,
       isEmailValid: isEmailValid ?? this.isEmailValid,
       statusMessage: statusMessage ?? this.statusMessage,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
     );
   }
 
@@ -64,7 +87,12 @@ class DataProfileState extends Equatable {
         addressInputController,
         emailInputController,
         dateOfBirthController,
+        oldPasswordController,
+        newPasswordController,
+        confirmPasswordController,
         isEmailValid,
         statusMessage,
+        isLoading,
+        error,
       ];
 }

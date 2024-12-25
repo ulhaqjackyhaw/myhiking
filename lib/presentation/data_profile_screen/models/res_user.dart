@@ -49,19 +49,19 @@ class ResUser {
 }
 
 class Data {
-  int id;
-  String name;
-  String email;
-  dynamic emailVerifiedAt;
-  String level;
-  String address;
-  String nik;
-  String phone;
-  String emergencyPhone;
-  String profilePicture;
-  DateTime dateOfBirth;
-  DateTime createdAt;
-  DateTime updatedAt;
+  final int id;
+  final String name;
+  final String email;
+  final dynamic emailVerifiedAt;
+  final String level;
+  final String address;
+  final String nik;
+  final String phone;
+  final String emergencyPhone;
+  final String profilePicture;
+  final DateTime? dateOfBirth;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   Data({
     required this.id,
@@ -80,19 +80,24 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
+        id: json["id"] ?? 0,
+        name: (json["name"] ?? '').toString(),
+        email: (json["email"] ?? '').toString(),
         emailVerifiedAt: json["email_verified_at"],
-        level: json["level"],
-        address: json["address"],
-        nik: json["nik"],
-        phone: json["phone"],
-        emergencyPhone: json["emergency_phone"],
-        profilePicture: json["profile_picture"],
-        dateOfBirth: DateTime.parse(json["date_of_birth"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        level: (json["level"] ?? '').toString(),
+        address: (json["address"] ?? '').toString(),
+        nik: (json["nik"] ?? '').toString(),
+        phone: (json["phone"] ?? '').toString(),
+        emergencyPhone: (json["emergency_phone"] ?? '').toString(),
+        profilePicture: (json["profile_picture"] ?? '').toString(),
+        dateOfBirth: json["date_of_birth"] != null &&
+                json["date_of_birth"].toString().isNotEmpty
+            ? DateTime.parse(json["date_of_birth"])
+            : null,
+        createdAt: DateTime.parse(
+            json["created_at"] ?? DateTime.now().toIso8601String()),
+        updatedAt: DateTime.parse(
+            json["updated_at"] ?? DateTime.now().toIso8601String()),
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,7 +111,7 @@ class Data {
         "phone": phone,
         "emergency_phone": emergencyPhone,
         "profile_picture": profilePicture,
-        "date_of_birth": dateOfBirth.toIso8601String(),
+        "date_of_birth": dateOfBirth?.toIso8601String(),
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };

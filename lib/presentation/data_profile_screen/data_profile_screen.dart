@@ -46,7 +46,9 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<DataProfileBloc>();
+    context
+        .read<DataProfileBloc>()
+        .add(FetchUserDataEvent(userId: widget.userId));
     _getUser();
   }
 
@@ -76,7 +78,7 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
             userId1 = response['data']['id'];
             userName = response['data']['name'];
             userEmail = response['data']['email'];
-            userPassword = response['data']['password'];
+            // userPassword = response['data']['password'];
             isLoading = false;
           });
         }
@@ -409,8 +411,11 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
     }
   }
 
-  // Method to show password change dialog
   void onTapTxtIdCounter(BuildContext context) {
+    final oldPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -420,13 +425,13 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           ),
           title: Text("Ubah Password"),
           content: SizedBox(
-            height: 200,
+            height: 210, // Tinggi disesuaikan untuk menghindari overflow
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                _buildPasswordField("Password Lama"),
-                _buildPasswordField("Password Baru"),
-                _buildPasswordField("Konfirmasi Password"),
+                _buildPasswordField("Password Lama", oldPasswordController),
+                _buildPasswordField("Password Baru", newPasswordController),
+                _buildPasswordField(
+                    "Konfirmasi Password", confirmPasswordController),
               ],
             ),
           ),
@@ -434,13 +439,42 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
             TextButton(
               child: Text("Batal"),
               onPressed: () {
+                // Bersihkan controller sebelum menutup dialog
+                oldPasswordController.dispose();
+                newPasswordController.dispose();
+                confirmPasswordController.dispose();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: Text("Simpan Password Baru"),
               onPressed: () {
+                // Validasi password
+                if (newPasswordController.text.isEmpty ||
+                    oldPasswordController.text.isEmpty ||
+                    confirmPasswordController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Semua field harus diisi')),
+                  );
+                  return;
+                }
+
+                if (newPasswordController.text !=
+                    confirmPasswordController.text) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Password baru tidak cocok')),
+                  );
+                  return;
+                }
+
                 // Tambahkan logika untuk menyimpan password
+                print('Password Lama: ${oldPasswordController.text}');
+                print('Password Baru: ${newPasswordController.text}');
+
+                // Bersihkan controller sebelum menutup dialog
+                oldPasswordController.dispose();
+                newPasswordController.dispose();
+                confirmPasswordController.dispose();
                 Navigator.of(context).pop();
               },
             ),
@@ -450,12 +484,23 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
     );
   }
 
-  Widget _buildPasswordField(String label) {
-    return TextField(
-      decoration: InputDecoration(
-        labelText: label,
+  Widget _buildPasswordField(String label, TextEditingController controller) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 12.0,
+            vertical: 14.0,
+          ),
+        ),
+        obscureText: true,
       ),
-      obscureText: true,
     );
   }
 
@@ -502,40 +547,69 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
   }
 
   /// Section Widget
+
   Widget _buildFullNameInput(BuildContext context) {
     return BlocBuilder<DataProfileBloc, DataProfileState>(
       builder: (context, state) {
+        // Tampilkan loading indicator saat sedang fetch data
+        if (state.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Logging dan menampilkan error message jika ada
+        if (state.error.isNotEmpty) {
+          // Debug print untuk logging error
+          print('Error in _buildFullNameInput:');
+          print('Error message: ${state.error}');
+          print('Current state: $state');
+          print('Controller state: ${state.fullNameInputController?.text}');
+
+          // Stack trace untuk debugging
+          try {
+            throw Exception(state.error);
+          } catch (e, stackTrace) {
+            print('Stack trace:');
+            print(stackTrace);
+          }
+
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.error_outline, color: Colors.red, size: 24),
+                const SizedBox(height: 8),
+                Text(
+                  state.error,
+                  style: const TextStyle(color: Colors.red),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        }
+
         return SizedBox(
-          width: 334.h, // Menyesuaikan dengan ukuran referensi
+          width: 334.h,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label text untuk input Nama Lengkap
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_nama_lengkap".tr, // Menggunakan localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.fullNameInputController,
                 onChanged: (value) {
+                  // Tambahkan log untuk tracking perubahan nilai
+                  print('Full Name changed to: $value');
                   context
                       .read<DataProfileBloc>()
                       .add(FullNameChangedEvent(value));
                 },
                 decoration: InputDecoration(
                   hintText: 'Masukkan Nama Lengkap',
-                  hintStyle: CustomTextStyles
-                      .bodySmallGray50003Light, // Sesuai referensi gaya teks
+                  hintStyle: CustomTextStyles.bodySmallGray50003Light,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.h),
                     borderSide: BorderSide(
-                      color: appTheme.gray400, // Warna border dari referensi
+                      color: appTheme.gray400,
                       width: 1.h,
                     ),
                   ),
@@ -544,19 +618,17 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
                     horizontal: 12.h,
                   ),
                 ),
-                style:
-                    CustomTextStyles.bodyMediumBlack900Light, // Gaya teks input
-                keyboardType: TextInputType.name, // Keyboard untuk nama
-                textInputAction:
-                    TextInputAction.next, // Menambahkan aksi next pada keyboard
+                style: CustomTextStyles.bodyMediumBlack900Light,
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
               ),
-              // Opsional: Bisa menambahkan error message jika diperlukan
-              if (state.statusMessage != null &&
-                  state.statusMessage!.isNotEmpty)
+              if (state.statusMessage?.isNotEmpty ?? false)
                 Padding(
                   padding: EdgeInsets.only(top: 4.h),
-                  child: Text(state.statusMessage!,
-                      style: CustomTextStyles.bodySmallBlack900),
+                  child: Text(
+                    state.statusMessage!,
+                    style: CustomTextStyles.bodySmallBlack900,
+                  ),
                 ),
             ],
           ),
