@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/presentation/data_profile_screen/bloc/data_profile_bloc.dart';
+import 'package:myhiking/presentation/data_profile_screen/data_profile_screen.dart';
 import 'package:myhiking/presentation/landing_screen/landing_screen.dart';
 import 'package:myhiking/presentation/profile_screen/bloc/profile_bloc.dart';
 import '../../core/app_export.dart';
@@ -6,7 +9,7 @@ import '../../widgets/custom_icon_button.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   static Widget builder(BuildContext context) {
@@ -14,6 +17,70 @@ class ProfileScreen extends StatelessWidget {
       create: (context) => ProfileBloc(const ProfileState()),
       child: const ProfileScreen(),
     );
+  }
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String userName = '';
+  int userId = 0;
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi data awal
+    context.read<ProfileBloc>().add(ProfileInitialEvent());
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userName = response['data']['name'];
+            userId = response['data']['id'];
+            isLoading = false;
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -63,14 +130,14 @@ class ProfileScreen extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "lbl_prastita_s".tr,
+                    userName,
                     style: theme.textTheme.titleLarge,
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 8.h),
+                  padding: EdgeInsets.only(left: 0.h),
                   child: Text(
-                    "lbl_id_793928".tr,
+                    "ID : ${userId.toString()}",
                     style: CustomTextStyles.titleMediumOnPrimary_1,
                   ),
                 ),
@@ -273,7 +340,19 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void onTapProfileone(BuildContext context) {
-    NavigatorService.pushNamed(AppRoutes.dataProfileScreen);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlocProvider(
+          create: (context) => DataProfileBloc(apiService: ApiService()),
+          child: DataProfileScreen(
+            userId: userId, // Use widget to access jalurId
+             // Use widget to access idGunung
+            // userId: userId,
+          ),
+        ),
+      ),
+    );
   }
 
   void onTapTransaction(BuildContext context) {

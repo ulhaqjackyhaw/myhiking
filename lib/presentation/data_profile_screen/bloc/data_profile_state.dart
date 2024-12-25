@@ -10,6 +10,8 @@ class DataProfileState extends Equatable {
   final TextEditingController? emergencyContactInputController;
   final TextEditingController? addressInputController;
   final TextEditingController? emailInputController;
+  TextEditingController? dateOfBirthController;
+  final bool isEmailValid;
   final String? statusMessage;
 
   DataProfileState({
@@ -19,6 +21,8 @@ class DataProfileState extends Equatable {
     this.emergencyContactInputController,
     this.addressInputController,
     this.emailInputController,
+    this.dateOfBirthController,
+    this.isEmailValid = true,
     this.statusMessage,
   });
 
@@ -29,6 +33,8 @@ class DataProfileState extends Equatable {
     TextEditingController? emergencyContactInputController,
     TextEditingController? addressInputController,
     TextEditingController? emailInputController,
+    TextEditingController? dateOfBirthController,
+    bool? isEmailValid,
     String? statusMessage,
   }) {
     return DataProfileState(
@@ -42,6 +48,9 @@ class DataProfileState extends Equatable {
       addressInputController:
           addressInputController ?? this.addressInputController,
       emailInputController: emailInputController ?? this.emailInputController,
+      dateOfBirthController:
+          dateOfBirthController ?? this.dateOfBirthController,
+      isEmailValid: isEmailValid ?? this.isEmailValid,
       statusMessage: statusMessage ?? this.statusMessage,
     );
   }
@@ -54,6 +63,8 @@ class DataProfileState extends Equatable {
         emergencyContactInputController,
         addressInputController,
         emailInputController,
+        dateOfBirthController,
+        isEmailValid,
         statusMessage,
       ];
 }

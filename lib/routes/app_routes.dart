@@ -99,7 +99,7 @@ class AppRoutes {
         // routeScreen: RouteScreen.builder,
         // tataTertibScreen: TataTertibScreen.builder,
         profileScreen: ProfileScreen.builder,
-        dataProfileScreen: DataProfileScreen.builder,
+        // dataProfileScreen: DataProfileScreen.builder,
         tiketScreen: (context) {
           final pesananId = ModalRoute.of(context)?.settings.arguments as int?;
           

@@ -71,6 +71,7 @@ class UpdateMemberIdField extends BookingEvent {
   UpdateMemberIdField(this.anggotaIds);
 }
 
+
 /// Event triggered when the user updates their booking details.
 // class UpdateBookingEvent extends BookingEvent {
 //   final int bookingId;

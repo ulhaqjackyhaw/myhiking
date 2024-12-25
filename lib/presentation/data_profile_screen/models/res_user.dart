@@ -20,9 +20,25 @@ class ResUser {
   });
 
   factory ResUser.fromJson(Map<String, dynamic> json) => ResUser(
-        success: json["success"],
-        message: json["message"],
-        data: Data.fromJson(json["data"]),
+        success: json["success"] ?? false,
+        message: json["message"] ?? '',
+        data: json["data"] != null
+            ? Data.fromJson(json["data"])
+            : Data(
+                id: 0,
+                name: '',
+                email: '',
+                emailVerifiedAt: null,
+                level: '',
+                address: '',
+                nik: '',
+                phone: '',
+                emergencyPhone: '',
+                profilePicture: '',
+                dateOfBirth: DateTime.now(),
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ),
       );
 
   Map<String, dynamic> toJson() => {

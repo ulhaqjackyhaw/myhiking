@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -214,51 +215,70 @@ class ApiService {
     String? emergencyPhone,
     String? dateOfBirth,
     File? profilePicture,
-    String? level,
+    int? level,
   }) async {
-    final String url = '$baseUrl/users/$userId'; // Ganti dengan URL API Anda
-    final request = http.MultipartRequest('POST', Uri.parse(url));
-
-    // Tambahkan field data
-    request.fields['name'] = name;
-    request.fields['email'] = email;
-    if (password != null) request.fields['password'] = password;
-    if (address != null) request.fields['address'] = address;
-    if (nik != null) request.fields['nik'] = nik;
-    if (phone != null) request.fields['phone'] = phone;
-    if (emergencyPhone != null)
-      request.fields['emergency_phone'] = emergencyPhone;
-    if (dateOfBirth != null) request.fields['date_of_birth'] = dateOfBirth;
-    if (level != null) request.fields['level'] = level;
-
-    // Tambahkan file jika ada profile_picture
-    if (profilePicture != null) {
-      final profilePictureStream = http.ByteStream(profilePicture.openRead());
-      final profilePictureLength = await profilePicture.length();
-
-      final multipartFile = http.MultipartFile(
-        'profile_picture',
-        profilePictureStream,
-        profilePictureLength,
-        filename: profilePicture.path.split('/').last,
-      );
-
-      request.files.add(multipartFile);
-    }
-
     try {
-      // Kirim request
-      final response = await http.Response.fromStream(await request.send());
+      // Endpoint API
+      final url = Uri.parse('$baseUrl/users/$userId');
 
-      // Periksa status response
+      // Buat request multipart
+      final request = http.MultipartRequest('POST', url);
+
+      // Tambahkan headers
+      request.headers.addAll({
+        'Accept': 'application/json',
+      });
+
+      // Menambahkan data fields ke dalam request
+      request.fields['name'] = name;
+      request.fields['email'] = email;
+      if (password != null) request.fields['password'] = password;
+      if (address != null) request.fields['address'] = address;
+      if (nik != null) request.fields['nik'] = nik;
+      if (phone != null) request.fields['phone'] = phone;
+      if (emergencyPhone != null)
+        request.fields['emergency_phone'] = emergencyPhone;
+      if (dateOfBirth != null) request.fields['date_of_birth'] = dateOfBirth;
+      if (level != null) request.fields['level'] = level.toString();
+
+      // Menambahkan file profile_picture jika ada
+      if (profilePicture != null) {
+        final profilePictureStream = http.ByteStream(profilePicture.openRead());
+        final profilePictureLength = await profilePicture.length();
+
+        final multipartFile = http.MultipartFile(
+          'profile_picture',
+          profilePictureStream,
+          profilePictureLength,
+          filename: profilePicture.path.split('/').last,
+        );
+
+        request.files.add(multipartFile);
+      }
+
+      // Kirim request dan tunggu respon
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      // Periksa status kode HTTP
       if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-        return ResUser.fromJson(responseData);
+        // Parse respon body
+        final responseData = jsonDecode(response.body);
+
+        if (responseData['data'] != null) {
+          final userData = responseData['data'];
+          return ResUser.fromJson(userData);
+        } else {
+          print("Respon tidak valid: ${response.body}");
+          throw Exception('Respon tidak valid');
+        }
       } else {
-        throw Exception('Failed to update profile: ${response.body}');
+        print("Error: ${response.statusCode} - ${response.body}");
+        throw Exception('Gagal memperbarui profil');
       }
     } catch (e) {
-      throw Exception('Failed to connect to the server: $e');
+      print("Exception: $e");
+      throw Exception('Terjadi kesalahan: $e');
     }
   }
 
@@ -332,41 +352,4 @@ class ApiService {
       print("Exception: $e");
     }
   }
-
-  // Future<List<TataTertibModel>> getTataTertibByJalur(int jalurId) async {
-  //   try {
-  //     final url = Uri.parse('$baseUrl/tata-tertib/jalur/$jalurId');
-  //     print('Requesting URL: $url');
-
-  //     final response = await http.get(
-  //       url,
-  //       headers: {
-  //         'Accept': 'application/json',
-  //         'Content-Type': 'application/json',
-  //       },
-  //     );
-
-  //     print('Response Status Code: ${response.statusCode}');
-  //     print('Response Headers: ${response.headers}');
-  //     print('Response Body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final Map<String, dynamic> responseMap = json.decode(response.body);
-
-  //       if (responseMap['status'] == 'success' && responseMap['data'] != null) {
-  //         final List<dynamic> dataList = responseMap['data'];
-  //         return dataList
-  //             .map((json) => TataTertibModel.fromJson(json))
-  //             .toList();
-  //       } else {
-  //         throw Exception('Invalid response format: ${response.body}');
-  //       }
-  //     } else {
-  //       throw Exception('Failed to load tata tertib: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     print('Error in getTataTertibByJalur: $e');
-  //     throw Exception('Failed to load tata tertib: $e');
-  //   }
-  // }
 }
