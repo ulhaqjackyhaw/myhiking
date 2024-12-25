@@ -1,119 +1,161 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
+import 'package:myhiking/presentation/data_profile_screen/bloc/data_profile_bloc.dart';
+import 'package:myhiking/presentation/data_profile_screen/data_profile_screen.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'bloc/pop_up_lengkapi_data_diri_bloc.dart';
 import 'models/pop_up_lengkapi_data_diri_model.dart'; // ignore_for_file: must_be
 
-class PopUpLengkapiDataDiriDialog extends StatelessWidget {
-  const PopUpLengkapiDataDiriDialog({super.key});
+class PopUpLengkapiDataDiriDialog extends StatefulWidget {
+  final int userId;
 
-  static Widget builder(BuildContext context) {
-    return BlocProvider<PopUpLengkapiDataDiriBloc>(
-      create: (context) => PopUpLengkapiDataDiriBloc(
-        PopUpLengkapiDataDiriState(
-          const PopUpLengkapiDataDiriModel(),
-        ),
-      )..add(PopUpLengkapiDataDiriInitialEvent()),
-      child: const PopUpLengkapiDataDiriDialog(),
-    );
+  const PopUpLengkapiDataDiriDialog({super.key, required this.userId});
+
+  // static Widget builder(BuildContext context, {required int userId}) {
+  //   return BlocProvider<PopUpLengkapiDataDiriBloc>(
+  //     create: (context) => PopUpLengkapiDataDiriBloc(
+  //       PopUpLengkapiDataDiriState(
+  //         const PopUpLengkapiDataDiriModel(),
+  //       ),
+  //     )..add(PopUpLengkapiDataDiriInitialEvent()),
+  //     child: PopUpLengkapiDataDiriDialog(userId: userId),
+  //   );
+  // }
+
+  @override
+  State<PopUpLengkapiDataDiriDialog> createState() =>
+      _PopUpLengkapiDataDiriDialogState();
+}
+
+class _PopUpLengkapiDataDiriDialogState
+    extends State<PopUpLengkapiDataDiriDialog> {
+  bool isLoading = true;
+  int userId = 0;
+  void initState() {
+    super.initState();
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+
+    // Cek apakah token null atau kosong
+    if (token == null || token.isEmpty) {
+      // Jika token tidak tersedia, tampilkan pesan atau ambil tindakan lain
+      // print("Token is null or empty");
+      if (mounted) {
+        setState(() {
+          isLoading =
+              false; // Menyelesaikan status loading jika token tidak ada
+        });
+      }
+      return; // Keluar dari fungsi jika token tidak ada
+    }
+
+    // print("Token: $token"); // Debugging, pastikan token ada
+
+    try {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        if (mounted) {
+          setState(() {
+            userId = response['data']['id'];
+          });
+        }
+      } else {
+        // Menangani error jika API gagal
+        // print("Error: ${response['message']}");
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    } catch (e) {
+      // Tangani error jaringan atau kesalahan lainnya
+      // print("Error fetching user: $e");
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.h,
-            vertical: 20.h,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 20.h,
+        vertical: 20.h,
+      ),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onPrimary,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 6.h),
+          SizedBox(
+            height: 30.h,
+            child: VerticalDivider(
+              width: 6.h,
+              thickness: 6.h,
+              color: appTheme.redA700,
+            ),
           ),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(14),
+          SizedBox(height: 8.h),
+          CustomImageView(
+            imagePath: ImageConstant.imgVector,
+            height: 10.h,
+            width: 10.h,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          SizedBox(height: 26.h),
+          Text(
+            "Harap lengkapi Data diri Profile\nterlebih dahulu",
+            textAlign: TextAlign.center,
+            style: CustomTextStyles.titleSmallBlack900.copyWith(
+              height: 1.40,
+            ),
+          ),
+          SizedBox(height: 32.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(height: 6.h),
-              SizedBox(
-                height: 30.h,
-                child: VerticalDivider(
-                  width: 6.h,
-                  thickness: 6.h,
-                  color: appTheme.redA700,
-                ),
+              CustomElevatedButton(
+                height: 35.h,
+                width: 100.h,
+                text: "Batal",
+                buttonStyle: CustomButtonStyles.fillRed,
+                buttonTextStyle: CustomTextStyles.labelMediumOnPrimary,
+                onPressed: () => Navigator.of(context).pop(),
               ),
-              SizedBox(height: 8.h),
-              CustomImageView(
-                imagePath: ImageConstant.imgVector,
-                height: 10.h,
-                width: 10.h,
-              ),
-              SizedBox(height: 26.h),
-              Text(
-                "msg_harap_lengkapi_data".tr,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: CustomTextStyles.titleSmallBlack900.copyWith(
-                  // ...
-                  height: 1.40,
-                ),
-              ),
-              SizedBox(height: 32.h),
-              Container(
-                width: double.maxFinite,
-                margin: EdgeInsets.symmetric(horizontal: 20.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomElevatedButton(
-                      height: 25.h,
-                      width: 72.h,
-                      text: "lbl_batal".tr,
-                      buttonStyle: CustomButtonStyles.fillRed,
-                      buttonTextStyle: CustomTextStyles.labelMediumOnPrimary,
-                      onPressed: () {
-                        onTapBatal(context);
-                      },
+              CustomElevatedButton(
+                height: 35.h,
+                width: 100.h,
+                text: "Lengkapi",
+                buttonStyle: CustomButtonStyles.fillPrimaryTL12,
+                buttonTextStyle: CustomTextStyles.labelMediumOnPrimary,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlocProvider(
+                        create: (context) =>
+                            DataProfileBloc(apiService: ApiService()),
+                        child: DataProfileScreen(userId: widget.userId),
+                      ),
                     ),
-                    CustomElevatedButton(
-                      height: 25.h,
-                      width: 72.h,
-                      text: "lbl_lengkapi".tr,
-                      buttonStyle: CustomButtonStyles.fillPrimaryTL12,
-                      buttonTextStyle: CustomTextStyles.labelMediumOnPrimary,
-                      onPressed: () {
-                        onTapLengkapi(context);
-                      },
-                    )
-                  ],
-                ),
+                  );
+                },
               )
             ],
-          ),
-        )
-      ],
-    );
-  }
-
-// ...
-
-// Navigates to the berandaScreen when the action is triggered.
-  onTapBatal(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.berandaScreen,
-    );
-  }
-
-// Navigates to the dataProfileScreen when the action is triggered.
-  onTapLengkapi(BuildContext context) {
-    NavigatorService.pushNamed(
-      AppRoutes.dataProfileScreen,
+          )
+        ],
+      ),
     );
   }
 }

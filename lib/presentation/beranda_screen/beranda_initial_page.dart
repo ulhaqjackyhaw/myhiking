@@ -31,7 +31,7 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
   String userName = '';
   int userId = 0;
   bool isLoading = true;
-  
+
   @override
   void initState() {
     super.initState();
@@ -105,7 +105,7 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
           ),
           GestureDetector(
             onTap: () {
-              onTapTxtIdCounter(context);
+              // onTapTxtIdCounter(context);
             },
             child: Padding(
               padding: EdgeInsets.only(left: 14.h),
@@ -118,7 +118,8 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
           SizedBox(height: 4.h),
           Padding(
             padding: EdgeInsets.only(left: 8.h, right: 16.h),
-            child:BlocSelector<BerandaBloc, BerandaState, TextEditingController?>(
+            child:
+                BlocSelector<BerandaBloc, BerandaState, TextEditingController?>(
               selector: (state) => state.searchController,
               builder: (context, searchController) {
                 return CustomSearchView(
@@ -127,12 +128,12 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 10.h,
                     vertical: 12.h,
-                     ),
+                  ),
                   onChanged: (query) {
                     // Dispatch the search event with the query
                     context.read<BerandaBloc>().add(BerandaSearchEvent(query));
                   },
-                  );
+                );
               },
             ),
           ),
@@ -166,7 +167,8 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
               HomelistItemModel model =
                   berandaInitialModelObj?.homelistItemList[index] ??
                       HomelistItemModel();
-              return HomelistItemWidget(model); // Memanggil widget dengan model gunung
+              return HomelistItemWidget(
+                  model); // Memanggil widget dengan model gunung
             },
           );
         },
@@ -175,21 +177,21 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
   }
 
   /// Displays a dialog with the [PopUpLengkapiDataDiriDialog] content.
-  onTapTxtIdCounter(BuildContext context) {
-    showDialog(
-      context: NavigatorService.navigatorKey.currentContext!,
-      builder: (_) => AlertDialog(
-        content: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: PopUpLengkapiDataDiriDialog.builder(
-            NavigatorService.navigatorKey.currentContext!,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        contentPadding: EdgeInsets.zero,
-        insetPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 24.0), // Margin dari tepi layar
-      ),
-    );
-  }
+  // onTapTxtIdCounter(BuildContext context) {
+  //   showDialog(
+  //     context: NavigatorService.navigatorKey.currentContext!,
+  //     builder: (_) => AlertDialog(
+  //       content: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: PopUpLengkapiDataDiriDialog.builder(
+  //           NavigatorService.navigatorKey.currentContext!,
+  //         ),
+  //       ),
+  //       backgroundColor: Colors.transparent,
+  //       contentPadding: EdgeInsets.zero,
+  //       insetPadding: const EdgeInsets.symmetric(
+  //           horizontal: 20.0, vertical: 24.0), // Margin dari tepi layar
+  //     ),
+  //   );
+  // }
 }

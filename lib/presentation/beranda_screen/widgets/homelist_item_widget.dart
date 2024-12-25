@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/presentation/detail_mountain_screen/bloc/detail_mountain_bloc.dart';
 import 'package:myhiking/presentation/detail_mountain_screen/detail_mountain_screen.dart';
+import 'package:myhiking/presentation/pop_up_lengkapi_data_diri_dialog/pop_up_lengkapi_data_diri_dialog.dart';
 import '../../../core/app_export.dart';
 import '../models/homelist_item_model.dart';
 
@@ -103,23 +104,67 @@ class HomelistItemWidget extends StatelessWidget {
 // onTapImgSlamet(BuildContext context) {
 //   NavigatorService.pushNamed(AppRoutes.detailMountainScreen);
 // }
-
-// Fungsi untuk menangani onTap dan mengarahkan ke halaman detail gunung
-onTapImgGunung(BuildContext context, HomelistItemModel homelistItemModelObj) {
+Future<void> onTapImgGunung(
+    BuildContext context, HomelistItemModel homelistItemModelObj) async {
   final idGunung = homelistItemModelObj.id;
 
   if (idGunung != null) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => BlocProvider(
-          create: (context) => DetailMountainBloc(
-              apiService: ApiService()) // Menyediakan ApiService ke Bloc
-            ..add(DetailMountainInitialEvent(idGunung)),
-          child: DetailMountainScreen(idGunung: idGunung),
-        ),
-      ),
-    );
+    final token = await ApiService().getToken();
+
+    if (token == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Silahkan login terlebih dahulu')),
+      );
+      return;
+    }
+
+    try {
+      final response = await ApiService().getUser(token);
+
+      if (response['success']) {
+        final userData = response['data'];
+        final userId = userData['id'];
+
+        if (userData['nik'] == null ||
+            userData['phone'] == null ||
+            userData['emergency_phone'] == null ||
+            userData['address'] == null ||
+            userData['nik'].toString().isEmpty ||
+            userData['phone'].toString().isEmpty ||
+            userData['emergency_phone'].toString().isEmpty ||
+            userData['address'].toString().isEmpty) {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (_) => Dialog(
+              insetPadding: EdgeInsets.symmetric(horizontal: 40.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: PopUpLengkapiDataDiriDialog(
+                userId: userData['id'],
+              ),
+            ),
+          );
+          return;
+        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) => DetailMountainBloc(apiService: ApiService())
+                ..add(DetailMountainInitialEvent(idGunung)),
+              child: DetailMountainScreen(idGunung: idGunung),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error getting user data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan saat mengambil data user')),
+      );
+    }
   } else {
     print('Mountain ID tidak ditemukan');
   }
