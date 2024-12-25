@@ -436,47 +436,62 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text("Batal"),
-              onPressed: () {
-                // Bersihkan controller sebelum menutup dialog
-                oldPasswordController.dispose();
-                newPasswordController.dispose();
-                confirmPasswordController.dispose();
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text("Simpan Password Baru"),
-              onPressed: () {
-                // Validasi password
-                if (newPasswordController.text.isEmpty ||
-                    oldPasswordController.text.isEmpty ||
-                    confirmPasswordController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Semua field harus diisi')),
-                  );
-                  return;
-                }
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  child: Text("Batal"),
+                  onPressed: () {
+                    oldPasswordController.dispose();
+                    newPasswordController.dispose();
+                    confirmPasswordController.dispose();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Simpan Password Baru"),
+                  onPressed: () async {
+                    try {
+                      final response = await ApiService().updatePassword(
+                        userId: userId1,
+                        oldPassword: oldPasswordController.text,
+                        newPassword: newPasswordController.text,
+                        confirmPassword: confirmPasswordController.text,
+                      );
+                      print("$response");
+                      Navigator.of(context).pop();
 
-                if (newPasswordController.text !=
-                    confirmPasswordController.text) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Password baru tidak cocok')),
-                  );
-                  return;
-                }
-
-                // Tambahkan logika untuk menyimpan password
-                print('Password Lama: ${oldPasswordController.text}');
-                print('Password Baru: ${newPasswordController.text}');
-
-                // Bersihkan controller sebelum menutup dialog
-                oldPasswordController.dispose();
-                newPasswordController.dispose();
-                confirmPasswordController.dispose();
-                Navigator.of(context).pop();
-              },
+                      // Tampilkan dialog sukses
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Icon(Icons.check_circle,
+                              color: Colors.green, size: 60),
+                          content: Text(
+                            "Password Berhasil Diubah",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text("OK"),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Gagal mengubah password: $e')),
+                      );
+                    } finally {
+                      oldPasswordController.dispose();
+                      newPasswordController.dispose();
+                      confirmPasswordController.dispose();
+                    }
+                  },
+                ),
+              ],
             ),
           ],
         );

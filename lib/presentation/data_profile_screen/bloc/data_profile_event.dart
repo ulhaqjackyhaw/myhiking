@@ -15,6 +15,21 @@ class DataProfileInitialEvent extends DataProfileEvent {
   List<Object?> get props => [];
 }
 
+class UpdatePasswordEvent extends DataProfileEvent {
+  final String oldPassword;
+  final String newPassword;
+  final String confirmPassword;
+
+  UpdatePasswordEvent({
+    required this.oldPassword,
+    required this.newPassword,
+    required this.confirmPassword,
+  });
+
+  @override
+  List<Object?> get props => [oldPassword, newPassword, confirmPassword];
+}
+
 class FetchUserDataEvent extends DataProfileEvent {
   final int? userId;
 

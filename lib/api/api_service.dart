@@ -282,6 +282,42 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> updatePassword({
+    required int userId,
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token tidak ditemukan');
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/update-password/$userId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'old_password': oldPassword,
+          'new_password': newPassword,
+          'confirm_password': confirmPassword,
+        }),
+      );
+
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (response.statusCode == 200) {
+        return data;
+      } else {
+        throw Exception(data['message'] ?? 'Gagal mengupdate password');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
   Future<TransactionResponseModel> createTransaction(
       int pesananId, String metodePembayaran) async {
     final response = await http.post(
