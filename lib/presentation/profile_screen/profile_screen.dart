@@ -347,7 +347,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           create: (context) => DataProfileBloc(apiService: ApiService()),
           child: DataProfileScreen(
             userId: userId, // Use widget to access jalurId
-             // Use widget to access idGunung
+            // Use widget to access idGunung
             // userId: userId,
           ),
         ),

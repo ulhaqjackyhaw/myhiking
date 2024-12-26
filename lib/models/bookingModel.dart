@@ -154,6 +154,9 @@ class TransactionModel {
   final String statusPesanan;
   final String? waktuPembayaran;
   final String? bukti;
+  String? gunung;
+  String? jalur;
+  String? userId;
 
   TransactionModel({
     required this.id,
@@ -163,6 +166,9 @@ class TransactionModel {
     required this.statusPesanan,
     this.waktuPembayaran,
     this.bukti,
+    this.gunung,
+    this.jalur,
+    this.userId,
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {

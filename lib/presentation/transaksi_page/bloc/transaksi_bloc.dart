@@ -10,91 +10,75 @@ part 'transaksi_event.dart';
 part 'transaksi_state.dart';
 
 class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
-  String? userId;
-
   TransaksiBloc(super.initialState) {
     on<TransaksiInitialEvent>(_onInitialize);
     on<TransaksiUserIdEvent>(_onUserIdReceived);
   }
 
-    // Event handler untuk menerima userId dan memanggil fetchRecentClimbingList
   _onUserIdReceived(
     TransaksiUserIdEvent event,
     Emitter<TransaksiState> emit,
   ) async {
     try {
-      // Dapatkan userId dari event
       String userId = event.userId;
+      print("Received userId in _onUserIdReceived: $userId");
 
-      // Memanggil fetchRecentClimbingList dengan userId
-      List<TransactionlistItemModel> recentClimbingList = await fetchTransaksiList(userId);
+      List<TransactionModel> transactions = await fetchTransaksiList(userId);
 
-      // Emit state dengan userId dan data yang diambil
-      emit(
-        state.copyWith(
-          userId: userId,
-          transaksiModelObj: state.transaksiModelObj?.copyWith(
-          transactionlistItemList: recentClimbingList,
-          ),
-          
+      emit(state.copyWith(
+        userId: userId,
+        transaksiModelObj: state.transaksiModelObj?.copyWith(
+          transactionlistItemList: transactions,
         ),
-      );
+      ));
     } catch (e) {
-      emit(
-        state.copyWith(
-        ),
-      );
+      print("Error in _onUserIdReceived: $e");
+      emit(state.copyWith());
     }
   }
 
-    // Function untuk mengambil data dari API dengan userId
-  Future<List<TransactionlistItemModel>> fetchTransaksiList(String userId) async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/transaksi'));
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body)['data'] as List;
-      print('Data dari API: $data');
-
-      // Filter data berdasarkan userId yang diterima
-    final filteredData = data
-    .where((item) => item['pemesan'].toString() == userId)
-    .map((item) => TransactionlistItemModel.fromJson(item))
-    .toList(); 
-print('User ID yang digunakan: $userId');
-print('Data setelah filter: $filteredData');
-
-
-      return filteredData;
-    } else {
-      throw Exception('Failed to load data');
-    }
-  }
-
-  // Event handler untuk menginisialisasi data
-  _onInitialize(
-    TransaksiInitialEvent event,
-    Emitter<TransaksiState> emit,
-  ) async {
+  Future<List<TransactionModel>> fetchTransaksiList(String userId) async {
     try {
-      // Mengambil data dari API tanpa menggunakan userId (untuk kasus inisialisasi)
-      List<TransactionlistItemModel> recentClimbingList = await fetchTransaksiList("");
-print('Data diterima: ${recentClimbingList.length}');
+      print("Fetching transactions for userId: $userId");
 
-      // Emit state dengan data yang diambil
-      emit(
-        state.copyWith(
-          transaksiModelObj: state.transaksiModelObj?.copyWith(
-            transactionlistItemList: recentClimbingList,
-          ),
-        ),
-      );
-      
-    } 
-    catch (e) {
-      emit(
-        state.copyWith(
-        ),
-      );
+      final response =
+          await http.get(Uri.parse('http://127.0.0.1:8000/api/transaksi'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body)['data'] as List;
+        print('Raw API data: $data');
+
+        if (userId.isEmpty) {
+          print('UserId is empty, returning empty list');
+          return [];
+        }
+
+        final filteredData = data.where((item) {
+          String pemesanId = item['pemesan'].toString();
+          bool matches = pemesanId == userId;
+          print(
+              'Comparing pemesan: $pemesanId with userId: $userId, matches: $matches');
+          return matches;
+        }).toList();
+
+        final transactions = filteredData
+            .map((item) => TransactionModel.fromJson(item))
+            .toList();
+
+        print('Filtered transactions count: ${transactions.length}');
+        return transactions;
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print("Error fetching transactions: $e");
+      throw e;
     }
+  }
+
+  _onInitialize(TransaksiInitialEvent event, Emitter<TransaksiState> emit) {
+    emit(state.copyWith(
+      transaksiModelObj: TransaksiModel(transactionlistItemList: []),
+    ));
   }
 }

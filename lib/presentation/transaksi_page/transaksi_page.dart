@@ -52,6 +52,20 @@ class _TransaksiPageState extends State<TransaksiPage> {
 
   @override
   Widget build(BuildContext context) {
+        return BlocBuilder<TransaksiBloc,
+        TransaksiState>(
+      builder: (context, state) {
+    if (state.isLoading) {
+      return Container(
+        color: Colors.white, // Mengatur latar belakang menjadi putih
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.green.shade900), // Warna hijau untuk indikator loading
+          ),
+        ),
+      );
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -102,6 +116,7 @@ class _TransaksiPageState extends State<TransaksiPage> {
         ),
       ),
     );
+  });
   }
 
   Widget _buildWomanReceiveSection(BuildContext context) {
@@ -162,14 +177,14 @@ class _TransaksiPageState extends State<TransaksiPage> {
             },
             itemCount: transaksiModelObj?.transactionlistItemList.length ?? 0,
             itemBuilder: (context, index) {
-              TransactionlistItemModel model =
+              TransactionModel model =
                   transaksiModelObj?.transactionlistItemList[index] ??
-                      TransactionlistItemModel();
+                      TransactionModel();
               return TransactionlistItemWidget(
                 model,
                 onTapRecentclimbing: () {
-                  _handleTapRecentClimbing(context, model.status, model.id);
-                
+                  _handleTapRecentClimbing(
+                      context, model.status, model.id.toString());
                 },
               );
             },
@@ -178,18 +193,20 @@ class _TransaksiPageState extends State<TransaksiPage> {
       ),
     );
   }
-  
 
-void _handleTapRecentClimbing(BuildContext context, String? status, String? id) {
-  switch (status) {
-    case "verified":
-      NavigatorService.pushNamed(AppRoutes.tiketScreen);
-      break;
-    case "unverified":
-      NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
-      break;
-    default:
-      print('Status transaksi tidak dikenali: $status');
+  void _handleTapRecentClimbing(
+      BuildContext context, String? status, String? id) {
+    switch (status) {
+      case "incomplete":
+        NavigatorService.pushNamed(AppRoutes.rincianPembayaranUploadScreen);
+      case "verified":
+        NavigatorService.pushNamed(AppRoutes.tiketScreen);
+        break;
+      case "unverified":
+        NavigatorService.pushNamed(AppRoutes.menungguVerifikasiScreen);
+        break;
+      default:
+        print('Status transaksi tidak dikenali: $status');
+    }
   }
-}
 }

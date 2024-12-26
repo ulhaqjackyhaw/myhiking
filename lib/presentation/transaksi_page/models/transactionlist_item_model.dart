@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 /// This class is used in the [transactionlist_item_widget] screen.
 // ignore_for_file: must_be_immutable
-class TransactionlistItemModel extends Equatable {
-  TransactionlistItemModel({
+class TransactionModel extends Equatable {
+  TransactionModel({
     this.id,
     this.pesananId,
     this.paymentId,
@@ -14,30 +14,37 @@ class TransactionlistItemModel extends Equatable {
     this.userId,
   });
 
-  factory TransactionlistItemModel.fromJson(Map<String, dynamic> json) {
-    return TransactionlistItemModel(
-        id: json['id'],
-        pesananId: json['id_pesanan'],
-        paymentId: json['payment_id'],
-        status: json['status'],
-        waktuPembayaran: json['waktu_pembayaran'],
-        gunung: json['gunung'],
-        jalur: json['jalur'],
-        userId: json['pemesan'].toString() //id pemesan
-        );
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
+    return TransactionModel(
+      id: json['id'] is String ? int.parse(json['id']) : json['id'],
+      pesananId: json['id_pesanan'] is String
+          ? int.parse(json['id_pesanan'])
+          : json['id_pesanan'],
+      paymentId: json['payment_id'] is String
+          ? int.parse(json['payment_id'].toString())
+          : json['payment_id'],
+      status: json['status'],
+      waktuPembayaran: json['waktu_pembayaran'],
+      gunung: json['gunung'],
+      jalur: json['jalur'],
+      userId: json['pemesan'].toString(),
+    );
   }
 
-  String? id;
-  int? pesananId;
-  int? paymentId;
-  String? status;
-  String? waktuPembayaran;
-  String? gunung;
-  String? jalur;
-  String? userId;
+  final int? id;
+  final int? pesananId;
+  final int? paymentId;
+  final String? status;
+  final String? waktuPembayaran;
+  final String? gunung;
+  final String? jalur;
+  final String? userId;
 
-  TransactionlistItemModel copyWith({
-    String? id,
+  // @override
+  // List<Object?> get props => [id, pesananId, paymentId, status, waktuPembayaran, gunung, jalur, userId];
+
+  TransactionModel copyWith({
+    int? id,
     int? pesananId,
     int? paymentId,
     String? status,
@@ -46,7 +53,7 @@ class TransactionlistItemModel extends Equatable {
     String? jalur,
     String? userId,
   }) {
-    return TransactionlistItemModel(
+    return TransactionModel(
       id: id ?? this.id,
       pesananId: pesananId ?? this.pesananId,
       paymentId: paymentId ?? this.paymentId,

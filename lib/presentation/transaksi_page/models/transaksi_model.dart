@@ -4,10 +4,10 @@ import 'transactionlist_item_model.dart';
 class TransaksiModel extends Equatable {
   TransaksiModel({this.transactionlistItemList = const [],});
 
-  List<TransactionlistItemModel> transactionlistItemList;
+  List<TransactionModel> transactionlistItemList;
 
   TransaksiModel copyWith({
-    List<TransactionlistItemModel>? transactionlistItemList,
+    List<TransactionModel>? transactionlistItemList,
   }) {
     return TransaksiModel(
       transactionlistItemList:

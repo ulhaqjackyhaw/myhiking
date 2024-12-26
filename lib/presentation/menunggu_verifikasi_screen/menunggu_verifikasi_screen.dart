@@ -90,11 +90,16 @@ class _MenungguVerifikasiScreenState extends State<MenungguVerifikasiScreen> {
     return BlocBuilder<MenungguVerifikasiBloc, MenungguVerifikasiState>(
       builder: (context, state) {
         if (state.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return Container(
+            color: Colors.white, // Mengatur latar belakang menjadi putih
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors
+                    .green.shade900), // Warna hijau untuk indikator loading
+              ),
+            ),
           );
         }
-
         if (state.error != null) {
           return Center(
             child: Text("Terjadi kesalahan: ${state.error}"),

@@ -249,7 +249,7 @@ class _PilihanBankPembayaranScreenState
                 RincianPembayaranUploadBloc(apiService: ApiService()),
             child: RincianPembayaranUploadScreen(
               pesananId: widget.pesananId,
-              transaksi: transactionResponse.transaction,
+              transaksiId: transactionResponse.transaction.id,
             ),
           ),
         ),
