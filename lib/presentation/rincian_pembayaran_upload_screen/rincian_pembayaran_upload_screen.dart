@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/bloc/menunggu_verifikasi_bloc.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/menunggu_verifikasi_screen.dart';
@@ -56,7 +57,7 @@ class _RincianPembayaranUploadScreenState
           );
     });
 
-    _updateTime();
+    _updateTime(context, widget.pesananId);
   }
 
   Future<void> _pickFile() async {
@@ -81,7 +82,7 @@ class _RincianPembayaranUploadScreenState
     }
   }
 
-  void _updateTime() {
+  void _updateTime(BuildContext context, int pesananId) {
     _formattedTime = _formatDuration(_remainingTime);
 
     // Start a timer to update the remaining time every second
@@ -91,6 +92,10 @@ class _RincianPembayaranUploadScreenState
           _remainingTime = _remainingTime - Duration(seconds: 1);
         } else {
           _timer.cancel(); // Stop the timer when it reaches 0
+          _formattedTime = _formatDuration(_remainingTime);
+
+          // Otomatis membatalkan pesanan
+          onTapBatal(context, pesananId);
         }
         _formattedTime = _formatDuration(_remainingTime);
       });
@@ -652,5 +657,41 @@ class _RincianPembayaranUploadScreenState
     NavigatorService.pushNamed(
       AppRoutes.berandaScreen,
     );
+  }
+
+  void onTapBatal(BuildContext context, int pesananId) async {
+    try {
+      // Kirim permintaan DELETE ke server
+      final response = await http.delete(
+        Uri.parse('$baseUrl/pesanan/$pesananId'),
+        headers: {
+          'Authorization': 'Bearer YOUR_TOKEN_HERE',
+        },
+      );
+
+      // Periksa status respons
+      if (response.statusCode == 200) {
+        // Tampilkan notifikasi sukses
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Pesanan telah dibatalkan")),
+        );
+
+        // Navigasi ke layar tertentu jika diperlukan
+        Navigator.of(context, rootNavigator: true)
+            .pushReplacementNamed(AppRoutes.berandaScreen);
+      } else {
+        // Tampilkan pesan kesalahan
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Gagal membatalkan pesanan: ${response.body}"),
+          ),
+        );
+      }
+    } catch (e) {
+      // Tangani kesalahan koneksi atau lainnya
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Terjadi kesalahan: $e")),
+      );
+    }
   }
 }
