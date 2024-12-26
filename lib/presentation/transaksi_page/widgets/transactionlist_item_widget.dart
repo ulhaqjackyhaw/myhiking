@@ -153,7 +153,7 @@ class TransactionlistItemWidget extends StatelessWidget {
                     tanggal != null
                         ? DateFormat('EEEE, dd MMMM yyyy', 'id_ID')
                             .format(tanggal)
-                        : 'Tanggal tidak valid',
+                        : 'Anda Belum Membayar',
                     style: theme.textTheme.titleSmall,
                   ),
                   SizedBox(height: 4.h),
