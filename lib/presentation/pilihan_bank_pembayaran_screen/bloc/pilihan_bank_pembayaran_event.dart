@@ -9,6 +9,8 @@ abstract class PilihanBankPembayaranEvent extends Equatable {
 // Event untuk inisialisasi state pertama kali
 class PilihanBankPembayaranInitialEvent extends PilihanBankPembayaranEvent {}
 
+class FetchPaymentsEvent extends PilihanBankPembayaranEvent {}
+
 // Event ketika metode pembayaran dipilih
 class PaymentmethodslistItemEvent extends PilihanBankPembayaranEvent {
   final int index; // Index pilihan metode pembayaran

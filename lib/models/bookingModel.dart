@@ -149,7 +149,7 @@ class TransactionResponseModel {
 class TransactionModel {
   final int id;
   final int idPesanan;
-  final String metodePembayaran;
+  final int paymentId;
   final int totalBayar;
   final String statusPesanan;
   final String? waktuPembayaran;
@@ -158,7 +158,7 @@ class TransactionModel {
   TransactionModel({
     required this.id,
     required this.idPesanan,
-    required this.metodePembayaran,
+    required this.paymentId,
     required this.totalBayar,
     required this.statusPesanan,
     this.waktuPembayaran,
@@ -169,7 +169,7 @@ class TransactionModel {
     return TransactionModel(
       id: json['id'],
       idPesanan: json['id_pesanan'],
-      metodePembayaran: json['metode_pembayaran'],
+      paymentId: json['payment_id'],
       totalBayar: json['total_bayar'],
       statusPesanan: json['status_pesanan'],
       waktuPembayaran: json['waktu_pembayaran'],
@@ -180,7 +180,7 @@ class TransactionModel {
     return {
       'id': id,
       'id_pesanan': idPesanan,
-      'metode_pembayaran': metodePembayaran,
+      'payment_id': paymentId,
       'total_bayar': totalBayar,
       'status_pesanan': statusPesanan,
       'waktu_pembayaran': waktuPembayaran,

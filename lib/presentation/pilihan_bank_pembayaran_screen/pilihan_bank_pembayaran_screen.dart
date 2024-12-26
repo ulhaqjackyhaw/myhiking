@@ -36,6 +36,7 @@ class _PilihanBankPembayaranScreenState
       context
           .read<PilihanBankPembayaranBloc>()
           .add(PilihanBankPembayaranInitialEvent());
+      context.read<PilihanBankPembayaranBloc>().add(FetchPaymentsEvent());
     });
   }
 
@@ -181,7 +182,7 @@ class _PilihanBankPembayaranScreenState
                   },
                   isSelected: selectedDebitCard ==
                       paymentMethodsList[index]
-                          .debitcard, // Cek apakah item ini terpilih
+                          .namaPayment, // Cek apakah item ini terpilih
                 );
               },
             );
@@ -201,7 +202,21 @@ class _PilihanBankPembayaranScreenState
         text: "lbl_bayar_sekarang".tr.toUpperCase(),
         onPressed: isBankSelected
             ? () {
-                onTapRincian(context);
+                // Cari model pembayaran yang dipilih berdasarkan debitcard
+                final selectedPayment = context
+                    .read<PilihanBankPembayaranBloc>()
+                    .state
+                    .pilihanBankPembayaranModelObj
+                    ?.paymentmethodslistItemList
+                    .firstWhere(
+                      (payment) => payment.namaPayment == selectedDebitCard,
+                      orElse: () => PaymentmethodslistItemModel(),
+                    );
+
+                onTapRincian(
+                  context,
+                  selectedPayment?.id ?? 0,
+                );
               }
             : null, // Disable button if no bank is selected
         margin: EdgeInsets.only(bottom: 12.h),
@@ -214,11 +229,15 @@ class _PilihanBankPembayaranScreenState
     );
   }
 
-  void onTapRincian(BuildContext context) async {
+  void onTapRincian(BuildContext context, int id) async {
+    // Log selalu ditampilkan di awal fungsi
+    print("Pesanan ID: ${widget.pesananId}, ID Payment: $id");
+
     try {
+      // Panggil API untuk membuat transaksi
       final transactionResponse = await ApiService().createTransaction(
         widget.pesananId,
-        "GoPay", // Gunakan nilai static "GoPay"
+        id,
       );
 
       // Navigasi ke RincianPembayaranUploadScreen dengan data transaksi
@@ -238,7 +257,14 @@ class _PilihanBankPembayaranScreenState
     } catch (e) {
       // Tangani error jika gagal membuat transaksi
       print('Error creating transaction: $e');
-      // Tampilkan pesan error ke pengguna
+
+      // Tampilkan pesan error ke pengguna menggunakan ScaffoldMessenger
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal membuat transaksi. Silakan coba lagi.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
     }
   }
 }

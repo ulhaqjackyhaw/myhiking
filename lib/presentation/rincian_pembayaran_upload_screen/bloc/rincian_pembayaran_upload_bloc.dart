@@ -30,51 +30,62 @@ class RincianPembayaranUploadBloc
   }
 
   // Event handler for fetching rincian pembayaran data
+
   Future<void> _onFetchRincianPembayaranUpload(
     FetchRincianPembayaranUploadEvent event,
     Emitter<RincianPembayaranUploadState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true, error: '')); // Show loading state
+    emit(state.copyWith(isLoading: true, error: ''));
 
     try {
-      // Get the token for authentication
-      String? token = await apiService.getToken();
-      if (token == null) {
-        throw Exception('Token not found');
-      }
+      // Ambil token autentikasi
 
-      // Make the API call to fetch the rincian pembayaran data
+      // Kirim permintaan GET ke API untuk mendapatkan rincian transaksi dan pembayaran
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/pesanan'),
-        headers: {'Authorization': 'Bearer $token'},
+        Uri.parse('$baseUrl/transaksi/${event.transactionId}/with-payment'),
+        headers: {
+          'Authorization': 'Bearer YOUR TOKEN',
+          'Content-Type': 'application/json',
+        },
       );
 
+      // Periksa status respons
       if (response.statusCode == 200) {
-        // Handle successful response
-        final responseData = jsonDecode(response.body);
-        print('Response Data: $responseData');
+        // Parsing JSON jika respons berhasil
+        final responseData = json.decode(response.body) as Map<String, dynamic>;
 
-        // Map the response data to your model
-        final rincianPembayaran =
-            RincianPembayaranUploadModel.resPesananFromJson(responseData);
+        // Debugging: Print responnya untuk memeriksa data
+        print("Respon data: $responseData");
 
-        // Update the state with fetched data
-        emit(state.copyWith(
-          isLoading: false,
-          rincianPembayaranUploadModelObj: rincianPembayaran,
-          error: '', // Clear any previous errors
-        ));
+        // Pastikan responseData memiliki data yang diinginkan
+        if (responseData != null && responseData['data'] != null) {
+          final rincianPembayaran =
+              RincianPembayaranUploadModel.fromJson(responseData['data']);
+
+          // Emit state dengan data yang berhasil diambil
+          emit(state.copyWith(
+            isLoading: false,
+            rincianPembayaranUploadModelObj: rincianPembayaran,
+            error: '',
+          ));
+        } else {
+          // Jika data tidak ditemukan dalam response
+          throw Exception('Data tidak ditemukan dalam response');
+        }
       } else {
-        // Handle non-200 status codes
+        // Jika status code tidak 200, lemparkan error
         throw Exception(
-            'Failed to fetch rincian pembayaran. Status code: ${response.statusCode}');
+            'Gagal mengambil rincian pembayaran: ${response.statusCode}');
       }
     } catch (e) {
-      // Handle any errors during API call
+      // Tangani error dan emit state dengan pesan error
       emit(state.copyWith(
         isLoading: false,
-        error: 'Failed to fetch data: $e', // Provide detailed error message
+        error: 'Gagal mengambil data: $e',
       ));
+
+      // Debugging: Tampilkan error di console
+      print('Error fetching data: $e');
     }
   }
 }

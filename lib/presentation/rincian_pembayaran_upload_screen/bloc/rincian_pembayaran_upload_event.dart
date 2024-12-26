@@ -10,20 +10,18 @@ class RincianPembayaranUploadEvent extends Equatable {
 
 /// Event that triggers fetching the rincian pembayaran data.
 class FetchRincianPembayaranUploadEvent extends RincianPembayaranUploadEvent {
-  final String idTransaksi; // id of the pesanan to fetch
-  String? idPesanan; // id of the pesanan to fetch
-  final String filePath;
+  final String transactionId;
+  String? filePath;
   final bool isLoading;
   final String? error;
 
-  FetchRincianPembayaranUploadEvent(
-      {required this.idTransaksi,
-      this.idPesanan,
-      required this.filePath,
-      required this.isLoading,
-      this.error});
+  FetchRincianPembayaranUploadEvent({
+    required this.transactionId,
+    this.filePath,
+    required this.isLoading,
+    this.error,
+  });
 
   @override
-  List<Object?> get props =>
-      [idTransaksi, idPesanan, filePath, isLoading, error];
+  List<Object?> get props => [transactionId, filePath, isLoading, error];
 }

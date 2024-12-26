@@ -20,8 +20,8 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
     // Menggunakan GestureDetector untuk mendeteksi klik pada elemen
     return GestureDetector(
       onTap: () {
-        // Memanggil onTapRadioGroup ketika item dipilih
-        onTapRadioGroup?.call(paymentmethodslistItemModelObj.debitcard);
+        onTapRadioGroup
+            ?.call(paymentmethodslistItemModelObj.namaPayment.toString());
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -49,16 +49,18 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
           children: [
             // Gambar metode pembayaran (Gopay/BCA/BRI)
             CustomImageView(
-              imagePath: paymentmethodslistItemModelObj.gopayOne,
+              imagePath: paymentmethodslistItemModelObj
+                  .imagePath, // Menggunakan getter imagePath
               height: 45.h,
               width: 45.h,
               margin: EdgeInsets.only(right: 12.h),
             ),
+
             // Nama metode pembayaran
             Padding(
               padding: EdgeInsets.only(bottom: 6.h),
               child: Text(
-                paymentmethodslistItemModelObj.debitcard,
+                paymentmethodslistItemModelObj.namaPayment ?? '',
                 style: CustomTextStyles.titleSmallGray900,
               ),
             ),
@@ -81,9 +83,9 @@ class PaymentmethodslistItemWidget extends StatelessWidget {
                 ),
                 CustomRadioButton(
                   value: paymentmethodslistItemModelObj
-                      .debitcard, // Nilai unik sebagai value
+                      .namaPayment, // Nilai unik sebagai value
                   groupValue: isSelected
-                      ? paymentmethodslistItemModelObj.debitcard
+                      ? paymentmethodslistItemModelObj.namaPayment
                       : null, // Cocokkan dengan yang dipilih
                   onChange: (value) {
                     if (onTapRadioGroup != null) {

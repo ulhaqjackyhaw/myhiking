@@ -1,6 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import '../../../core/utils/image_constant.dart';
 import '../models/paymentmethodslist_item_model.dart';
 import '../models/pilihan_bank_pembayaran_model.dart';
 
@@ -9,40 +10,66 @@ part 'pilihan_bank_pembayaran_state.dart';
 
 class PilihanBankPembayaranBloc
     extends Bloc<PilihanBankPembayaranEvent, PilihanBankPembayaranState> {
+  final String apiUrl = "http://127.0.0.1:8000/api/payments";
+
   PilihanBankPembayaranBloc()
       : super(PilihanBankPembayaranState(
           pilihanBankPembayaranModelObj: PilihanBankPembayaranModel(
-            paymentmethodslistItemList: [
-              PaymentmethodslistItemModel(
-                gopayOne: ImageConstant.imgLogo,
-                debitcard: 'GoPay',
-              ),
-              PaymentmethodslistItemModel(
-                gopayOne: ImageConstant.imgPngwingCom1,
-                debitcard: 'Bank Central Asia',
-              ),
-              PaymentmethodslistItemModel(
-                gopayOne: ImageConstant.imgLogoBankBri,
-                debitcard: 'Bank Rakyat Indonesia',
-              ),
-            ],
+            paymentmethodslistItemList: [],
           ),
         )) {
-    // Handler for the initial event
+    // Handler untuk event initial
     on<PilihanBankPembayaranInitialEvent>((event, emit) {
-      // Emit the current state to initialize the BLoC with the initial values
       emit(state);
     });
 
-    // Handler for the PaymentmethodslistItemEvent
-    on<PaymentmethodslistItemEvent>((event, emit) {
-      // Update state with the selected payment method index
-      final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
-        selectedPaymentMethodIndex: event.index,
-      );
-      emit(state.copyWith(
-        pilihanBankPembayaranModelObj: updatedModel,
-      ));
+    // Handler untuk fetch data payments
+    on<FetchPaymentsEvent>((event, emit) async {
+      emit(state.copyWith(isLoading: true, error: null));
+      try {
+        // Lakukan request ke API
+        final response = await http.get(Uri.parse(apiUrl));
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+
+          if (responseData['success'] == true) {
+            // Parsing data
+            final List<PaymentmethodslistItemModel> payments =
+                (responseData['data'] as List)
+                    .map((item) => PaymentmethodslistItemModel(
+                          namaPayment: item['nama_pembayaran'],
+                          gambarPayment: item['gambar_pembayaran'],
+                          id: item['id'], // Pastikan 'id' diisi dengan benar
+                        ))
+                    .toList();
+
+            // Update state dengan data baru
+            final updatedModel = state.pilihanBankPembayaranModelObj?.copyWith(
+              paymentmethodslistItemList: payments,
+            );
+
+            emit(state.copyWith(
+              pilihanBankPembayaranModelObj: updatedModel,
+              isLoading: false,
+            ));
+          } else {
+            emit(state.copyWith(
+              isLoading: false,
+              error: "Gagal memuat data payments.",
+            ));
+          }
+        } else {
+          emit(state.copyWith(
+            isLoading: false,
+            error: "Error: ${response.statusCode}",
+          ));
+        }
+      } catch (e) {
+        emit(state.copyWith(
+          isLoading: false,
+          error: e.toString(),
+        ));
+      }
     });
   }
 }

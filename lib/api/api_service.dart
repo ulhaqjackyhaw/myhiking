@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/model.dart';
 import 'package:myhiking/presentation/data_profile_screen/models/res_user.dart';
@@ -319,24 +320,42 @@ class ApiService {
   }
 
   Future<TransactionResponseModel> createTransaction(
-      int pesananId, String metodePembayaran) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/transaksi/store'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'id_pesanan': pesananId, // Kirim sebagai int, tidak perlu toString()
-        'metode_pembayaran': metodePembayaran, // Tetap sebagai String
-      }),
-    );
+    int pesananId,
+    int id,
+  ) async {
+    try {
+      print("Api pesanan id, payment id: $pesananId, $id");
+      final response = await http.post(
+        Uri.parse('$baseUrl/transaksi/store'),
+        headers: {
+          'Content-Type': 'application/json',
+          // Tambahkan header Authorization jika diperlukan:
+          // 'Authorization': 'Bearer your_token_here',
+        },
+        body: json.encode({
+          'id_pesanan': pesananId,
+          'payment_id': id,
+        }),
+      );
 
-    if (response.statusCode == 201) {
-      return TransactionResponseModel.fromJson(json.decode(response.body));
-    } else {
-      print('Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-      throw Exception('Failed to create transaction');
+      if (response.statusCode == 201) {
+        // Parsing respons JSON jika sukses
+        print('Transaction created successfully');
+        print('Response body: ${response.body}');
+        return TransactionResponseModel.fromJson(json.decode(response.body));
+      } else {
+        // Tangani error dari server
+        final errorBody = json.decode(response.body);
+        print('Failed to create transaction');
+        print('Response status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception(
+            'Failed to create transaction: ${errorBody['message'] ?? 'Unknown error'}');
+      }
+    } catch (e) {
+      // Tangani kesalahan lain (misalnya kesalahan jaringan atau parsing)
+      print('Error creating transaction: $e');
+      throw Exception('Failed to create transaction. Please try again.');
     }
   }
 

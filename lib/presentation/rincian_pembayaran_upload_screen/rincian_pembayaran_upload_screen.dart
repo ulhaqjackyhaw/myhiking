@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
+import 'package:intl/intl.dart';
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/bloc/menunggu_verifikasi_bloc.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/menunggu_verifikasi_screen.dart';
@@ -46,10 +47,15 @@ class _RincianPembayaranUploadScreenState
     super.initState();
     // Menambahkan event setelah widget pertama kali dibangun
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context
-          .read<RincianPembayaranUploadBloc>()
-          .add(RincianPembayaranUploadEvent());
+      context.read<RincianPembayaranUploadBloc>().add(
+            FetchRincianPembayaranUploadEvent(
+              transactionId: widget.transaksi.id.toString(),
+              filePath: '',
+              isLoading: true,
+            ),
+          );
     });
+
     _updateTime();
   }
 
@@ -122,7 +128,7 @@ class _RincianPembayaranUploadScreenState
                   SizedBox(height: 12.h), // Kurangi jarak
                   _buildTimerRow(context),
                   SizedBox(height: 18.h), // Kurangi jarak
-                  _buildPaymentDetailsStack(context),
+                  _buildPaymentDetailsStack(context, state),
                   SizedBox(height: 4.h), // Jarak antar elemen
                   GestureDetector(
                     onTap: _pickFile, // Ketika di-tap, pilih file
@@ -365,7 +371,8 @@ class _RincianPembayaranUploadScreenState
   }
 
   /// Section Widget
-  Widget _buildPaymentDetailsStack(BuildContext context) {
+  Widget _buildPaymentDetailsStack(
+      BuildContext context, RincianPembayaranUploadState state) {
     return SizedBox(
       width: double.maxFinite,
       child: Card(
@@ -429,58 +436,70 @@ class _RincianPembayaranUploadScreenState
                     ),
                     SizedBox(height: 12.h),
                     Text(
-                      "Rp ${widget.transaksi.totalBayar}",
+                      "Rp ${NumberFormat('#,##0', 'id_ID').format(state.rincianPembayaranUploadModelObj?.totalBayar.toInt() ?? 0)}",
                       style: theme.textTheme.headlineSmall,
                     ),
 
-                    SizedBox(height: 18.h),
+                    SizedBox(height: 8.h), // Jarak dari elemen sebelumnya
                     Container(
                       width: double.maxFinite,
-                      margin: EdgeInsets.only(right: 4.h),
+                      margin: EdgeInsets.symmetric(
+                          horizontal:
+                              16), // Margin untuk menjaga elemen tidak terlalu ke kiri/kanan
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .center, // Posisikan Row di tengah secara horizontal
                         children: [
                           Container(
                             height: 36.h,
                             width: 54.h,
                             decoration: BoxDecoration(
-                              // color: theme.colorScheme.onPrimary,
                               borderRadius: BorderRadiusStyle.roundedBorder6,
                             ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgLogo,
-                                  height: 36.h,
-                                  width: 38.h,
-                                  radius: BorderRadius.circular(
-                                    8.h,
-                                  ),
-                                ),
-                              ],
+                            child: CustomImageView(
+                              imagePath: state.rincianPembayaranUploadModelObj
+                                      ?.payment.imagePath ??
+                                  '',
+                              height: 36.h,
+                              width: 38.h,
+                              radius: BorderRadius.circular(8.h),
                             ),
                           ),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Gopay".tr,
-                                  style:
-                                      CustomTextStyles.labelLargeBluegray40002,
+                          SizedBox(
+                              width:
+                                  12), // Jarak horizontal antara gambar dan teks
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment
+                                .center, // Posisikan elemen di tengah secara vertikal
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // Rata tengah secara horizontal
+                            children: [
+                              Text(
+                                state.rincianPembayaranUploadModelObj?.payment
+                                        .namaPembayaran ??
+                                    '',
+                                style: CustomTextStyles.labelLargeBluegray40002,
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(
+                                  height: 6
+                                      .h), // Jarak antara nama pembayaran dan nomor pembayaran
+                              Text(
+                                state.rincianPembayaranUploadModelObj?.payment
+                                        .nomorPembayaran ??
+                                    '',
+                                style: CustomTextStyles.titleSmallLightblue900
+                                    .copyWith(
+                                  decoration: TextDecoration.underline,
                                 ),
-                                Text(
-                                  "0887_4553_6753".tr,
-                                  style: CustomTextStyles.titleSmallLightblue900
-                                      .copyWith(
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ],
-                            ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
+
                     SizedBox(height: 6.h),
                     // Text(
                     //   "${rincianPembayaran?.namaGunung ?? 'Gunung Tidak Diketahui'} - ${rincianPembayaran?.namaJalur ?? 'Jalur Tidak Diketahui'}",
@@ -575,7 +594,7 @@ class _RincianPembayaranUploadScreenState
     try {
       // Tampilkan loading state
       bloc.add(FetchRincianPembayaranUploadEvent(
-        idTransaksi: widget.transaksi.id.toString(),
+        transactionId: widget.transaksi.id.toString(),
         filePath: _filePath!,
         isLoading: true,
       ));
@@ -588,7 +607,7 @@ class _RincianPembayaranUploadScreenState
 
       // Sembunyikan loading state
       bloc.add(FetchRincianPembayaranUploadEvent(
-        idTransaksi: widget.transaksi.id.toString(),
+        transactionId: widget.transaksi.id.toString(),
         filePath: _filePath!,
         isLoading: false,
       ));
@@ -607,7 +626,7 @@ class _RincianPembayaranUploadScreenState
     } catch (e) {
       // Sembunyikan loading state dan tampilkan pesan error
       bloc.add(FetchRincianPembayaranUploadEvent(
-        idTransaksi: widget.transaksi.id.toString(),
+        transactionId: widget.transaksi.id.toString(),
         filePath: _filePath!,
         isLoading: false,
         error: e.toString(),
