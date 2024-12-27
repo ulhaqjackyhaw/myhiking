@@ -126,8 +126,8 @@ class _RincianPembayaranUploadScreenState
             color: Colors.white, // Mengatur latar belakang menjadi putih
             child: Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.green.shade900), // Warna hijau untuk indikator loading
+                valueColor: AlwaysStoppedAnimation<Color>(Colors
+                    .green.shade900), // Warna hijau untuk indikator loading
               ),
             ),
           );
@@ -606,53 +606,31 @@ class _RincianPembayaranUploadScreenState
       return;
     }
 
-    final bloc = context.read<RincianPembayaranUploadBloc>();
-
     try {
-      // Tampilkan loading state
-      bloc.add(FetchRincianPembayaranUploadEvent(
-        transactionId: widget.transaksiId.toString(),
-        filePath: _filePath!,
-        isLoading: true,
-      ));
-
       // Panggil API service untuk upload bukti pembayaran
       await apiService.uploadBuktiPembayaran(
         widget.transaksiId.toString(),
         _filePath!,
       );
 
-      // Sembunyikan loading state
-      bloc.add(FetchRincianPembayaranUploadEvent(
-        transactionId: widget.transaksiId.toString(),
-        filePath: _filePath!,
-        isLoading: false,
-      ));
-
-      // Navigasi ke layar berikutnya
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) =>
-                MenungguVerifikasiBloc(apiService: ApiService()),
-            child: MenungguVerifikasiScreen(pesananId: widget.pesananId),
+      // Navigasi langsung ke layar berikutnya tanpa loading
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BlocProvider(
+              create: (context) =>
+                  MenungguVerifikasiBloc(apiService: ApiService()),
+              child: MenungguVerifikasiScreen(pesananId: widget.pesananId),
+            ),
           ),
-        ),
-      );
+        );
+      }
     } catch (e) {
-      // Sembunyikan loading state dan tampilkan pesan error
-      bloc.add(FetchRincianPembayaranUploadEvent(
-        transactionId: widget.transaksiId.toString(),
-        filePath: _filePath!,
-        isLoading: false,
-        error: e.toString(),
-      ));
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content:
-                Text('Gagal mengunggah bukti pembayaran: ${e.toString()}')),
+          content: Text('Gagal mengunggah bukti pembayaran: ${e.toString()}'),
+        ),
       );
     }
   }

@@ -38,8 +38,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
       // Make the API call to fetch route centres
       final response = await http.get(
-        Uri.parse(
-            'http://127.0.0.1:8000/api/gunung/$idGunung/jalur/$jalurId/jalurbooking'),
+        Uri.parse('$baseUrl/gunung/$idGunung/jalur/$jalurId/jalurbooking'),
         headers: {'Authorization': 'Bearer $token'}, // Use the actual token
       );
 

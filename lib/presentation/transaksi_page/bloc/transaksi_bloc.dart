@@ -41,8 +41,7 @@ class TransaksiBloc extends Bloc<TransaksiEvent, TransaksiState> {
     try {
       print("Fetching transactions for userId: $userId");
 
-      final response =
-          await http.get(Uri.parse('http://127.0.0.1:8000/api/transaksi'));
+      final response = await http.get(Uri.parse('$baseUrl/transaksi'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body)['data'] as List;

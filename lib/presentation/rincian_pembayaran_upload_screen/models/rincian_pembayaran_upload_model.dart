@@ -52,7 +52,7 @@ class Payment {
     );
   }
   String get imagePath {
-    const baseUrl = 'http://localhost:8000/storage';
+    const baseUrl = 'http://myhiking.my.id/storage';
     return (gambarPembayaran != null && gambarPembayaran!.isNotEmpty)
         ? '$baseUrl/$gambarPembayaran'
         : '';

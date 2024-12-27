@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:myhiking/api/api_service.dart';
 import '../../../core/app_export.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -49,7 +50,7 @@ class RiwayatBloc extends Bloc<RiwayatEvent, RiwayatState> {
 
   // Function untuk mengambil data dari API dengan userId
   Future<List<RecentclimbinglistItemModel>> fetchRecentClimbingList(String userId) async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/pesanan'));
+    final response = await http.get(Uri.parse('$baseUrl/pesanan'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body)['data'] as List;

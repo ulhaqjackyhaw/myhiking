@@ -23,7 +23,7 @@ class RouteBloc extends Bloc<RouteEvent, RouteState> {
     try {
       // API Request
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/gunung/$idGunung/jalur/$jalurId'),
+        Uri.parse('$baseUrl/gunung/$idGunung/jalur/$jalurId'),
         headers: {'Authorization': 'Bearer your_token'},
       );
       print('Headers: ${response.headers}');
