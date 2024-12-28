@@ -25,7 +25,7 @@ class DetailMountainBloc
 
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/gunung/$idGunung'),
+        Uri.parse('$baseUrl/gunung/$idGunung'),
         headers: {'Authorization': 'Bearer your_token'},
       );
 

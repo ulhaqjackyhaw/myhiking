@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
 import 'dart:convert'; // Add this import
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -197,7 +198,7 @@ class RegistScreen extends StatelessWidget {
   if (password == confirmPassword) {
     // Kirim data ke server
     final response = await http.post(
-      Uri.parse('http://localhost:8000/api/register'),
+      Uri.parse('http://myhiking.my.id/api/register'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

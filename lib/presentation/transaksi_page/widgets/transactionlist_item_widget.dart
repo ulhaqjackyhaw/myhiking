@@ -98,7 +98,7 @@ class TransactionlistItemWidget extends StatelessWidget {
         statusButton = CustomElevatedButton(
           height: 26.h,
           width: 98.h,
-          text: "Check In".tr,
+          text: "Selesai".tr,
           buttonStyle: CustomButtonStyles.outlineTeal,
           buttonTextStyle: CustomTextStyles.titleSmallOnPrimary,
           onPressed: () {

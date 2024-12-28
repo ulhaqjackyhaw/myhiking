@@ -29,7 +29,7 @@ class PaymentmethodslistItemModel extends Equatable {
 
   /// Getter untuk menghasilkan path gambar lengkap.
   String get imagePath {
-    const baseUrl = 'http://localhost:8000/storage';
+    const baseUrl = 'http://myhiking.my.id/storage';
     return (gambarPayment != null && gambarPayment!.isNotEmpty)
         ? '$baseUrl/$gambarPayment'
         : '';

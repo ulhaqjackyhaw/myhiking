@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../presentation/tata_tertib_screen/models/tata_tertib_model.dart';
 
-const String baseUrl = 'http://localhost:8000/api';
+const String baseUrl = 'http://myhiking.my.id/api';
 
 class ApiService {
   Future<String?> getToken() async {
@@ -111,7 +111,7 @@ class ApiService {
       }
       print("Anggota Ids: {$anggotaIds}");
       final response = await http.post(
-        Uri.parse("http://localhost:8000/api/pesanan"),
+        Uri.parse("$baseUrl/pesanan"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ class ApiService {
 
   Future<void> getPesananDetail(int pesananId) async {
     final response = await http.get(
-      Uri.parse('http://localhost:8000/api/pesanan/$pesananId'),
+      Uri.parse('$baseUrl/pesanan/$pesananId'),
       headers: {
         'Authorization': 'Bearer YOUR_TOKEN',
       },
@@ -363,8 +363,8 @@ class ApiService {
       String idTransaksi, String filePath) async {
     try {
       // Endpoint API
-      final url = Uri.parse(
-          'http://127.0.0.1:8000/api/transaksi/update-pembayaran/$idTransaksi');
+      final url =
+          Uri.parse('$baseUrl/transaksi/update-pembayaran/$idTransaksi');
 
       // Buat request multipart
       final request = http.MultipartRequest('POST', url);

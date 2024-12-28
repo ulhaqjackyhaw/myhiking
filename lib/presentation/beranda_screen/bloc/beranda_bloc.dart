@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:myhiking/api/api_service.dart';
 import '../../../core/app_export.dart';
 import '../models/beranda_initial_model.dart';
 import '../models/beranda_model.dart';
@@ -67,7 +68,7 @@ class BerandaBloc extends Bloc<BerandaEvent, BerandaState> {
   // Fungsi untuk mengambil data gunung
   Future<List<HomelistItemModel>> fetchGunungData() async {
     final response =
-        await http.get(Uri.parse('http://localhost:8000/api/gunung'));
+        await http.get(Uri.parse('$baseUrl/gunung'));
 
     if (response.statusCode == 200) {
       List<dynamic> jsonData = json.decode(response.body);

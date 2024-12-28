@@ -37,7 +37,7 @@ class DataProfileBloc extends Bloc<DataProfileEvent, DataProfileState> {
       }
 
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/user-data/${event.userId}'),
+        Uri.parse('$baseUrl/user-data/${event.userId}'),
         headers: {'Authorization': 'Bearer $token'},
       );
 

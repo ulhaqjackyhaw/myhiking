@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_export.dart';
@@ -276,7 +277,7 @@ class LoginScreen extends StatelessWidget {
       final password = passwordController.text;
 
       // Endpoint URL
-      final url = Uri.parse("http://localhost:8000/api/login");
+      final url = Uri.parse("http://myhiking.my.id/api/login");
 
       // Mengirim request ke server
       final response = await http.post(

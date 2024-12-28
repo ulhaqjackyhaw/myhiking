@@ -1,12 +1,12 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    // Flutter Gradle Plugin harus diterapkan setelah plugin Android dan Kotlin.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace = "com.example.myhiking"
+    namespace = "com.example.myhiking" // Pastikan namespace sesuai dengan struktur package Anda.
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,14 +16,13 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = "1.8"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // Pastikan applicationId ini unik untuk aplikasi Anda.
         applicationId = "com.example.myhiking"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // Versi minimum dan target SDK aplikasi Anda.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -32,9 +31,11 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Konfigurasi penandatanganan (signing) untuk build release.
             signingConfig = signingConfigs.debug
+            // Optimasi build release.
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import '../../../api/api_service.dart';
 import '../models/paymentmethodslist_item_model.dart';
 import '../models/pilihan_bank_pembayaran_model.dart';
 
@@ -10,7 +11,7 @@ part 'pilihan_bank_pembayaran_state.dart';
 
 class PilihanBankPembayaranBloc
     extends Bloc<PilihanBankPembayaranEvent, PilihanBankPembayaranState> {
-  final String apiUrl = "http://127.0.0.1:8000/api/payments";
+  final String apiUrl = "$baseUrl/payments";
 
   PilihanBankPembayaranBloc()
       : super(PilihanBankPembayaranState(
