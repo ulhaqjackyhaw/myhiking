@@ -11,6 +11,7 @@ import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
+import 'package:dotted_line/dotted_line.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
@@ -166,37 +167,50 @@ class _TiketScreenState extends State<TiketScreen> {
                                       Align(
                                         alignment: Alignment.center,
                                         child: Container(
-                                          padding: EdgeInsets.all(16
-                                              .h), // Padding di dalam kotak untuk QR code
+                                          padding: EdgeInsets.all(16.h),
                                           decoration: BoxDecoration(
-                                            color: Colors
-                                                .white, // Warna background
-                                            borderRadius: BorderRadius.circular(
-                                                20.h), // Sudut melengkung (circular)
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(20.h),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.grey.withOpacity(
-                                                    0.4), // Warna bayangan
-                                                spreadRadius:
-                                                    4, // Sebar bayangan
-                                                blurRadius:
-                                                    10, // Radius blur bayangan
-                                                offset: Offset(
-                                                    0, 4), // Posisi bayangan
+                                                color: Colors.grey.withOpacity(0.4),
+                                                spreadRadius: 4,
+                                                blurRadius: 10,
+                                                offset: Offset(0, 4),
                                               ),
                                             ],
                                           ),
-                                          child: QrImageView(
-                                            data:
-                                                '${widget.pesananId}', // Data QR code
-                                            size: 150.h, // Ukuran QR code
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min, // Agar row mengambil ukuran minimal
+                                            children: [
+                                              // Logo
+                                              Image.asset(
+                                                'assets/images/myhikinglogo.png', // Sesuaikan dengan path logo Anda
+                                                height: 70.h, // Sesuaikan ukuran logo
+                                                width: 70.h,
+                                              ),
+                                              SizedBox(width: 10.h), // Jarak antara logo dan QR code
+                                              // QR Code
+                                              QrImageView(
+                                                data: '${widget.pesananId}',
+                                                size: 150.h,
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                       SizedBox(height: 14.h),
                                       const SizedBox(
                                         width: double.maxFinite,
-                                        child: Divider(),
+                                        child: DottedLine(
+                                          direction: Axis.horizontal,
+                                          lineLength: double.infinity,
+                                          lineThickness: 1.0,
+                                          dashLength: 4.0,
+                                          dashColor: Colors.grey,
+                                          dashRadius: 0.0,
+                                          dashGapLength: 4.0,
+                                        ),
                                       ),
                                       SizedBox(height: 12.h),
                                       Text(
