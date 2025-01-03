@@ -266,19 +266,20 @@ class LoginScreen extends StatelessWidget {
   //   );
   // }
 
-  /// Navigates to the berandaScreen when the action is triggered.
-  void onTapMasuk(BuildContext context) async {
-    final emailController = context.read<LoginBloc>().state.lockoneController;
-    final passwordController =
-        context.read<LoginBloc>().state.locationoneController;
+/// Navigates to the berandaScreen when the action is triggered.
+void onTapMasuk(BuildContext context) async {
+  final emailController = context.read<LoginBloc>().state.lockoneController;
+  final passwordController =
+      context.read<LoginBloc>().state.locationoneController;
 
-    if (emailController != null && passwordController != null) {
-      final email = emailController.text;
-      final password = passwordController.text;
+  if (emailController != null && passwordController != null) {
+    final email = emailController.text;
+    final password = passwordController.text;
 
-      // Endpoint URL
-      final url = Uri.parse("http://myhiking.my.id/api/login");
+    // Endpoint URL
+    final url = Uri.parse("http://myhiking.my.id/api/login");
 
+    try {
       // Mengirim request ke server
       final response = await http.post(
         url,
@@ -300,31 +301,42 @@ class LoginScreen extends StatelessWidget {
         // Navigate to berandaScreen after successful login
         NavigatorService.pushNamed(AppRoutes.berandaScreen);
       } else {
+        // Jika login gagal, tampilkan pop-up error
         final errorData = jsonDecode(response.body);
-        _showErrorDialog(context, errorData['data'] ?? errorData);
-      }
-    }
-  }
-
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Error"),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text("OK"),
-            ),
-          ],
+        _showErrorDialog(
+          context,
+          errorData['data'] ?? "Login gagal. Silakan cek kembali email dan password Anda.",
         );
-      },
-    );
+      }
+    } catch (e) {
+      // Tangani error yang tidak terduga
+      _showErrorDialog(context, "Terjadi kesalahan. Pastikan Anda terhubung ke internet.");
+    }
+  } else {
+    // Jika input kosong
+    _showErrorDialog(context, "Email dan password tidak boleh kosong.");
   }
+}
+
+void _showErrorDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Login Gagal"),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   /// Navigates to the registScreen when the action is triggered.
   void onTapTxtRegistrasidi(BuildContext context) {

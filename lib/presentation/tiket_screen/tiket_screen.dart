@@ -40,28 +40,40 @@ class TicketDownloader {
   }
 
   static Future<String?> saveTicketToGallery(Uint8List imageBytes) async {
-    try {
-      if (Platform.isAndroid) {
-        final status = await Permission.storage.request();
-        if (!status.isGranted) {
-          throw 'Storage permission not granted';
-        }
+  try {
+    // Periksa izin penyimpanan hanya untuk Android 10 ke bawah
+        print('Checking storage permissions...');
+
+    if (Platform.isAndroid && (await Permission.storage.isDenied)) {
+      final status = await Permission.storage.request();
+      if (!status.isGranted) {
+                print('Storage permission denied.');
+
+        throw 'Storage permission not granted';
       }
-
-      final directory = await getApplicationDocumentsDirectory();
-      final String fileName =
-          'ticket_${DateTime.now().millisecondsSinceEpoch}.png';
-      final String filePath = '${directory.path}/$fileName';
-
-      final File file = File(filePath);
-      await file.writeAsBytes(imageBytes);
-
-      return filePath;
-    } catch (e) {
-      print('Error saving ticket: $e');
-      return null;
     }
+
+    // Gunakan direktori penyimpanan aplikasi
+    final directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() // Direkomendasikan untuk Android 10 ke bawah
+        : await getApplicationDocumentsDirectory(); // Untuk iOS dan Scoped Storage
+
+    if (directory == null) throw 'External storage directory not found';
+
+    print('Saving ticket to: ${directory.path}');
+    final String fileName = 'ticket_${DateTime.now().millisecondsSinceEpoch}.png';
+    final String filePath = '${directory.path}/$fileName';
+
+    final File file = File(filePath);
+    await file.writeAsBytes(imageBytes);
+
+    print('File saved at: $filePath');
+    return filePath;
+  } catch (e) {
+    print('Error saving ticket: $e');
+    return null;
   }
+}
 
   static Future<bool> downloadTicket() async {
     try {
