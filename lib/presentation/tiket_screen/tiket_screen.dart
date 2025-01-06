@@ -54,7 +54,7 @@ class _TiketScreenState extends State<TiketScreen> {
                 duration: Duration(seconds: 3),
               ),
             );
-            await openAppSettings();
+            await Permission.manageExternalStorage.request();
             return false;
           }
         }
