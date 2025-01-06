@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:equatable/equatable.dart';
 import 'package:myhiking/models/model.dart';
 import '../../../core/app_export.dart';
-import '../models/route_model.dart';
-import '../models/routelistsection_item_model.dart';
 import 'package:myhiking/api/api_service.dart';
 
 part 'route_event.dart';

@@ -12,7 +12,6 @@ import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'bloc/pilihan_bank_pembayaran_bloc.dart';
 import 'models/paymentmethodslist_item_model.dart';
-import 'models/pilihan_bank_pembayaran_model.dart';
 import 'widgets/paymentmethodslist_item_widget.dart';
 
 class PilihanBankPembayaranScreen extends StatefulWidget {

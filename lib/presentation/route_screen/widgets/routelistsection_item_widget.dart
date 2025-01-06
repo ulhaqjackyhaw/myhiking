@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myhiking/presentation/route_screen/models/route_model.dart';
 import '../../../core/app_export.dart';
-import '../models/routelistsection_item_model.dart';
 // ignore_for_file: must_be_immutable
 class RoutelistsectionItemWidget extends StatelessWidget {
   final RouteModel routeModel; // Model data untuk item
@@ -32,15 +31,6 @@ class RoutelistsectionItemWidget extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Menampilkan gambar basecamp jika ada
-            // CustomImageView(
-            //   imagePath: routeModel.basecamp.isNotEmpty
-            //       ? ImageConstant.imagePath
-            //       : ImageConstant.imgLinkedin,
-            //   height: 40.h,
-            //   width: 40.h,
-            //   fit: BoxFit.cover,
-            // ),
             SizedBox(height: 8.h),
             // Menampilkan nama jalur
             Text(

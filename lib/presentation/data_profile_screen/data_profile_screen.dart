@@ -3,14 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myhiking/api/api_service.dart';
-import 'package:myhiking/presentation/beranda_screen/beranda_initial_page.dart';
-import 'package:myhiking/presentation/profile_screen/profile_screen.dart';
-import 'package:myhiking/presentation/riwayat_page/riwayat_page.dart';
 import '../../core/app_export.dart';
-import '../../widgets/custom_bottom_bar.dart';
-import '../../widgets/custom_text_form_field.dart';
 import 'bloc/data_profile_bloc.dart';
-import 'models/data_profile_model.dart';
 import 'package:myhiking/widgets/custom_elevated_button.dart';
 import '../../theme/custom_button_style.dart';
 import 'package:file_picker/file_picker.dart';
@@ -742,16 +736,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label text untuk input NIK
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_nik".tr, // Menggunakan localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.nikInputController,
@@ -806,16 +790,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label text untuk input Nomor Telepon
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_nomor_telepon".tr, // Menggunakan localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.phoneNumberInputController,
@@ -872,16 +846,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label text untuk input Nomor Kontak Darurat
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_kontak_darurat".tr, // Menggunakan localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.emergencyContactInputController,
@@ -938,16 +902,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label text untuk input alamat
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_alamat".tr, // Menggunakan localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.addressInputController,
@@ -1005,16 +959,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Label untuk email
-              // Uncomment jika diperlukan
-              // Text(
-              //   "lbl_email".tr, // Localization
-              //   maxLines: 1,
-              //   overflow: TextOverflow.ellipsis,
-              //   style: CustomTextStyles.bodyMediumGray50004.copyWith(
-              //     height: 1.40,
-              //   ),
-              // ),
               SizedBox(height: 8.h),
               TextField(
                 controller: state.emailInputController,
@@ -1175,12 +1119,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
   Widget _buildBottomNavigation(BuildContext context) {
     return const SizedBox(
       width: double.maxFinite,
-      // child: CustomBottomBar(
-      //   onChanged: (BottomBarEnum type) {
-      //     Navigator.pushNamed(
-      //         navigatorKey.currentContext!, getCurrentRoute(type));
-      //   },
-      // ),
     );
   }
 }

@@ -5,24 +5,13 @@ import 'package:myhiking/presentation/data_profile_screen/data_profile_screen.da
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../widgets/custom_elevated_button.dart';
-import 'bloc/pop_up_lengkapi_data_diri_bloc.dart';
-import 'models/pop_up_lengkapi_data_diri_model.dart'; // ignore_for_file: must_be
+
+// ignore_for_file: must_be
 
 class PopUpLengkapiDataDiriDialog extends StatefulWidget {
   final int userId;
 
   const PopUpLengkapiDataDiriDialog({super.key, required this.userId});
-
-  // static Widget builder(BuildContext context, {required int userId}) {
-  //   return BlocProvider<PopUpLengkapiDataDiriBloc>(
-  //     create: (context) => PopUpLengkapiDataDiriBloc(
-  //       PopUpLengkapiDataDiriState(
-  //         const PopUpLengkapiDataDiriModel(),
-  //       ),
-  //     )..add(PopUpLengkapiDataDiriInitialEvent()),
-  //     child: PopUpLengkapiDataDiriDialog(userId: userId),
-  //   );
-  // }
 
   @override
   State<PopUpLengkapiDataDiriDialog> createState() =>

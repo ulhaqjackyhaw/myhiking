@@ -53,7 +53,7 @@ class Payment {
   }
   String get imagePath {
     const baseUrl = 'http://myhiking.my.id/storage';
-    return (gambarPembayaran != null && gambarPembayaran!.isNotEmpty)
+    return (gambarPembayaran != null && gambarPembayaran.isNotEmpty)
         ? '$baseUrl/$gambarPembayaran'
         : '';
   }

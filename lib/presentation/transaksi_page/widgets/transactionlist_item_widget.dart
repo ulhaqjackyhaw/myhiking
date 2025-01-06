@@ -9,8 +9,6 @@ import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import '../models/transactionlist_item_model.dart';
-import '../../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
-
 class TransactionlistItemWidget extends StatelessWidget {
   TransactionlistItemWidget(
     // this.transaksi,

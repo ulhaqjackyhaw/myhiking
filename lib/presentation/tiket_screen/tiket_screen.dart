@@ -4,8 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:myhiking/presentation/tiket_screen/models/tiket_model.dart';
-import 'package:myhiking/widgets/app_bar/appbar_leading_iconbutton.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +12,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import 'package:dotted_line/dotted_line.dart';
-import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'bloc/tiket_bloc.dart';
 

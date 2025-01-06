@@ -5,7 +5,6 @@ import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/bloc/menunggu_verifikasi_bloc.dart';
 import 'package:myhiking/presentation/menunggu_verifikasi_screen/menunggu_verifikasi_screen.dart';
 import '../../api/api_service.dart';
@@ -518,10 +517,6 @@ class _RincianPembayaranUploadScreenState
                     ),
 
                     SizedBox(height: 6.h),
-                    // Text(
-                    //   "${rincianPembayaran?.namaGunung ?? 'Gunung Tidak Diketahui'} - ${rincianPembayaran?.namaJalur ?? 'Jalur Tidak Diketahui'}",
-                    //   style: CustomTextStyles.labelMediumPrimary10,
-                    // ),
                   ],
                 ),
               ),

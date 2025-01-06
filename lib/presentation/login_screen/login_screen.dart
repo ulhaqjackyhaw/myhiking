@@ -1,8 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:myhiking/api/api_service.dart';
-import 'package:myhiking/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -258,13 +256,6 @@ class LoginScreen extends StatelessWidget {
       AppRoutes.resetKirimEmailScreen,
     );
   }
-
-  // /// Navigates to the berandaScreen when the action is triggered.
-  // void onTapMasuk(BuildContext context) {
-  //   NavigatorService.pushNamed(
-  //     AppRoutes.berandaScreen,
-  //   );
-  // }
 
 /// Navigates to the berandaScreen when the action is triggered.
 void onTapMasuk(BuildContext context) async {

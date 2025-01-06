@@ -7,7 +7,6 @@ import 'package:myhiking/api/api_service.dart';
 import 'package:myhiking/models/bookingModel.dart';
 import 'package:myhiking/models/jalurmodel.dart';
 import '../../../core/app_export.dart';
-import '../models/booking_model.dart';
 
 part 'booking_event.dart';
 part 'booking_state.dart';
@@ -21,7 +20,6 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<UpdateBookingDateEvent>(_onUpdateBookingDate);
     on<CreateBookingEvent>(_onCreateBooking); // Add the handler here
     on<UpdateMemberIdField>(_onUpdateAnggotaID);
-    // on<ChangeDateEvent>(_onChangeDate);
   }
 
   // Method to fetch route centres
@@ -80,9 +78,6 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
         event.modelBooking.tanggalNaik.toIso8601String(),
         event.modelBooking.tanggalTurun.toIso8601String(),
         event.modelBooking.totalHargaTiket, // Explicitly convert to double
-        // .map((price) => price.toString())
-        // .join(", "),
-        // event.modelBooking.anggotaIds
       );
 
       if (response != null) {
@@ -132,25 +127,4 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       ));
     }
   }
-
-  // @override
-  // Stream<BookingState> mapEventToState(BookingEvent event) async* {
-  //   if (event is UpdateBookingDateEvent) {
-  //     yield state.copyWith(
-  //       bookingDateFieldController:
-  //           TextEditingController(text: event.formattedDate),
-  //     );
-  //   }
-  // }
-
-  // Handle date change event
-  // Future<void> _onChangeDate(
-  //     ChangeDateEvent event, Emitter<BookingState> emit) async {
-  //   // Copy the updated date
-  //   emit(state.copyWith(
-  //     bookingDateFieldController: TextEditingController(
-  //       text: event.date.toIso8601String(),
-  //     ),
-  //   ));
-  // }
 }

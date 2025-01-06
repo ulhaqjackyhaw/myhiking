@@ -40,9 +40,6 @@ class TransactionModel extends Equatable {
   final String? jalur;
   final String? userId;
 
-  // @override
-  // List<Object?> get props => [id, pesananId, paymentId, status, waktuPembayaran, gunung, jalur, userId];
-
   TransactionModel copyWith({
     int? id,
     int? pesananId,

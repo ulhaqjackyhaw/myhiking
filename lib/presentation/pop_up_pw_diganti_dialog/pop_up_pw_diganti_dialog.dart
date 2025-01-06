@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
-import '../../presentation/login_screen/login_screen.dart';
 
 class PopUpPwDigantiDialog extends StatelessWidget {
   const PopUpPwDigantiDialog({super.key});

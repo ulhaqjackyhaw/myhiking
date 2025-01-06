@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myhiking/presentation/pop_up_data_diri_lengkap_dialog/pop_up_data_diri_lengkap_dialog.dart';
 import '../../core/app_export.dart';
-import '../pop_up_checkout_dialog/pop_up_checkout_dialog.dart';
-
-import '../pop_up_lengkapi_data_diri_dialog/pop_up_lengkapi_data_diri_dialog.dart';
 import '../pop_up_pw_diganti_dialog/pop_up_pw_diganti_dialog.dart';
 import '../ubahpw_dialog/ubahpw_dialog.dart';
 import 'bloc/app_navigation_bloc.dart';
@@ -126,12 +123,6 @@ class AppNavigationScreen extends StatelessWidget {
                               onTapScreenTitle: () => onTapDialogTitle(context,
                                   PopUpPwDigantiDialog.builder(context)),
                             ),
-                            // _buildScreenTitle(
-                            //   context,
-                            //   screenTitle: "pop up lengkapi data diri - Dialog",
-                            //   onTapScreenTitle: () => onTapDialogTitle(context,
-                            //       PopUpLengkapiDataDiriDialog.builder(context)),
-                            // ),
                             _buildScreenTitle(
                               context,
                               screenTitle: "BOOKING",
@@ -222,12 +213,6 @@ class AppNavigationScreen extends StatelessWidget {
                               onTapScreenTitle: () => onTapDialogTitle(context,
                                   PopUpDataDiriLengkapDialog.builder(context)),
                             ),
-                            // _buildScreenTitle(
-                            //   context,
-                            //   screenTitle: "pop up checkout - Dialog",
-                            //   onTapScreenTitle: () => onTapDialogTitle(context,
-                            //       PopUpCheckoutDialog.builder(context)),
-                            // ),
                             _buildScreenTitle(
                               context,
                               screenTitle: "transaksi page",

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_search_view.dart';
-import '../pop_up_lengkapi_data_diri_dialog/pop_up_lengkapi_data_diri_dialog.dart';
 import 'bloc/beranda_bloc.dart';
 import 'models/beranda_initial_model.dart';
 import 'models/homelist_item_model.dart';
@@ -175,23 +174,4 @@ class BerandaInitialPageState extends State<BerandaInitialPage> {
       ),
     );
   }
-
-  /// Displays a dialog with the [PopUpLengkapiDataDiriDialog] content.
-  // onTapTxtIdCounter(BuildContext context) {
-  //   showDialog(
-  //     context: NavigatorService.navigatorKey.currentContext!,
-  //     builder: (_) => AlertDialog(
-  //       content: Padding(
-  //         padding: const EdgeInsets.all(16.0),
-  //         child: PopUpLengkapiDataDiriDialog.builder(
-  //           NavigatorService.navigatorKey.currentContext!,
-  //         ),
-  //       ),
-  //       backgroundColor: Colors.transparent,
-  //       contentPadding: EdgeInsets.zero,
-  //       insetPadding: const EdgeInsets.symmetric(
-  //           horizontal: 20.0, vertical: 24.0), // Margin dari tepi layar
-  //     ),
-  //   );
-  // }
 }

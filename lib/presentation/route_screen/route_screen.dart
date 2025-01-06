@@ -34,10 +34,6 @@ class _RouteScreenState extends State<RouteScreen> {
   @override
   void initState() {
     super.initState();
-    // Memicu event untuk mengambil data saat screen diinisialisasi
-    // context
-    //     .read<DetailMountainBloc>()
-    //     .add(DetailMountainInitialEvent(widget.idGunung));
     _getUser();
   }
 

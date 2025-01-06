@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import 'bloc/tata_tertib_bloc.dart';
-import 'models/tata_tertib_model.dart';
 
 class TataTertibScreen extends StatefulWidget {
   final int? jalurId;

@@ -14,13 +14,11 @@ class HomelistItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Membuat URL dasar untuk gambar
-    // String baseUrl =
-    //     'http://localhost:8000/storage/images/'; // Atur URL dasar yang benar di sini
+
     String imageUrl = (homelistItemModelObj.gambar ??
         ''); // Menggabungkan base URL dengan nama gambar
 
-    // print(homelistItemModelObj);
+
 
     return Card(
       color: Colors.grey[100],
@@ -82,7 +80,7 @@ class HomelistItemWidget extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(left: 4.h),
               child: Text(
-                homelistItemModelObj?.province?.name ??
+                homelistItemModelObj.province?.name ??
                     'Provinsi Tidak Tersedia',
                 style: CustomTextStyles.bodyMediumGray600,
               ),

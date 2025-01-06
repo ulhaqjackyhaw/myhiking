@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 // Model untuk data gunung
 class HomelistItemModel {
   int? id;
