@@ -17,79 +17,6 @@ import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'bloc/tiket_bloc.dart';
-import 'models/tiket_model.dart';
-
-// Ticket Downloader Class
-class TicketDownloader {
-  static final GlobalKey _globalKey = GlobalKey();
-
-  static GlobalKey get globalKey => _globalKey;
-
-  static Future<Uint8List?> captureTicketWidget() async {
-    try {
-      RenderRepaintBoundary boundary = _globalKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      return byteData?.buffer.asUint8List();
-    } catch (e) {
-      print('Error capturing widget: $e');
-      return null;
-    }
-  }
-
-  static Future<String?> saveTicketToGallery(Uint8List imageBytes) async {
-  try {
-    // Periksa izin penyimpanan hanya untuk Android 10 ke bawah
-        print('Checking storage permissions...');
-
-    if (Platform.isAndroid && (await Permission.storage.isDenied)) {
-      final status = await Permission.storage.request();
-      if (!status.isGranted) {
-                print('Storage permission denied.');
-
-        throw 'Storage permission not granted';
-      }
-    }
-
-    // Gunakan direktori penyimpanan aplikasi
-    final directory = Platform.isAndroid
-        ? await getExternalStorageDirectory() // Direkomendasikan untuk Android 10 ke bawah
-        : await getApplicationDocumentsDirectory(); // Untuk iOS dan Scoped Storage
-
-    if (directory == null) throw 'External storage directory not found';
-
-    print('Saving ticket to: ${directory.path}');
-    final String fileName = 'ticket_${DateTime.now().millisecondsSinceEpoch}.png';
-    final String filePath = '${directory.path}/$fileName';
-
-    final File file = File(filePath);
-    await file.writeAsBytes(imageBytes);
-
-    print('File saved at: $filePath');
-    return filePath;
-  } catch (e) {
-    print('Error saving ticket: $e');
-    return null;
-  }
-}
-
-  static Future<bool> downloadTicket() async {
-    try {
-      final imageBytes = await captureTicketWidget();
-      if (imageBytes == null) throw 'Failed to capture widget';
-
-      final filePath = await saveTicketToGallery(imageBytes);
-      if (filePath == null) throw 'Failed to save image';
-
-      return true;
-    } catch (e) {
-      print('Error downloading ticket: $e');
-      return false;
-    }
-  }
-}
 
 // Main Ticket Screen
 class TiketScreen extends StatefulWidget {
@@ -110,6 +37,70 @@ class TiketScreen extends StatefulWidget {
 }
 
 class _TiketScreenState extends State<TiketScreen> {
+  static final GlobalKey _globalKey = GlobalKey();
+
+  Future<bool> downloadTicket() async {
+    try {
+      if (Platform.isAndroid) {
+        var status = await Permission.manageExternalStorage.status;
+        if (status.isDenied) {
+          status = await Permission.manageExternalStorage.request();
+          if (status.isDenied) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'Silakan berikan izin penyimpanan di pengaturan aplikasi'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 3),
+              ),
+            );
+            await openAppSettings();
+            return false;
+          }
+        }
+      }
+
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List? imageBytes = byteData?.buffer.asUint8List();
+
+      if (imageBytes == null) throw 'Failed to capture widget';
+
+      final directory = (await getDownloadsDirectory())?.path;
+      if (directory == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Gagal menemukan direktori Downloads'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return false;
+      }
+
+      final filePath = '$directory/tiket.png';
+      await File(filePath).writeAsBytes(imageBytes);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Bukti booking berhasil diunduh: $filePath'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal mengunduh bukti booking: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TiketBloc, TiketState>(
@@ -129,208 +120,234 @@ class _TiketScreenState extends State<TiketScreen> {
 
                   // Konten yang bisa digulir
                   SingleChildScrollView(
-                    key: TicketDownloader.globalKey,
-                    child: Container(
-                      // Menghapus Card dan menggunakan Container langsung
-                      child: Column(
-                        children: [
-                          SizedBox(height: 100.h),
-                          // Memberi jarak untuk konten
-                          Container(
-                            width: double.maxFinite,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20.h,
-                              vertical: 20.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              borderRadius: BorderRadiusStyle.roundedBorder20,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: appTheme.gray40019,
-                                  spreadRadius: 2.h,
-                                  blurRadius: 2.h,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(height: 4.h),
-                                Container(
-                                  width: double.maxFinite,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 18.h,
-                                    vertical: 20.h,
+                    child: RepaintBoundary(
+                      key: _globalKey,
+                      child: Container(
+                        // Menghapus Card dan menggunakan Container langsung
+                        child: Column(
+                          children: [
+                            SizedBox(height: 100.h),
+                            // Memberi jarak untuk konten
+                            Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.h,
+                                vertical: 20.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.primary,
+                                borderRadius: BorderRadiusStyle.roundedBorder20,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: appTheme.gray40019,
+                                    spreadRadius: 2.h,
+                                    blurRadius: 2.h,
+                                    offset: const Offset(0, 4),
                                   ),
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: fs.Svg(
-                                        ImageConstant.imgETickets,
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(height: 4.h),
+                                  Container(
+                                    width: double.maxFinite,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 18.h,
+                                      vertical: 20.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: fs.Svg(
+                                          ImageConstant.imgETickets,
+                                        ),
+                                        fit: BoxFit.fill,
                                       ),
-                                      fit: BoxFit.fill,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.center,
+                                          child: Container(
+                                            padding: EdgeInsets.all(16.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(20.h),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey
+                                                      .withOpacity(0.4),
+                                                  spreadRadius: 4,
+                                                  blurRadius: 10,
+                                                  offset: Offset(0, 4),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize
+                                                  .min, // Agar row mengambil ukuran minimal
+                                              children: [
+                                                // Logo
+                                                Image.asset(
+                                                  'assets/images/myhikinglogo.png', // Sesuaikan dengan path logo Anda
+                                                  height: 70
+                                                      .h, // Sesuaikan ukuran logo
+                                                  width: 70.h,
+                                                ),
+                                                SizedBox(
+                                                    width: 10
+                                                        .h), // Jarak antara logo dan QR code
+                                                // QR Code
+                                                QrImageView(
+                                                  data: '${widget.pesananId}',
+                                                  size: 150.h,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: 14.h),
+                                        const SizedBox(
+                                          width: double.maxFinite,
+                                          child: DottedLine(
+                                            direction: Axis.horizontal,
+                                            lineLength: double.infinity,
+                                            lineThickness: 1.0,
+                                            dashLength: 4.0,
+                                            dashColor: Colors.grey,
+                                            dashRadius: 0.0,
+                                            dashGapLength: 4.0,
+                                          ),
+                                        ),
+                                        SizedBox(height: 12.h),
+                                        Text(
+                                          "ID Pemesanan",
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                        SizedBox(height: 4.h),
+                                        Text('${tiket.id}'.tr,
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: CustomTextStyles
+                                                .titleMediumBlack900),
+                                        SizedBox(height: 14.h),
+                                        Text(
+                                          "lbl_nama_ketua".tr,
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                        SizedBox(height: 4.h),
+                                        Text('${tiket.pemesanName}'.tr,
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: CustomTextStyles
+                                                .titleMediumBlack900),
+                                        SizedBox(height: 14.h),
+                                        Text("lbl_booking2".tr,
+                                            style: theme.textTheme.bodyLarge),
+                                        SizedBox(height: 4.h),
+                                        Text(
+                                            '${tiket.gunungName} via ${tiket.jalurName}'
+                                                .tr,
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: CustomTextStyles
+                                                .titleMediumBlack900),
+                                        SizedBox(height: 12.h),
+                                        Text(
+                                          "lbl_tanggal".tr,
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                        SizedBox(height: 4.h),
+                                        Text('${tiket.tanggalNaik}'.tr,
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: CustomTextStyles
+                                                .titleMediumBlack900),
+                                        SizedBox(height: 12.h),
+                                        Text(
+                                          "lbl_anggota".tr,
+                                          style: theme.textTheme.bodyLarge,
+                                        ),
+                                        SizedBox(height: 2.h),
+                                        for (var anggota in tiket.anggota)
+                                          Text(
+                                            '- ${anggota.name}'.tr,
+                                            maxLines: 4,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: CustomTextStyles
+                                                .titleSmallBlack900_1
+                                                .copyWith(
+                                              height: 1.71,
+                                            ),
+                                          ),
+                                        SizedBox(height: 12.h),
+                                        Text(
+                                          "msg_ticket_yang_sudah".tr,
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                        SizedBox(height: 6.h),
+                                        const SizedBox(
+                                          width: double.maxFinite,
+                                          child: Divider(),
+                                        ),
+                                        SizedBox(height: 12.h),
+                                        CustomElevatedButton(
+                                          height: 50.h,
+                                          text: "Download Tiket".tr,
+                                          buttonStyle: CustomButtonStyles
+                                              .outlineBlueGrayC,
+                                          buttonTextStyle: CustomTextStyles
+                                              .titleMediumManropeOnPrimary,
+                                          onPressed: () async {
+                                            WidgetsBinding.instance
+                                                .addPostFrameCallback(
+                                                    (_) async {
+                                              try {
+                                                final success =
+                                                    await downloadTicket();
+                                                if (success) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                        content: Text(
+                                                            'Tiket berhasil diunduh')),
+                                                  );
+                                                } else {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                        content: Text(
+                                                            'Gagal mengunduh tiket')),
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                print('Error: $e');
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                      content:
+                                                          Text('Error: $e')),
+                                                );
+                                              }
+                                            });
+                                          },
+                                          // icon: const Icon(
+                                          //   Icons.file_download_outlined,
+                                          //   color: Colors.white,
+                                          // ),
+                                        ),
+                                        SizedBox(height: 6.h),
+                                      ],
                                     ),
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.center,
-                                        child: Container(
-                                          padding: EdgeInsets.all(16.h),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20.h),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.withOpacity(0.4),
-                                                spreadRadius: 4,
-                                                blurRadius: 10,
-                                                offset: Offset(0, 4),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min, // Agar row mengambil ukuran minimal
-                                            children: [
-                                              // Logo
-                                              Image.asset(
-                                                'assets/images/myhikinglogo.png', // Sesuaikan dengan path logo Anda
-                                                height: 70.h, // Sesuaikan ukuran logo
-                                                width: 70.h,
-                                              ),
-                                              SizedBox(width: 10.h), // Jarak antara logo dan QR code
-                                              // QR Code
-                                              QrImageView(
-                                                data: '${widget.pesananId}',
-                                                size: 150.h,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 14.h),
-                                      const SizedBox(
-                                        width: double.maxFinite,
-                                        child: DottedLine(
-                                          direction: Axis.horizontal,
-                                          lineLength: double.infinity,
-                                          lineThickness: 1.0,
-                                          dashLength: 4.0,
-                                          dashColor: Colors.grey,
-                                          dashRadius: 0.0,
-                                          dashGapLength: 4.0,
-                                        ),
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      Text(
-                                        "ID Pemesanan",
-                                        style: theme.textTheme.bodyLarge,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text('${tiket.id}'.tr,
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: CustomTextStyles
-                                              .titleMediumBlack900),
-                                      SizedBox(height: 14.h),
-                                      Text(
-                                        "lbl_nama_ketua".tr,
-                                        style: theme.textTheme.bodyLarge,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text('${tiket.pemesanName}'.tr,
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: CustomTextStyles
-                                              .titleMediumBlack900),
-                                      SizedBox(height: 14.h),
-                                      Text("lbl_booking2".tr,
-                                          style: theme.textTheme.bodyLarge),
-                                      SizedBox(height: 4.h),
-                                      Text(
-                                          '${tiket.gunungName} via ${tiket.jalurName}'
-                                              .tr,
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: CustomTextStyles
-                                              .titleMediumBlack900),
-                                      SizedBox(height: 12.h),
-                                      Text(
-                                        "lbl_tanggal".tr,
-                                        style: theme.textTheme.bodyLarge,
-                                      ),
-                                      SizedBox(height: 4.h),
-                                      Text('${tiket.tanggalNaik}'.tr,
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: CustomTextStyles
-                                              .titleMediumBlack900),
-                                      SizedBox(height: 12.h),
-                                      Text(
-                                        "lbl_anggota".tr,
-                                        style: theme.textTheme.bodyLarge,
-                                      ),
-                                      SizedBox(height: 2.h),
-                                      for (var anggota in tiket.anggota)
-                                        Text(
-                                          '- ${anggota.name}'.tr,
-                                          maxLines: 4,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: CustomTextStyles
-                                              .titleSmallBlack900_1
-                                              .copyWith(
-                                            height: 1.71,
-                                          ),
-                                        ),
-                                      SizedBox(height: 12.h),
-                                      Text(
-                                        "msg_ticket_yang_sudah".tr,
-                                        style: theme.textTheme.bodySmall,
-                                      ),
-                                      SizedBox(height: 6.h),
-                                      const SizedBox(
-                                        width: double.maxFinite,
-                                        child: Divider(),
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      CustomElevatedButton(
-                                        height: 50.h,
-                                        text: "Download Tiket".tr,
-                                        buttonStyle:
-                                            CustomButtonStyles.outlineBlueGrayC,
-                                        buttonTextStyle: CustomTextStyles
-                                            .titleMediumManropeOnPrimary,
-                                        onPressed: () async {
-                                          final success = await TicketDownloader
-                                              .downloadTicket();
-                                          if (success) {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content: Text(
-                                                      'Tiket berhasil diunduh')),
-                                            );
-                                          } else {
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content: Text(
-                                                      'Gagal mengunduh tiket')),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(height: 6.h),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
