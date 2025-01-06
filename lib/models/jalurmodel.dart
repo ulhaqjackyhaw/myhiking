@@ -1,11 +1,3 @@
-import 'dart:convert';
-import 'package:decimal/decimal.dart';
-
-// ResJalurModel resJalurModelFromJson(String str) =>
-//     ResJalurModel.fromJson(json.decode(str));
-
-// String resJalurModelToJson(ResJalurModel data) => json.encode(data.toJson());
-
 class ResJalurModel {
   final bool status;
   final String message;

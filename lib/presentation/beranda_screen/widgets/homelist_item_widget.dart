@@ -22,80 +22,74 @@ class HomelistItemWidget extends StatelessWidget {
 
     // print(homelistItemModelObj);
 
-    return Container(
-      width: double.maxFinite,
-      padding: EdgeInsets.all(10.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadiusStyle.roundedBorder20,
+    return Card(
+      color: Colors.grey[100],
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 4.h),
-          SizedBox(
-            height: 172.h,
-            width: double.maxFinite,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 12.h,
-                      top: 8.h,
-                    ),
-                    child: Text(
-                      homelistItemModelObj.namaGunung!,
-                      style: CustomTextStyles.bodySmallInterGray40002,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    // if (homelistItemModelObj.namaGunung! == "Gunung Slamet") {
-                    //   onTapImgSlamet(context);
-                    // }
-                    onTapImgGunung(context, homelistItemModelObj);
-                  },
-                  child: Image.network(
-                    imageUrl,
-                    height: 172.h,
-                    width: double.maxFinite,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      print('Error loading image: $error');
-                      return Container(
+      child: Container(
+        width: double.maxFinite,
+        padding: EdgeInsets.all(10.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 4.h),
+            SizedBox(
+              height: 172.h,
+              width: double.maxFinite,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      onTapImgGunung(context, homelistItemModelObj);
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        imageUrl,
                         height: 172.h,
                         width: double.maxFinite,
-                        color: Colors.grey,
-                        child: const Center(
-                          child: Text('Gambar tidak tersedia'),
-                        ),
-                      );
-                    },
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 172.h,
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Center(
+                              child: Text('Gambar tidak tersedia'),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 14.h),
-          Padding(
-            padding: EdgeInsets.only(left: 4.h),
-            child: Text(
-              homelistItemModelObj.namaGunung!,
-              style: theme.textTheme.titleMedium,
+            SizedBox(height: 14.h),
+            Padding(
+              padding: EdgeInsets.only(left: 4.h),
+              child: Text(
+                homelistItemModelObj.namaGunung!,
+                style: theme.textTheme.titleMedium,
+              ),
             ),
-          ),
-          // Menampilkan nama provinsi atau pesan error
-          Padding(
-            padding: EdgeInsets.only(left: 4.h),
-            child: Text(
-              homelistItemModelObj?.province?.name ?? 'Provinsi Tidak Tersedia',
-              style: CustomTextStyles.bodyMediumGray600,
+            Padding(
+              padding: EdgeInsets.only(left: 4.h),
+              child: Text(
+                homelistItemModelObj?.province?.name ??
+                    'Provinsi Tidak Tersedia',
+                style: CustomTextStyles.bodyMediumGray600,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: 4.h),
+          ],
+        ),
       ),
     );
   }

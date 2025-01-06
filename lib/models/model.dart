@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ResRouteCentres {
   final bool status;
   final String message;

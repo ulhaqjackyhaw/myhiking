@@ -78,7 +78,7 @@ class _TiketScreenState extends State<TiketScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Bukti booking berhasil diunduh: $filePath'),
+          content: Text('Bukti booking berhasil diunduh'),
           backgroundColor: Colors.green,
         ),
       );

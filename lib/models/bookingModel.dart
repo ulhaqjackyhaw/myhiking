@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:decimal/decimal.dart';
-import 'package:equatable/equatable.dart';
 
 Booking bookingFromJson(String str) => Booking.fromJson(json.decode(str));
 
@@ -45,8 +43,6 @@ class ModelBooking {
   final String createdAt;
   final String updatedAt;
   final List<Anggota>? anggotaIds;
-  // final GunungBooking? gunung; // Made nullable
-  // final JalurBooking? jalur; // Made nullable
 
   ModelBooking({
     required this.id,
