@@ -2,6 +2,8 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:myhiking/presentation/tiket_screen/models/tiket_model.dart';
 import 'package:myhiking/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -39,7 +41,7 @@ class TiketScreen extends StatefulWidget {
 class _TiketScreenState extends State<TiketScreen> {
   static final GlobalKey _globalKey = GlobalKey();
 
-  Future<bool> downloadTicket() async {
+  Future<bool> downloadTicket(TiketModel tiketModel) async {
     try {
       if (Platform.isAndroid) {
         var status = await Permission.manageExternalStorage.status;
@@ -69,18 +71,9 @@ class _TiketScreenState extends State<TiketScreen> {
 
       if (imageBytes == null) throw 'Failed to capture widget';
 
-      final directory = (await getDownloadsDirectory())?.path;
-      if (directory == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Gagal menemukan direktori Downloads'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return false;
-      }
-
-      final filePath = '$directory/tiket.png';
+      final now = DateFormat('ddMMyyyy').format(DateTime.now());
+      final filePath =
+          '/storage/emulated/0/DCIM/Screenshots/tiket_${tiketModel.id}_$now.png';
       await File(filePath).writeAsBytes(imageBytes);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -307,7 +300,8 @@ class _TiketScreenState extends State<TiketScreen> {
                                                     (_) async {
                                               try {
                                                 final success =
-                                                    await downloadTicket();
+                                                    await downloadTicket(
+                                                        state.tiketModel);
                                                 if (success) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
