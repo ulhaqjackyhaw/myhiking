@@ -564,24 +564,27 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   void onTapBookingDateInput(BuildContext context) async {
-    // Mendapatkan tanggal saat ini
+    // Get current date
     DateTime currentDate = DateTime.now();
 
-    // Menampilkan date picker
+    // Show date picker
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: currentDate, // Tanggal saat ini sebagai tanggal awal
-      firstDate:
-          currentDate, // Membatasi agar tidak bisa memilih tanggal sebelumnya
-      lastDate: DateTime(currentDate.year +
-          1), // Bisa memilih sampai setahun ke depan, sesuaikan dengan kebutuhan
+      initialDate: currentDate,
+      firstDate: currentDate,
+      // Changed to allow selection up to 2 years ahead
+      lastDate: DateTime(
+        currentDate.year + 2,
+        currentDate.month,
+        currentDate.day,
+      ),
     );
 
     if (pickedDate != null && pickedDate != currentDate) {
-      // Jika tanggal dipilih, format tanggal sesuai dengan yang diinginkan (yyyy-MM-dd)
+      // Format the selected date to yyyy-MM-dd
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
 
-      // Dispatch UpdateBookingDateEvent dengan format tanggal yang baru
+      // Dispatch UpdateBookingDateEvent with the new date format
       BlocProvider.of<BookingBloc>(context)
           .add(UpdateBookingDateEvent(formattedDate));
     }
