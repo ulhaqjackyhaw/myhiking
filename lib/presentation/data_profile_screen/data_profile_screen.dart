@@ -1007,7 +1007,6 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
   }
 
   /// Section Widget
-
   Widget _buildIdentityUploadSection(BuildContext context) {
     return SizedBox(
       height: 100.h,
@@ -1076,14 +1075,24 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
                                 barrierDismissible: true,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text(
-                                      "Ukuran File Terlalu Besar",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
-                                      textAlign: TextAlign.center,
+                                    title: Column(
+                                      children: [
+                                        Icon(
+                                          Icons.error_outline,
+                                          color: Colors.red,
+                                          size: 48,
+                                        ),
+                                        SizedBox(height: 16),
+                                        Text(
+                                          "Ukuran File Terlalu Besar",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black87,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
                                     ),
                                     content: Text(
                                       "Ukuran file tidak boleh lebih dari 2MB. Silakan pilih file yang lebih kecil.",
