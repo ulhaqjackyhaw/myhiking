@@ -1007,6 +1007,7 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
   }
 
   /// Section Widget
+
   Widget _buildIdentityUploadSection(BuildContext context) {
     return SizedBox(
       height: 100.h,
@@ -1049,37 +1050,99 @@ class _DataProfileScreenState extends State<DataProfileScreen> {
                           child: Text(
                             _fileNameIdentity ?? "msg_upload_file_jpeg".tr,
                             style: CustomTextStyles.bodySmallGray50003Light,
-                            overflow:
-                                TextOverflow.ellipsis, // Menghindari overflow
+                            overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
                         ),
                       ),
                       GestureDetector(
                         onTap: () async {
-                          // Implementasi File Picker
                           FilePickerResult? result =
                               await FilePicker.platform.pickFiles(
                             type: FileType.custom,
-                            allowedExtensions: [
-                              'jpg',
-                              'jpeg',
-                              'png'
-                            ], // Hanya file gambar
+                            allowedExtensions: ['jpg', 'jpeg', 'png'],
                           );
 
                           if (result != null) {
-                            // Mendapatkan file yang dipilih
                             PlatformFile file = result.files.first;
-                            setState(() {
-                              _fileNameIdentity =
-                                  file.name; // Tampilkan nama file
-                              _filePathIdentity = file.path; // Simpan path file
-                            });
-                            print('File dipilih: ${file.name}');
-                            print('Path lengkap: ${file.path}');
+
+                            // Check file size (convert bytes to MB)
+                            double fileSizeInMB = file.size / (1024 * 1024);
+
+                            if (fileSizeInMB > 2) {
+                              // Show popup dialog for file size exceed
+                              await showDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "Ukuran File Terlalu Besar",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text(
+                                      "Ukuran file tidak boleh lebih dari 2MB. Silakan pilih file yang lebih kecil.",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                        height: 1.5,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    actions: [
+                                      Container(
+                                        width: double.infinity,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 12),
+                                            backgroundColor:
+                                                appTheme.blueGray10001,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "OK",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black87,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 20,
+                                    ),
+                                    actionsPadding: EdgeInsets.all(16),
+                                  );
+                                },
+                              );
+                            } else {
+                              // File size is acceptable, proceed with update
+                              setState(() {
+                                _fileNameIdentity = file.name;
+                                _filePathIdentity = file.path;
+                              });
+                              print('File dipilih: ${file.name}');
+                              print('Path lengkap: ${file.path}');
+                            }
                           } else {
-                            // Pengguna membatalkan pemilihan file
                             print('Pemilihan file dibatalkan');
                           }
                         },
