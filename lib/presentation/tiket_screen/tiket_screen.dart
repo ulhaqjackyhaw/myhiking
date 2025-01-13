@@ -67,9 +67,9 @@ class _TiketScreenState extends State<TiketScreen> {
 
       if (imageBytes == null) throw 'Failed to capture widget';
 
-      final now = DateFormat('ddMMyyyy').format(DateTime.now());
+      final now = DateFormat('ddMMyyyy_HHmmss').format(DateTime.now());  
       final filePath =
-          '/storage/emulated/0/DCIM/Screenshots/tiket_${tiketModel.id}_$now.png';
+          '/storage/emulated/0/DCIM/Downloads/tiket_${tiketModel.id}_$now.png';
       await File(filePath).writeAsBytes(imageBytes);
 
       ScaffoldMessenger.of(context).showSnackBar(

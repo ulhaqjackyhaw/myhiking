@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'bloc/pop_up_checkout_bloc.dart';
@@ -117,11 +118,7 @@ class PopUpCheckoutDialog extends StatelessWidget {
               text: "lbl_gform".tr,
               buttonTextStyle: CustomTextStyles.titleSmallOnPrimary,
               onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.tiketScreen,
-                  arguments: pesananId,
-                );
+                onTapGform(context);
               },
             ),
           ),
@@ -136,5 +133,36 @@ class PopUpCheckoutDialog extends StatelessWidget {
       AppRoutes.tiketScreen,
       arguments: pesananId,
     );
+  }
+
+  void onTapGform(BuildContext context) async {
+    print('Attempting to launch URL:');
+    const url = 'https://forms.gle/24H6HALhYRYEXVLS8';
+    print('URL: $url');
+
+    try {
+      final Uri parsedUrl = Uri.parse(url);
+      print('Parsed URL: $parsedUrl');
+
+      if (!await launchUrl(
+        parsedUrl,
+        mode: LaunchMode.platformDefault,
+      )) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tidak dapat meluncurkan Google Form'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal meluncurkan Google Form: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

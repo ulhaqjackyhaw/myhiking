@@ -64,117 +64,126 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BookingBloc(apiService: ApiService())
-        ..add(BookingInitialEvent(
-          idGunung: widget.idGunung!,
-          jalurId: widget.jalurId!,
-        )),
-      child: BlocBuilder<BookingBloc, BookingState>(
-        builder: (context, state) {
-          if (state.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (state.jalur == null || state.gunung == null) {
-            return Center(
-                child: Text('Data jalur atau gunung tidak tersedia.'));
-          }
+        create: (context) => BookingBloc(apiService: ApiService())
+          ..add(BookingInitialEvent(
+            idGunung: widget.idGunung!,
+            jalurId: widget.jalurId!,
+          )),
+        child: Scaffold(
+          // Add Scaffold
+          appBar: _buildAppbar(context), // Add the AppBar here
+          body: BlocBuilder<BookingBloc, BookingState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state.jalur == null || state.gunung == null) {
+                return Center(
+                    child: Text('Data jalur atau gunung tidak tersedia.'));
+              }
 
-          final resDetailRouteCentres = ResJalurModel(
-            status: true,
-            message: "Success",
-            //error disini
-            jalur: state.jalur!,
-          );
+              final resDetailRouteCentres = ResJalurModel(
+                status: true,
+                message: "Success",
+                //error disini
+                jalur: state.jalur!,
+              );
 
-          final jalurModel =
-              BookingModel.resJalurModelFromJson(resDetailRouteCentres);
+              final jalurModel =
+                  BookingModel.resJalurModelFromJson(resDetailRouteCentres);
 
-          return SizedBox(
-            width: double.maxFinite,
-            child: SingleChildScrollView(
-              child: Container(
+              return SizedBox(
                 width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 12.h),
-                child: Column(
-                  children: [
-                    SizedBox(height: 4.h),
-                    _buildProgressSection(context),
-                    SizedBox(height: 28.h),
-                    _buildHotelCard(context, jalurModel),
-                    SizedBox(height: 28.h),
-                    Container(
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(
-                        left: 4.h,
-                        right: 6.h,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: double.maxFinite,
-                            padding: EdgeInsets.symmetric(vertical: 12.h),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusStyle.roundedBorder20,
-                              border: Border.all(
-                                color: theme.colorScheme.primaryContainer,
-                                width: 2.h,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "FORM PESANAN".tr,
-                                    style: CustomTextStyles.titleMediumManrope,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                SizedBox(
-                                  width: double.maxFinite,
-                                  child: Divider(
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                                SizedBox(height: 24.h),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 24.h),
-                                  child: Text(
-                                    "msg_tanggal_pemesanan".tr.toUpperCase(),
-                                    style: CustomTextStyles.labelLargePrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                                _buildBookingDateField(context),
-                                SizedBox(height: 14.h),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 24.h),
-                                  child: Text(
-                                    "lbl_tambah_anggota".tr.toUpperCase(),
-                                    style: CustomTextStyles.labelLargePrimary,
-                                  ),
-                                ),
-                                SizedBox(height: 14.h),
-                                _buildMemberIdField(context),
-                                SizedBox(height: 124.h),
-                              ],
-                            ),
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(horizontal: 12.h),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 4.h),
+                        _buildProgressSection(context),
+                        SizedBox(height: 28.h),
+                        _buildHotelCard(context, jalurModel),
+                        SizedBox(height: 28.h),
+                        Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(
+                            left: 4.h,
+                            right: 6.h,
                           ),
-                          SizedBox(height: 22.h),
-                          _buildContinueButton(context),
-                        ],
-                      ),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.maxFinite,
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder20,
+                                  border: Border.all(
+                                    color: theme.colorScheme.primaryContainer,
+                                    width: 2.h,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        "FORM PESANAN".tr,
+                                        style:
+                                            CustomTextStyles.titleMediumManrope,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    SizedBox(
+                                      width: double.maxFinite,
+                                      child: Divider(
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                    SizedBox(height: 24.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 24.h),
+                                      child: Text(
+                                        "msg_tanggal_pemesanan"
+                                            .tr
+                                            .toUpperCase(),
+                                        style:
+                                            CustomTextStyles.labelLargePrimary,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    _buildBookingDateField(context),
+                                    SizedBox(height: 14.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 24.h),
+                                      child: Text(
+                                        "lbl_tambah_anggota".tr.toUpperCase(),
+                                        style:
+                                            CustomTextStyles.labelLargePrimary,
+                                      ),
+                                    ),
+                                    SizedBox(height: 14.h),
+                                    _buildMemberIdField(context),
+                                    SizedBox(height: 75.h),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 22.h),
+                              _buildContinueButton(context),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+              );
+            },
+          ),
+        ));
   }
 
   PreferredSizeWidget _buildAppbar(BuildContext context) {
@@ -195,6 +204,7 @@ class _BookingScreenState extends State<BookingScreen> {
               },
               padding: EdgeInsets.only(right: 16.h), // Adjust padding as needed
             ),
+            SizedBox(width: 20.h),
             Expanded(
               child: Center(
                 child: AppbarSubtitleOne(
@@ -414,7 +424,7 @@ class _BookingScreenState extends State<BookingScreen> {
       height: 42.h,
       text: "lbl_lanjut2".tr,
       margin: EdgeInsets.only(
-        left: 8.h,
+        left: 4.h,
         right: 4.h,
       ),
       buttonStyle: CustomButtonStyles.fillPrimary,
