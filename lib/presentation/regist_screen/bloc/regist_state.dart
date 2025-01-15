@@ -9,12 +9,16 @@ class RegistState extends Equatable {
     this.passwordtwoController,
     this.passwordthreeController,
     this.registModelObj,
+    this.isPassword2Visible,
+    this.isPassword3Visible,
   });
 
   TextEditingController? edittextoneController;
   TextEditingController? emailtwoController;
   TextEditingController? passwordtwoController;
   TextEditingController? passwordthreeController;
+  bool? isPassword2Visible;
+  bool? isPassword3Visible;
   RegistModel? registModelObj;
 
   RegistState copyWith({
@@ -22,6 +26,8 @@ class RegistState extends Equatable {
     TextEditingController? emailtwoController,
     TextEditingController? passwordtwoController,
     TextEditingController? passwordthreeController,
+    bool? isPassword2Visible,
+    bool? isPassword3Visible,
     RegistModel? registModelObj,
   }) {
     return RegistState(
@@ -29,6 +35,8 @@ class RegistState extends Equatable {
       emailtwoController: emailtwoController ?? this.emailtwoController,
       passwordtwoController: passwordtwoController ?? this.passwordtwoController,
       passwordthreeController: passwordthreeController ?? this.passwordthreeController,
+      isPassword2Visible: isPassword2Visible ?? this.isPassword2Visible,
+      isPassword3Visible: isPassword3Visible ?? this.isPassword3Visible,
       registModelObj: registModelObj ?? this.registModelObj,
     );
   }
@@ -39,6 +47,8 @@ class RegistState extends Equatable {
         emailtwoController,
         passwordtwoController,
         passwordthreeController,
+        isPassword2Visible,
+        isPassword3Visible,
         registModelObj,
       ];
 }

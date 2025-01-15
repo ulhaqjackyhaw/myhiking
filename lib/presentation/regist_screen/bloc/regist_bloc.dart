@@ -10,6 +10,8 @@ part 'regist_state.dart';
 class RegistBloc extends Bloc<RegistEvent, RegistState> {
   RegistBloc(super.initialState) {
     on<RegistInitialEvent>(_onInitialize);
+    on<TogglePassword2Visibility>(_onTogglePassword2Visibility);
+    on<TogglePassword3Visibility>(_onTogglePassword3Visibility);
   }
 
   Future<void> _onInitialize(
@@ -24,5 +26,19 @@ class RegistBloc extends Bloc<RegistEvent, RegistState> {
         passwordthreeController: TextEditingController(),
       ),
     );
+  }
+
+  void _onTogglePassword2Visibility(
+    TogglePassword2Visibility event,
+    Emitter<RegistState> emit,
+  ) {
+    emit(state.copyWith(isPassword2Visible: !(state.isPassword2Visible ?? false)));
+  }
+
+  void _onTogglePassword3Visibility(
+    TogglePassword3Visibility event,
+    Emitter<RegistState> emit,
+  ) {
+    emit(state.copyWith(isPassword3Visible: !(state.isPassword3Visible ?? false)));
   }
 }

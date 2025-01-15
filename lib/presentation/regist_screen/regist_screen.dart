@@ -251,32 +251,61 @@ class RegistScreen extends StatelessWidget {
     );
   }
 
-  /// Password input field
-  Widget _buildPasswordtwo(BuildContext context) {
-    return BlocSelector<RegistBloc, RegistState, TextEditingController?>(
-      selector: (state) => state.passwordtwoController,
-      builder: (context, passwordtwoController) {
-        return CustomTextFormField(
-          controller: passwordtwoController,
-          obscureText: true,
-          contentPadding: EdgeInsets.all(12.h),
-        );
-      },
-    );
-  }
+/// Password input field
+Widget _buildPasswordtwo(BuildContext context) {
+  return BlocSelector<RegistBloc, RegistState, bool>(
+    selector: (state) => state.isPassword2Visible ?? false,
+    builder: (context, isVisible) {
+      return BlocSelector<RegistBloc, RegistState, TextEditingController?>(
+        selector: (state) => state.passwordtwoController,
+        builder: (context, passwordtwoController) {
+          return CustomTextFormField(
+            controller: passwordtwoController,
+            obscureText: !isVisible,
+            contentPadding: EdgeInsets.all(12.h),
+            suffix: IconButton(
+              icon: Icon(
+                isVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                context.read<RegistBloc>().add(TogglePassword2Visibility());
+              },
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
-  /// Confirm password input field
-  Widget _buildPasswordthree(BuildContext context) {
-    return BlocSelector<RegistBloc, RegistState, TextEditingController?>(
-      selector: (state) => state.passwordthreeController,
-      builder: (context, passwordthreeController) {
-        return CustomTextFormField(
-          controller: passwordthreeController,
-          textInputAction: TextInputAction.done,
-          obscureText: true,
-          contentPadding: EdgeInsets.all(12.h),
-        );
-      },
-    );
-  }
+/// Confirm password input field
+Widget _buildPasswordthree(BuildContext context) {
+  return BlocSelector<RegistBloc, RegistState, bool>(
+    selector: (state) => state.isPassword3Visible ?? false,
+    builder: (context, isVisible) {
+      return BlocSelector<RegistBloc, RegistState, TextEditingController?>(
+        selector: (state) => state.passwordthreeController,
+        builder: (context, passwordthreeController) {
+          return CustomTextFormField(
+            controller: passwordthreeController,
+            textInputAction: TextInputAction.done,
+            obscureText: !isVisible,
+            contentPadding: EdgeInsets.all(12.h),
+            suffix: IconButton(
+              icon: Icon(
+                isVisible ? Icons.visibility : Icons.visibility_off,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                context.read<RegistBloc>().add(TogglePassword3Visibility());
+              },
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 }
